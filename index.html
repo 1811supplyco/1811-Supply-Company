@@ -28,10 +28,8 @@
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
-        /* Ajuste para que el botón de categorías móvil no desaparezca */
         body.product-open #mobile-cat-trigger { display: block; }
 
-        /* Estética móvil de categorías */
         #category-panel-mobile {
             position: fixed; top: 72px; left: 0; width: 100%; background: #0a0a0a; 
             z-index: 90; padding: 20px; border-bottom: 1px solid #1f1f1f; display: none;
@@ -47,7 +45,6 @@
                 <a href="index.html" class="block">
                     <img src="logo2.png" alt="1811 Logo" class="h-10 md:h-16 w-auto object-contain">
                 </a>
-                <!-- El botón ahora llama a una función que alterna el panel móvil -->
                 <button id="mobile-cat-trigger" onclick="toggleCategoriesMobile()" class="md:hidden text-[10px] font-black uppercase tracking-widest text-white bg-white/5 px-3 py-2 rounded">Categorías</button>
             </div>
             
@@ -57,7 +54,6 @@
         </div>
     </nav>
 
-    <!-- Menú de categorías móvil desplegable -->
     <div id="category-panel-mobile" class="md:hidden">
         <div class="grid grid-cols-2 gap-2">
             <button onclick="filterProducts('TODOS')" class="text-[9px] font-black p-3 border border-white/10 text-white uppercase">TODOS</button>
@@ -88,7 +84,6 @@
     </div>
 
     <div id="main-content" class="container mx-auto px-4 py-6">
-        <!-- Encabezado solicitado -->
         <div class="mb-10 text-center md:text-left">
             <h2 class="text-[14px] md:text-[18px] font-black text-white tracking-[0.4em] uppercase leading-tight">
                 LO MEJOR DE 1811 <br class="md:hidden"> EN UN SOLO ESPACIO
@@ -109,7 +104,6 @@
                     <button onclick="filterProducts('BEADS')" class="category-btn" id="btn-BEADS">BEADS</button>
                 </div>
             </div>
-            <!-- Grid de productos ajustado para móviles: 2 columnas mas pequeñas -->
             <main class="md:col-span-10 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6" id="products-grid"></main>
         </div>
     </div>
@@ -120,20 +114,141 @@
     </div>
 
     <script>
-        // ... (Los datos de los productos se mantienen iguales)
         const products = [
-            { id: 1, cat: "BOLSOS", name: "UTILITY DOPP KIT DISTRESSED CHOCOLATE", desc: "NECESER TODO TERRENO CON AMPLIO ESPACIO...", price: 179, imgs: ["DOPPKITmarron.png", "detalleDOPPKIT.png", "detalleDOPPKIT2.png"], variants: [] },
-            { id: 2, cat: "BILLETERAS", name: "ZIPPERED WALLET", desc: "BILLETERA MINIMALISTA DE DISEÑO JAPONES...", price: 89, imgs: ["ZIPPERED.png", "ZIPPEREDdetalle.png"], variants: [] },
-            { id: 3, cat: "BILLETERAS", name: "GANADERO WALLET", desc: "BIFOLD HÍBRIDA...", price: 109, varPhotos: { "MARRON": ["GANADERO.png", "GANADEROabierto.png"], "NEGRO": ["GANADEROnegro.png"] }, variants: ["MARRON", "NEGRO"], selected: "MARRON" },
-            { id: 4, cat: "BILLETERAS", name: "DÍDAC WALLET", desc: "TARJETERO MINIMALISTA...", price: 129, varPhotos: { "MARRON": ["didac.png"], "NEGRO": ["DIDACnegro.png"] }, variants: ["MARRON", "NEGRO"], selected: "MARRON" },
-            { id: 5, cat: "ACCESORIOS", name: "MULTITOOL CARD + FUNDA DE CUERO", desc: "TARJETA MULTIHERRAMIENTA...", price: 89, varPhotos: { "CUERO": ["MULTITOOL.png"], "NEGRO": ["MULTITOOL.png"] }, variants: ["CUERO", "NEGRO"], selected: "CUERO" },
-            { id: 6, cat: "ACCESORIOS", name: "UTILITY TRAY", desc: "BANDEJA PARA COLOCAR OBJETOS...", price: 99, varPhotos: { "SMALL": ["BANDEJAS.png"], "MEDIUM": ["BANDEJAM.png"], "LARGE": ["BANDEJAL.png"] }, varPrices: { "SMALL": 99, "MEDIUM": 129, "LARGE": 159 }, varDesc: { "SMALL": "14x14cm", "MEDIUM": "20x20cm", "LARGE": "20x30cm" }, variants: ["SMALL", "MEDIUM", "LARGE"], selected: "SMALL" },
-            { id: 7, cat: "ACCESORIOS", name: "PORTALENTES", desc: "FUNDA PARA LENTES...", price: 99, imgs: ["PORTALENTES.png"], variants: [] },
-            { id: 8, cat: "CINTURONES", name: "MIGHTY BELT + BLACK BUCKLE", desc: "CORREA TODO TERRENO...", price: 149, imgs: ["MIGHTY.png"], variants: [] },
-            { id: 9, cat: "LLAVEROS", name: "EL GANCHO", desc: "LLAVERO CON MOSQUETÓN...", price: 79, varPhotos: { "MARRON": ["GANCHO.png"], "NEGRO": ["GANCHOnegro.png"] }, variants: ["MARRON", "NEGRO"], selected: "MARRON" },
-            { id: 10, cat: "BEADS", name: "SKULL BEAD", desc: "CUENTA DECORATIVA...", price: 89, imgs: ["SKULLBEAD.png"], variants: [] },
-            { id: 11, cat: "BEADS", name: "BABY DEVIL BEAD", desc: "CUENTA DECORATIVA...", price: 99, imgs: ["BABYDEVIL.png"], variants: [] },
-            { id: 12, cat: "ACCESORIOS", name: "COASTERS", desc: "SET DE POSAVASOS...", price: 89, varPhotos: { "JUEGO DE 4": ["COASTERS.png"], "JUEGO DE 6": ["COASTERS.png"] }, varPrices: { "JUEGO DE 4": 89, "JUEGO DE 6": 119 }, variants: ["JUEGO DE 4", "JUEGO DE 6"], selected: "JUEGO DE 4" }
+            { 
+                id: 1, 
+                cat: "BOLSOS", 
+                name: "UTILITY DOPP KIT DISTRESSED CHOCOLATE", 
+                desc: "NECESER TODO TERRENO CON AMPLIO ESPACIO, BOLSILLO CON CIERRE, BOLSILLOS LATERALES Y HANDLE DE DOBLE AGARRE, PERFECTO PARA TUS ARTÍCULOS DE USO DIARIO (ASEO, TECH, ETC.)<br><br>MEDIDAS: 16 cm X 25 cm APROX (SIN CONTAR EL HANDLE)<br><br>MATERIALES: CUERO DE RES FULL GRAIN, CANVAS DE ALTO GRAMAJE, CORDURA NYLON, ACERO INOXIDABLE Y LATÓN", 
+                price: 179, 
+                imgs: ["DOPPKITmarron.png", "detalleDOPPKIT.png", "detalleDOPPKIT2.png"], 
+                variants: [] 
+            },
+            { 
+                id: 2, 
+                cat: "BILLETERAS", 
+                name: "ZIPPERED WALLET", 
+                desc: "BILLETERA MINIMALISTA DE DISEÑO JAPONES PARA TARJETAS, BILLETES Y MONEDAS.<br><br>MEDIDAS: 9.5 CM X 11 CM APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE LATÓN MACIZO", 
+                price: 89, 
+                imgs: ["ZIPPERED.png", "ZIPPEREDdetalle.png"], 
+                variants: [] 
+            },
+            { 
+                id: 3, 
+                cat: "BILLETERAS", 
+                name: "GANADERO WALLET", 
+                desc: "BIFOLD HÍBRIDA CON ESPACIO PARA TARJETAS, BILLETES Y 4 ESPACIOS PEQUEÑOS PARA MINI HERRAMIENTAS DE VICTORINOX (LAPICERO, MONDADIENTES, PINZAS, ETC.)<br><br>MEDIDAS: 10.5 CM X 9 CM APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y TELA CORDURA", 
+                price: 109, 
+                varPhotos: { 
+                    "CHOCOLATE": ["GANADERO.png", "GANADEROabierto.png", "GANADEROdetalle.png"], 
+                    "NEGRO": ["GANADEROnegro.png", "GANADEROnegroabierto.png", "GANADEROdetallenegro.png"] 
+                }, 
+                variants: ["CHOCOLATE", "NEGRO"], 
+                selected: "CHOCOLATE" 
+            },
+            { 
+                id: 4, 
+                cat: "BILLETERAS", 
+                name: "DÍDAC WALLET", 
+                desc: "TARJETERO MINIMALISTA PERFECTO PARA USO DIARIO PUEDES LLEVAR TARJETAS Y BILLETES.<br><br>MEDIDAS: 6.7 cm X 10.5 cm APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE LATON / ACERO INOXIDABLE", 
+                price: 129, 
+                varPhotos: { 
+                    "CHOCOLATE": ["didac.png", "DIDACatras.png"], 
+                    "NEGRO": ["DIDACnegro.png"] 
+                }, 
+                variants: ["CHOCOLATE", "NEGRO"], 
+                selected: "CHOCOLATE" 
+            },
+            { 
+                id: 5, 
+                cat: "ACCESORIOS", 
+                name: "MULTITOOL CARD + FUNDA DE CUERO", 
+                desc: "TARJETA MULTIHERRAMIENTA CON 10 FUNCIONES:<br>• ABRE LATAS<br>• ABRE CAJAS<br>• DESTORNILLADOR PLANO<br>• REGLA 4 CM<br>• ABRE BOTELLAS<br>• LLAVE INGLESA 6 MEDIDAS<br>• LLAVE MARIPOSA<br>• SIERRA<br>• ORIFICIO PARA LANYARD<br>• INDICADOR AUXILIAR DE DIRECCIÓN<br><br>MATERIAL: ACERO INOXIDABLE", 
+                price: 89, 
+                varPhotos: { 
+                    "CHOCOLATE": ["MULTITOOL.png", "MULTITOOLfunda.png"], 
+                    "NEGRO": ["MULTITOOL.png", "MULTITOOLfundanegra.png"] 
+                }, 
+                variants: ["CHOCOLATE", "NEGRO"], 
+                selected: "CHOCOLATE" 
+            },
+            { 
+                id: 6, 
+                cat: "ACCESORIOS", 
+                name: "UTILITY TRAY", 
+                desc: "BANDEJA PARA COLOCAR OBJETOS DE BOLSILLO PERFECTO PARA TU CASA U OFICINA.<br><br>MATERIALES: CUERO DE RES FULL GRAIN, HERRAJE DE ACERO INOXIDABLE Y TELA TWEED", 
+                price: 99, 
+                varPhotos: { 
+                    "SMALL": ["BANDEJAS.png"], 
+                    "MEDIUM": ["BANDEJAM.png"], 
+                    "LARGE": ["BANDEJAL.png"] 
+                }, 
+                varPrices: { "SMALL": 99, "MEDIUM": 129, "LARGE": 159 }, 
+                varDesc: {
+                    "SMALL": "MEDIDAS: 14 cm X 14 cm APROX.",
+                    "MEDIUM": "MEDIDAS: 20 cm X 20 cm APROX.",
+                    "LARGE": "MEDIDAS: 20 cm X 30 cm APROX."
+                },
+                variants: ["SMALL", "MEDIUM", "LARGE"], 
+                selected: "SMALL" 
+            },
+            { 
+                id: 7, 
+                cat: "ACCESORIOS", 
+                name: "PORTALENTES", 
+                desc: "FUNDA PARA LENTES CON INTERIOR ANTIRRAYONES Y OJAL PARA ENGANCHE.<br><br>MEDIDAS: 18 cm X 7.5 cm APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN, HERRAJE DE LATÓN Y ACERO INOXIDABLE", 
+                price: 99, 
+                imgs: ["PORTALENTES.png", "PORTALENTESatras.png"], 
+                variants: [] 
+            },
+            { 
+                id: 8, 
+                cat: "CINTURONES", 
+                name: "MIGHTY BELT + BLACK BUCKLE", 
+                desc: "CORREA TODO TERRENO DE PERFIL CASUAL PERFECTA PARA TODAS TUS AVENTURAS.<br><br>MEDIDAS: 4 cm DE ANCHO X LARGO PERSONALIZABLE.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE ACERO INOXIDABLE PAVONADO EN NEGRO", 
+                price: 149, 
+                imgs: ["MIGHTY.png", "MIGHTYcompleta.png"], 
+                variants: [] 
+            },
+            { 
+                id: 9, 
+                cat: "LLAVEROS", 
+                name: "EL GANCHO", 
+                desc: "LLAVERO CON MOSQUETÓN DE PERFIL TÁCTICO.<br><br>MEDIDAS: 13.5 cm X 3 cm APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE ACERO INOXIDABLE", 
+                price: 79, 
+                varPhotos: { "CHOCOLATE": ["GANCHO.png"], "NEGRO": ["GANCHOnegro.png"] }, 
+                variants: ["CHOCOLATE", "NEGRO"], 
+                selected: "CHOCOLATE" 
+            },
+            { 
+                id: 10, 
+                cat: "BEADS", 
+                name: "SKULL BEAD", 
+                desc: "CUENTA DECORATIVA.<br><br>MATERIAL: LATÓN MACIZO", 
+                price: 89, 
+                imgs: ["SKULLBEAD.png"], 
+                variants: [] 
+            },
+            { 
+                id: 11, 
+                cat: "BEADS", 
+                name: "BABY DEVIL BEAD", 
+                desc: "CUENTA DECORATIVA.<br><br>MATERIAL: LATÓN MACIZO", 
+                price: 99, 
+                imgs: ["BABYDEVIL.png"], 
+                variants: [] 
+            },
+            { 
+                id: 12, 
+                cat: "ACCESORIOS", 
+                name: "COASTERS", 
+                desc: "SET DE POSAVASOS DE CUERO DE PERFIL RÚSTICO INDISPENSABLES PARA TU CRISTALERIA / TAZAS Y BUENAZO PARA TUS REUNIONES.<br><br>MEDIDAS: 11 cm (DIAMETRO)<br><br>MATERIALES: CUERO DE RES FULL GRAIN", 
+                price: 89, 
+                varPhotos: { "JUEGO DE 4": ["COASTERS.png", "COASTERsola.png"], "JUEGO DE 6": ["COASTERS.png", "COASTERsola.png"] }, 
+                varPrices: { "JUEGO DE 4": 89, "JUEGO DE 6": 119 }, 
+                variants: ["JUEGO DE 4", "JUEGO DE 6"], 
+                selected: "JUEGO DE 4" 
+            }
         ];
 
         let cart = JSON.parse(localStorage.getItem('cart_1811')) || [];
@@ -147,7 +262,6 @@
             else render(params.get('cat') || 'TODOS');
         }
 
-        // Nueva lógica para categorías móviles
         function toggleCategoriesMobile() {
             document.getElementById('category-panel-mobile').classList.toggle('active');
         }
@@ -172,7 +286,7 @@
                 let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
                 let displayPrice = p.varPrices ? p.varPrices[p.selected] : p.price;
                 const div = document.createElement('div');
-                div.className = "product-card p-2 md:p-4"; // Padding reducido en móvil
+                div.className = "product-card p-2 md:p-4";
                 div.innerHTML = `
                     <div class="aspect-square mb-2 md:mb-4 overflow-hidden cursor-pointer bg-black" onclick="window.location.href='?id=${p.id}'">
                         <img src="${gallery[0]}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
@@ -230,12 +344,6 @@
                         <button onclick="addToCart(${p.id})" class="w-full bg-white text-black py-5 text-[11px] font-black uppercase tracking-[0.2em] active:scale-95 transition-all">Añadir al Carrito</button>
                     </div>
                 </div>`;
-        }
-
-        function updateGridVar(id, v, currentFilter) {
-            const p = products.find(prod => prod.id === id);
-            p.selected = v;
-            render(currentFilter);
         }
 
         function setVar(id, v) {
