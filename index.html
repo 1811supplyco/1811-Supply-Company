@@ -281,7 +281,7 @@
                 msg += `• *${item.name}* ${item.currentVariant ? '('+item.currentVariant+')' : ''} - S/ ${item.currentPrice}\n`;
                 sum += item.currentPrice;
             });
-            msg += `\n*TOTAL ESTIMADO: S/ ${sum.toFixed(2)}*`;
+            msg += `\n*TOTAL: S/ ${sum.toFixed(2)}*`;
             window.open(`https://wa.me/51947833118?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
