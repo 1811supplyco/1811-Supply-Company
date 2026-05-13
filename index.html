@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1811 SUPPLY CO. | Official Store</title>
+    <title>1811 SUPPLY CO.</title>
     <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .font-1811 { font-family: 'UnifrakturMaguntia', serif; font-size: 3.5rem; color: white; line-height: 1; }
         .font-supply { font-family: 'Inter', sans-serif; font-weight: 900; letter-spacing: -0.05em; color: #666; font-size: 1.2rem; text-transform: uppercase; }
         body { background-color: #0a0a0a; color: #d1d1d1; font-family: 'Inter', sans-serif; margin: 0; }
-        img { filter: none !important; opacity: 1 !important; transition: opacity 0.3s; }
+        img { filter: none !important; opacity: 1 !important; }
         .product-card { background-color: #111111; border: 1px solid #1f1f1f; position: relative; overflow: hidden; }
         .category-btn { transition: all 0.2s; border-bottom: 2px solid transparent; cursor: pointer; padding-bottom: 4px; white-space: nowrap; }
         .category-btn.active { border-color: white; color: white; font-weight: 900; }
@@ -55,7 +55,7 @@
             { 
                 id: 1, cat: "BOLSOS", name: "UTILITY DOPP KIT DISTRESSED CHOCOLATE", 
                 desc: "NECESER TODO TERRENO CON AMPLIO ESPACIO, BOLSILLO CON CIERRE, BOLSILLOS LATERALES Y HANDLE DE DOBLE AGARRE, PERFECTO PARA TUS ARTÍCULOS DE USO DIARIO (ASEO, TECH, ETC.)<br><br>MEDIDAS: 16 cm X 25 cm APROX (SIN CONTAR EL HANDLE)<br>MATERIALES: CUERO DE RES FULL GRAIN CANVAS DE ALTO GRAMAJE CORDURA NYLON, ACERO INOXIDABLE Y LATÓN", 
-                price: 179, imgs: ["DOPPKITdetalle.png", "detalleDOPPKIT.png", "detalleDOPPKIT(2).png"], variants: [] 
+                price: 179, imgs: ["DOPPKITmarron.png", "detalleDOPPKIT.png", "detalleDOPPKIT(2).png"], variants: [] 
             },
             { 
                 id: 2, cat: "BILLETERAS", name: "ZIPPERED WALLET", 
@@ -103,18 +103,18 @@
                 id: 9, cat: "LLAVEROS", name: "EL GANCHO", 
                 desc: "LLAVERO CON MOSQUETÓN DE PERFIL TÁCTICO<br><br>MEDIDAS: 13.5 cm X 3 cm APROX.<br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE ACERO INOXIDABLE", 
                 price: 79, imgs: ["GANCHO.png"], 
-                varPhotos: { "MARRON": ["GANCHO.png"], "NEGRO": ["GANCHO.png"] }, // Mismo nombre según tu lista
+                varPhotos: { "MARRON": ["GANCHO.png"], "NEGRO": ["GANCHOnegro.png"] }, 
                 variants: ["MARRON", "NEGRO"], selected: "MARRON" 
             },
             { 
                 id: 10, cat: "BEADS", name: "SKULL BEAD", 
                 desc: "CUENTA DECORATIVA<br>MATERIAL: LATÓN MACIZO", 
-                price: 89, imgs: ["BABYDEVIL.png"], variants: [] // Nota: Usé el nombre de foto que indicaste para este item
+                price: 89, imgs: ["SKULLBEAD.png"], variants: [] 
             },
             { 
                 id: 11, cat: "BEADS", name: "BABY DEVIL BEAD", 
                 desc: "CUENTA DECORATIVA<br>MATERIAL: LATON MACIZO", 
-                price: 99, imgs: ["SKULLBEAD.png"], variants: [] // Nota: Usé el nombre de foto que indicaste para este item
+                price: 99, imgs: ["BABYDEVIL.png"], variants: [] 
             }
         ];
 
@@ -140,9 +140,9 @@
                         <img src="${gallery[currentImgIdx[p.id]]}" onclick="toggleInfo(${p.id})" class="w-full h-full object-cover cursor-help">
                         
                         <div id="info-${p.id}" class="info-overlay" onclick="toggleInfo(${p.id})">
-                            <h4 class="text-white font-black text-[10px] uppercase mb-4 border-b border-white/20 pb-2">Descripción Detallada</h4>
-                            <p class="text-[10px] leading-relaxed text-gray-300 font-bold">${p.desc}</p>
-                            <p class="mt-8 text-[9px] text-white/40 font-bold uppercase tracking-widest text-center">Click para cerrar</p>
+                            <h4 class="text-white font-black text-[10px] uppercase mb-4 border-b border-white/20 pb-2 tracking-widest">Descripción</h4>
+                            <p class="text-[10px] leading-relaxed text-gray-300 font-bold uppercase">${p.desc}</p>
+                            <p class="mt-8 text-[9px] text-white/40 font-bold uppercase tracking-widest text-center">Toca para cerrar</p>
                         </div>
                     </div>
 
@@ -155,7 +155,7 @@
                         ${p.variants.map(v => `<button onclick="setVar(${p.id}, '${v}', '${filter}')" class="variant-btn ${p.selected === v ? 'selected' : ''}">${v}</button>`).join('')}
                     </div>
                     
-                    <button class="w-full bg-white text-black py-4 text-[10px] font-black uppercase tracking-widest hover:bg-gray-200 transition-all">Pedir Artículo</button>
+                    <button class="w-full bg-white text-black py-4 text-[10px] font-black uppercase tracking-widest hover:bg-gray-200 transition-all">Añadir</button>
                 `;
                 grid.appendChild(div);
             });
