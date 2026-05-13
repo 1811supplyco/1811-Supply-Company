@@ -4,60 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>1811 SUPPLY CO. | Official Store</title>
-    <!-- Importación de fuentes: Medici Text (vía UnifrakturMaguntia) e Inter para legibilidad -->
+    <!-- Fuentes: Medici Text (UnifrakturMaguntia) y Coolvetica (Inter Heavy) -->
     <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Tipografía Medici Text para "1811" */
+        /* Tipografía EXACTA para 1811 */
         .font-1811 { 
             font-family: 'UnifrakturMaguntia', serif; 
-            font-size: 2.8rem; 
-            line-height: 1; 
+            font-size: 3.5rem; 
+            line-height: 0.8; 
             color: #ffffff;
+            display: inline-block;
         }
-        /* Tipografía Coolvetica para "Supply Co." */
+        /* Tipografía estilo Coolvetica para Supply Co. */
         .font-supply { 
-            font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif; 
-            font-weight: 700; 
+            font-family: 'Inter', sans-serif; 
+            font-weight: 900; 
             letter-spacing: -0.05em; 
-            color: #555555;
-            font-size: 1.2rem;
-            transform: translateY(-4px);
+            color: #666;
+            font-size: 1.1rem;
+            text-transform: uppercase;
         }
         
         body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: #d1d1d1; margin: 0; }
-        .product-card { background-color: #111111; border: 1px solid #1f1f1f; border-radius: 2px; }
-        .variant-btn { border: 1px solid #333; transition: all 0.2s; font-size: 8px; border-radius: 1px; }
+        .product-card { background-color: #111111; border: 1px solid #1f1f1f; transition: transform 0.2s; }
+        .product-card:hover { transform: translateY(-5px); }
+        
+        /* Botones de variante */
+        .variant-btn { border: 1px solid #333; transition: all 0.2s; font-size: 9px; padding: 4px 8px; }
         .variant-btn.selected { background-color: white; color: black; border-color: white; font-weight: 900; }
-        .category-btn { transition: all 0.2s ease; border-bottom: 2px solid transparent; }
+        
+        /* Filtros */
+        .category-btn { transition: all 0.3s ease; border-bottom: 2px solid transparent; padding-bottom: 4px; cursor: pointer; }
         .category-btn.active { border-color: #ffffff; color: #ffffff; font-weight: 900; }
         
-        /* Estilos de Formulario */
-        input { background: #1a1a1a !important; border: 1px solid #333 !important; color: white !important; font-size: 13px !important; padding: 12px !important; border-radius: 2px !important; width: 100%; }
-        input:focus { border-color: #ffffff !important; outline: none; }
-        label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: #666; margin-bottom: 6px; display: block; }
+        /* Formulario */
+        input { background: #1a1a1a !important; border: 1px solid #333 !important; color: white !important; font-size: 14px !important; padding: 12px !important; width: 100%; margin-bottom: 15px; }
+        label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #555; display: block; margin-bottom: 5px; }
         
         .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body>
 
-    <!-- Navbar con Logo Personalizado -->
-    <nav class="p-6 sticky top-0 bg-[#0a0a0a]/95 backdrop-blur-xl z-50 border-b border-white/5">
+    <!-- Logo y Header -->
+    <nav class="p-8 sticky top-0 bg-[#0a0a0a]/95 backdrop-blur-xl z-50 border-b border-white/5">
         <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-end gap-3">
+            <div class="flex items-center gap-4">
                 <span class="font-1811">1811</span>
                 <span class="font-supply">Supply Co.</span>
             </div>
-            <button onclick="toggleCart()" class="text-[10px] font-bold tracking-widest uppercase flex items-center gap-2 text-white">
-                CARRITO <span id="cart-count" class="bg-white text-black px-2 py-0.5 rounded-sm">0</span>
+            <button onclick="toggleCart()" class="text-[10px] font-black tracking-[0.2em] text-white flex items-center gap-3">
+                CARRITO <span id="cart-count" class="bg-white text-black px-2 py-1 rounded-full">0</span>
             </button>
         </div>
     </nav>
 
-    <!-- Filtros de Categoría -->
-    <div class="container mx-auto px-6 mt-8">
-        <div class="flex gap-8 overflow-x-auto no-scrollbar border-b border-white/5 pb-4 text-[9px] tracking-[0.2em] font-bold text-gray-500 uppercase">
+    <!-- Menú de Categorías (Filtrado) -->
+    <div class="container mx-auto px-6 mt-10">
+        <div class="flex gap-10 overflow-x-auto no-scrollbar border-b border-white/5 pb-5 text-[10px] tracking-[0.2em] font-bold text-gray-500 uppercase">
             <button onclick="filterProducts('TODOS')" class="category-btn active" id="btn-TODOS">TODOS</button>
             <button onclick="filterProducts('BILLETERAS')" class="category-btn" id="btn-BILLETERAS">BILLETERAS</button>
             <button onclick="filterProducts('ACCESORIOS')" class="category-btn" id="btn-ACCESORIOS">ACCESORIOS</button>
@@ -66,100 +71,115 @@
         </div>
     </div>
 
-    <!-- Rejilla de Productos -->
-    <main class="container mx-auto p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10" id="products-grid"></main>
+    <!-- Contenedor de Productos -->
+    <main class="container mx-auto p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12" id="products-grid"></main>
 
-    <!-- Modal del Carrito y Checkout -->
-    <div id="cart-modal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-md z-[100] flex justify-end">
-        <div class="bg-[#0f0f0f] w-full max-w-md h-full p-8 flex flex-col border-l border-white/10 shadow-2xl overflow-y-auto">
+    <!-- Modal Carrito / Checkout -->
+    <div id="cart-modal" class="hidden fixed inset-0 bg-black/95 z-[100] flex justify-end">
+        <div class="bg-[#0c0c0c] w-full max-w-md h-full p-10 flex flex-col border-l border-white/10 shadow-2xl overflow-y-auto">
             
-            <!-- Vista 1: Items del Carrito -->
             <div id="cart-view">
-                <div class="flex justify-between items-center mb-10 border-b border-white/5 pb-6">
-                    <h2 class="text-sm font-black tracking-widest uppercase text-white">Tu Selección</h2>
-                    <button onclick="toggleCart()" class="text-[9px] uppercase font-bold text-gray-500 hover:text-white">Cerrar</button>
+                <div class="flex justify-between items-center mb-10 border-b border-white/10 pb-6">
+                    <h2 class="text-xs font-black tracking-widest uppercase text-white">Bolsa de Compras</h2>
+                    <button onclick="toggleCart()" class="text-[10px] uppercase font-bold text-gray-600 hover:text-white">Cerrar</button>
                 </div>
-                <div id="cart-items" class="space-y-6 mb-8"></div>
-                <div class="border-t border-white/10 pt-8">
-                    <div class="flex justify-between items-center mb-8">
-                        <span class="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Total Neto</span>
-                        <span class="text-2xl font-light text-white">S/ <span id="cart-total">0</span></span>
+                <div id="cart-items" class="space-y-8 mb-10"></div>
+                <div class="border-t border-white/10 pt-10">
+                    <div class="flex justify-between items-center mb-10">
+                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Total Estimado</span>
+                        <span class="text-3xl font-light text-white">S/ <span id="cart-total">0</span></span>
                     </div>
-                    <button onclick="showCheckout()" class="w-full bg-white text-black py-5 font-black uppercase tracking-[0.2em] text-[10px] hover:bg-gray-200 transition-colors">
-                        Continuar al Despacho
+                    <button onclick="showCheckout()" class="w-full bg-white text-black py-6 font-black uppercase tracking-[0.3em] text-[10px]">
+                        Finalizar Pedido
                     </button>
                 </div>
             </div>
 
-            <!-- Vista 2: Formulario de Datos -->
             <div id="checkout-view" class="hidden">
-                <button onclick="hideCheckout()" class="mb-6 text-[9px] text-gray-500 uppercase font-bold hover:text-white">← Regresar al carrito</button>
-                <h2 class="text-sm font-black tracking-widest uppercase text-white mb-8 border-b border-white/5 pb-4">Datos de Envío</h2>
-                <form id="shipping-form" class="space-y-5">
-                    <div><label>Nombres y Apellidos</label><input type="text" id="f-nombre" required></div>
-                    <div><label>DNI</label><input type="number" id="f-dni" required></div>
-                    <div><label>Celular</label><input type="tel" id="f-cel" required></div>
-                    <div><label>Distrito / Provincia</label><input type="text" id="f-distrito" required></div>
-                    <div><label>Dirección y Referencia</label><input type="text" id="f-direccion" required></div>
-                    <div class="pt-6">
-                        <button type="button" id="pay-button" onclick="processFinalOrder()" class="w-full bg-[#128C7E] text-white py-6 font-black uppercase tracking-[0.15em] text-[10px] shadow-lg hover:brightness-110 transition-all">
-                            Haz tu compra por Yape o Plin
-                        </button>
-                    </div>
+                <button onclick="hideCheckout()" class="mb-8 text-[10px] text-gray-600 uppercase font-bold">← Volver</button>
+                <h2 class="text-xs font-black tracking-widest uppercase text-white mb-10 border-b border-white/10 pb-6">Datos de Despacho</h2>
+                <form id="shipping-form">
+                    <label>Nombres Completos</label><input type="text" id="f-nombre">
+                    <label>DNI / CE</label><input type="number" id="f-dni">
+                    <label>Número de Celular</label><input type="tel" id="f-cel">
+                    <label>Distrito / Provincia</label><input type="text" id="f-distrito">
+                    <label>Dirección y Referencia</label><input type="text" id="f-direccion">
+                    
+                    <button type="button" id="pay-button" onclick="processFinalOrder()" class="w-full bg-[#128C7E] text-white py-6 mt-6 font-black uppercase tracking-[0.2em] text-[10px]">
+                        Pagar con Yape o Plin
+                    </button>
                 </form>
             </div>
         </div>
     </div>
 
     <script>
-        // Datos de productos según tus especificaciones
         const products = [
-            { id: 1, category: "BOLSOS", name: "UTILITY DOPP KIT", description: "Neceser todo terreno con amplio espacio. 16x25cm.", price: 179, imgs: ["DOPPKITdetalle.png"], variants: [] },
-            { id: 2, category: "BILLETERAS", name: "ZIPPERED WALLET", description: "Billetera minimalista de diseño japonés.", price: 89, imgs: ["ZIPPERED.png"], variants: [] },
-            { id: 3, category: "BILLETERAS", name: "GANADERO WALLET", description: "Bifold híbrida con espacio para Victorinox.", price: 109, imgs: ["GANADERO.png"], variantPhotos: { "NEGRO": ["GANADEROnegro.png"] }, variants: ["MARRON", "NEGRO"], selectedVariant: "MARRON" },
-            { id: 4, category: "BILLETERAS", name: "DÍDAC WALLET", description: "Tarjetero minimalista perfecto para uso diario.", price: 129, imgs: ["didac.png"], variantPhotos: { "NEGRO": ["DIDACnegro.png"] }, variants: ["MARRON", "NEGRO"], selectedVariant: "MARRON" },
-            { id: 5, category: "ACCESORIOS", name: "MULTITOOL CARD + FUNDA", description: "Tarjeta multiherramienta con 10 funciones.", price: 89, imgs: ["MULTITOOL.png"], variants: [] },
-            { id: 6, category: "ACCESORIOS", name: "UTILITY TRAY", description: "Bandeja de cuero full grain y tela Tweed.", price: 99, imgs: ["BANDEJAS.png"], variantPrices: { "SMALL": 99, "MEDIUM": 129, "LARGE": 159 }, variants: ["SMALL", "MEDIUM", "LARGE"], selectedVariant: "SMALL" },
-            { id: 7, category: "ACCESORIOS", name: "PORTALENTES", description: "Funda para lentes con interior antirrayones.", price: 99, imgs: ["PORTALENTES.png"], variants: [] },
-            { id: 8, category: "CINTURONES", name: "MIGHTY BELT", description: "Correa todo terreno con herraje pavonado.", price: 149, imgs: ["MIGHTY.png"], variants: [] }
+            { id: 1, category: "BOLSOS", name: "UTILITY DOPP KIT", description: "Neceser full grain. 16x25cm.", price: 179, imgs: ["DOPPKITdetalle.png"], variants: [] },
+            { id: 2, category: "BILLETERAS", name: "ZIPPERED WALLET", description: "Cuero genuino y cremallera de latón.", price: 89, imgs: ["ZIPPERED.png"], variants: [] },
+            { id: 3, category: "BILLETERAS", name: "GANADERO WALLET", description: "Híbrida con espacio para multiherramienta.", price: 109, imgs: ["GANADERO.png"], variantPhotos: { "NEGRO": ["GANADEROnegro.png"] }, variants: ["MARRON", "NEGRO"], selectedVariant: "MARRON" },
+            { id: 4, category: "BILLETERAS", name: "DÍDAC WALLET", description: "Tarjetero minimalista para EDC.", price: 129, imgs: ["didac.png"], variantPhotos: { "NEGRO": ["DIDACnegro.png"] }, variants: ["MARRON", "NEGRO"], selectedVariant: "MARRON" },
+            { id: 5, category: "ACCESORIOS", name: "MULTITOOL CARD", description: "Acero inoxidable 10 funciones.", price: 89, imgs: ["MULTITOOL.png"], variants: [] },
+            { id: 6, category: "ACCESORIOS", name: "UTILITY TRAY", description: "Bandeja de cuero y Tweed.", price: 99, imgs: ["BANDEJAS.png"], variantPrices: { "SMALL": 99, "MEDIUM": 129, "LARGE": 159 }, variants: ["SMALL", "MEDIUM", "LARGE"], selectedVariant: "SMALL" },
+            { id: 7, category: "ACCESORIOS", name: "PORTALENTES", description: "Interior suave antirrayones.", price: 99, imgs: ["PORTALENTES.png"], variants: [] },
+            { id: 8, category: "CINTURONES", name: "MIGHTY BELT", description: "Correa robusta de alta resistencia.", price: 149, imgs: ["MIGHTY.png"], variants: [] }
         ];
 
         let cart = [];
 
-        function renderProducts(filter = 'TODOS') {
+        function renderProducts(categoryFilter = 'TODOS') {
             const grid = document.getElementById('products-grid');
-            const filtered = filter === 'TODOS' ? products : products.filter(p => p.category === filter);
-            grid.innerHTML = filtered.map((p) => {
-                const pIdx = products.findIndex(prod => prod.id === p.id);
-                let displayImg = p.imgs[0];
-                if(p.variantPhotos && p.variantPhotos[p.selectedVariant]) displayImg = p.variantPhotos[p.selectedVariant][0];
-                const displayPrice = p.variantPrices ? p.variantPrices[p.selectedVariant] : p.price;
-                return `
-                <div class="product-card p-5">
-                    <img src="${displayImg}" class="w-full aspect-square object-cover mb-4">
-                    <div class="flex justify-between items-start mb-1">
-                        <h3 class="font-black text-[10px] uppercase tracking-[0.2em] text-white">${p.name}</h3>
-                        <span class="text-xs font-light">S/ ${displayPrice}</span>
+            grid.innerHTML = ''; // Limpiar pantalla
+            
+            const filtered = categoryFilter === 'TODOS' 
+                ? products 
+                : products.filter(p => p.category === categoryFilter);
+
+            filtered.forEach((p) => {
+                const pIdx = products.findIndex(item => item.id === p.id);
+                let currentImg = p.imgs[0];
+                if(p.variantPhotos && p.variantPhotos[p.selectedVariant]) {
+                    currentImg = p.variantPhotos[p.selectedVariant][0];
+                }
+                const currentPrice = p.variantPrices ? p.variantPrices[p.selectedVariant] : p.price;
+
+                const card = document.createElement('div');
+                card.className = "product-card p-6";
+                card.innerHTML = `
+                    <img src="${currentImg}" class="w-full aspect-square object-cover mb-6 block">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-black text-[11px] uppercase tracking-widest text-white">${p.name}</h3>
+                        <span class="text-xs font-light text-gray-400">S/ ${currentPrice}</span>
                     </div>
-                    <p class="text-[8px] text-gray-600 uppercase mb-6 h-8">${p.description}</p>
-                    <div class="flex gap-2 mb-6 h-8">
-                        ${p.variants.map(v => `<button onclick="selectVariant(${pIdx}, '${v}')" class="variant-btn px-3 py-1 uppercase ${p.selectedVariant === v ? 'selected' : ''}">${v}</button>`).join('')}
+                    <p class="text-[9px] text-gray-600 uppercase mb-6 h-8">${p.description}</p>
+                    <div class="flex gap-2 mb-8 h-8">
+                        ${p.variants.map(v => `<button onclick="changeVariant(${pIdx}, '${v}', '${categoryFilter}')" class="variant-btn ${p.selectedVariant === v ? 'selected' : ''}">${v}</button>`).join('')}
                     </div>
-                    <button onclick="addToCart(${p.id})" class="w-full bg-white text-black py-4 text-[9px] font-black uppercase tracking-[0.3em] active:scale-95 transition-transform">
-                        Añadir a la Bolsa
+                    <button onclick="addToCart(${p.id})" class="w-full bg-white text-black py-4 text-[10px] font-black uppercase tracking-[0.3em] hover:bg-gray-200 transition-colors">
+                        Añadir
                     </button>
-                </div>`;
-            }).join('');
+                `;
+                grid.appendChild(card);
+            });
         }
 
-        function selectVariant(idx, v) { products[idx].selectedVariant = v; renderProducts(document.querySelector('.category-btn.active').innerText); }
-        
+        function changeVariant(pIdx, variant, currentFilter) {
+            products[pIdx].selectedVariant = variant;
+            renderProducts(currentFilter);
+        }
+
+        function filterProducts(cat) {
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${cat}`).classList.add('active');
+            renderProducts(cat);
+        }
+
         function addToCart(id) {
             const p = products.find(prod => prod.id === id);
             cart.push({
                 ...p, 
-                cartPrice: p.variantPrices ? p.variantPrices[p.selectedVariant] : p.price, 
-                cartVariant: p.selectedVariant
+                cPrice: p.variantPrices ? p.variantPrices[p.selectedVariant] : p.price,
+                cVariant: p.selectedVariant
             });
             updateCart();
             toggleCart(true);
@@ -167,31 +187,32 @@
 
         function updateCart() {
             document.getElementById('cart-count').innerText = cart.length;
-            document.getElementById('cart-items').innerHTML = cart.map((item, index) => {
-                const img = (item.variantPhotos && item.variantPhotos[item.cartVariant]) ? item.variantPhotos[item.cartVariant][0] : item.imgs[0];
-                return `<div class="flex gap-4 items-center border-b border-white/5 pb-4">
-                    <img src="${img}" class="w-16 h-16 object-cover rounded-sm">
+            const container = document.getElementById('cart-items');
+            container.innerHTML = cart.map((item, index) => `
+                <div class="flex gap-5 items-center border-b border-white/5 pb-5">
+                    <img src="${(item.variantPhotos && item.variantPhotos[item.cVariant]) ? item.variantPhotos[item.cVariant][0] : item.imgs[0]}" class="w-20 h-20 object-cover">
                     <div class="flex-grow">
-                        <h4 class="text-[9px] font-black uppercase text-white tracking-widest">${item.name}</h4>
-                        <p class="text-[8px] text-gray-500 uppercase">${item.cartVariant || 'Estándar'}</p>
-                        <p class="text-[10px] text-white mt-1">S/ ${item.cartPrice}</p>
+                        <h4 class="text-[10px] font-black uppercase text-white">${item.name}</h4>
+                        <p class="text-[8px] text-gray-500 uppercase mt-1">${item.cVariant || 'Única'}</p>
+                        <p class="text-[11px] text-white mt-2 font-bold">S/ ${item.cPrice}</p>
                     </div>
-                    <button onclick="removeFromCart(${index})" class="text-red-800 hover:text-red-500 text-lg">✕</button>
-                </div>`;
-            }).join('');
-            document.getElementById('cart-total').innerText = cart.reduce((sum, i) => sum + i.cartPrice, 0);
+                    <button onclick="removeFromCart(${index})" class="text-red-900 font-bold px-2">✕</button>
+                </div>
+            `).join('');
+            document.getElementById('cart-total').innerText = cart.reduce((sum, i) => sum + i.cPrice, 0);
         }
 
         function removeFromCart(idx) { cart.splice(idx, 1); updateCart(); }
-        function toggleCart(forceOpen = false) {
-            const modal = document.getElementById('cart-modal');
-            if(forceOpen) modal.classList.remove('hidden');
-            else modal.classList.toggle('hidden');
-            if(modal.classList.contains('hidden')) hideCheckout();
+        
+        function toggleCart(open = null) {
+            const m = document.getElementById('cart-modal');
+            if(open === true) m.classList.remove('hidden');
+            else if(open === false) m.classList.add('hidden');
+            else m.classList.toggle('hidden');
         }
 
         function showCheckout() {
-            if(cart.length === 0) return alert("Tu bolsa está vacía");
+            if(cart.length === 0) return;
             document.getElementById('cart-view').classList.add('hidden');
             document.getElementById('checkout-view').classList.remove('hidden');
         }
@@ -202,43 +223,23 @@
         }
 
         async function processFinalOrder() {
+            const fields = ['f-nombre', 'f-dni', 'f-cel', 'f-distrito', 'f-direccion'];
+            for(let f of fields) if(!document.getElementById(f).value) return alert("Completa los datos");
+
             const btn = document.getElementById('pay-button');
-            const phoneOwner = "51947833118";
-            const numPago = "979253928";
-            
-            const campos = ['f-nombre', 'f-dni', 'f-cel', 'f-distrito', 'f-direccion'];
-            for(let id of campos) if(!document.getElementById(id).value) return alert("Por favor completa tus datos de envío");
-            
-            // Copiar número al portapapeles
-            try {
-                await navigator.clipboard.writeText(numPago);
-                btn.innerText = "PEGA ESTE NUMERO EN YAPE O PLIN";
-                btn.style.backgroundColor = "#ffffff";
-                btn.style.color = "#000000";
-            } catch (err) { console.log("Error al copiar"); }
+            await navigator.clipboard.writeText("979253928");
+            btn.innerText = "NÚMERO COPIADO - ABRE YAPE";
+            btn.classList.replace('bg-[#128C7E]', 'bg-white');
+            btn.classList.replace('text-white', 'text-black');
 
-            // Crear mensaje de WhatsApp
-            let orderMsg = `🔥 *NUEVO PEDIDO 1811* 🔥%0A%0A`;
-            orderMsg += `*CLIENTE:* ${document.getElementById('f-nombre').value}%0A`;
-            orderMsg += `*DNI:* ${document.getElementById('f-dni').value}%0A`;
-            orderMsg += `*CELULAR:* ${document.getElementById('f-cel').value}%0A`;
-            orderMsg += `*UBICACIÓN:* ${document.getElementById('f-distrito').value}%0A`;
-            orderMsg += `*DIRECCIÓN:* ${document.getElementById('f-direccion').value}%0A%0A`;
-            orderMsg += `*PEDIDO:*%0A`;
-            cart.forEach(item => orderMsg += `- ${item.name} (${item.cartVariant || 'STND'}) | S/ ${item.cartPrice}%0A`);
-            orderMsg += `%0A*TOTAL: S/ ${document.getElementById('cart-total').innerText}*`;
-            
-            setTimeout(() => {
-                window.open(`https://wa.me/${phoneOwner}?text=${orderMsg}`);
-            }, 1800);
+            let msg = `🔥 *ORDEN 1811* 🔥%0A%0A*CLIENTE:* ${document.getElementById('f-nombre').value}%0A*DNI:* ${document.getElementById('f-dni').value}%0A*CEL:* ${document.getElementById('f-cel').value}%0A*LUGAR:* ${document.getElementById('f-distrito').value}%0A*DIR:* ${document.getElementById('f-direccion').value}%0A%0A*ITEMS:*%0A`;
+            cart.forEach(i => msg += `- ${i.name} [${i.cVariant || 'STND'}] | S/ ${i.cPrice}%0A`);
+            msg += `%0A*TOTAL A PAGAR: S/ ${document.getElementById('cart-total').innerText}*`;
+
+            setTimeout(() => { window.open(`https://wa.me/51947833118?text=${msg}`); }, 2000);
         }
 
-        function filterProducts(cat) {
-            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(`btn-${cat}`).classList.add('active');
-            renderProducts(cat);
-        }
-
+        // Carga inicial
         renderProducts();
     </script>
 </body>
