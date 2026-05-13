@@ -3,32 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1811 SUPPLY CO.</title>
+    <title>1811 SUPPLY CO. | SHOP</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #0a0a0a; color: #d1d1d1; font-family: 'Inter', sans-serif; margin: 0; }
-        .product-card { background-color: #111111; border: 1px solid #1f1f1f; transition: all 0.3s ease; }
-        .product-card:hover { border-color: #333; }
-        .category-btn { transition: all 0.2s; border-bottom: 2px solid transparent; cursor: pointer; padding-bottom: 4px; white-space: nowrap; font-size: 10px; font-weight: 900; color: #555; }
+        body { background-color: #0a0a0a; color: #d1d1d1; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
+        .product-card { background-color: #111111; border: 1px solid #1f1f1f; transition: all 0.3s; }
+        .category-btn { transition: all 0.2s; border-bottom: 2px solid transparent; cursor: pointer; padding-bottom: 4px; font-size: 10px; font-weight: 900; color: #555; text-transform: uppercase; }
         .category-btn.active { border-color: white; color: white; }
         .variant-btn { border: 1px solid #333; font-size: 9px; padding: 5px 10px; cursor: pointer; color: #666; font-weight: 900; text-transform: uppercase; }
         .variant-btn.selected { background-color: white; color: black; border-color: white; }
+        
+        /* Cart Sidebar */
+        #cart-sidebar { position: fixed; right: -100%; top: 0; width: 350px; height: 100%; background: #0f0f0f; z-index: 200; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-left: 1px solid #222; box-shadow: -10px 0 30px rgba(0,0,0,0.5); }
+        #cart-sidebar.open { right: 0; }
+        .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 150; display: none; }
+        .cart-overlay.active { display: block; }
+        
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .nav-arrow { background: rgba(0,0,0,0.6); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; position: absolute; top: 50%; transform: translateY(-50%); z-index: 30; }
     </style>
 </head>
 <body>
 
+    <!-- Header -->
     <nav class="p-6 sticky top-0 bg-[#0a0a0a] z-[100] border-b border-white/5">
-        <div class="container mx-auto flex justify-center">
-            <a href="index.html">
-                <img src="logo.jpeg" alt="1811 Logo" class="h-20 w-auto object-contain">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="w-10 md:w-32"></div> <!-- Spacer -->
+            <a href="index.html" class="flex justify-center">
+                <img src="logo.jpeg" alt="1811 Logo" class="h-16 md:h-20 w-auto object-contain">
             </a>
+            <button onclick="toggleCart()" class="relative border border-white/10 px-4 py-2 text-[10px] font-black tracking-widest text-white uppercase hover:bg-white hover:text-black transition-all">
+                CARRITO (<span id="cart-count">0</span>)
+            </button>
         </div>
     </nav>
 
-    <!-- Contenedor Principal -->
+    <!-- Overlay Carrito -->
+    <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+
+    <!-- Sidebar Carrito -->
+    <div id="cart-sidebar" class="flex flex-col">
+        <div class="p-6 border-b border-white/5 flex justify-between items-center">
+            <h2 class="text-[11px] font-black tracking-[0.3em] uppercase">Tu Carrito</h2>
+            <button onclick="toggleCart()" class="text-xs text-gray-500 hover:text-white uppercase font-bold">Cerrar</button>
+        </div>
+        <div id="cart-items" class="flex-1 overflow-y-auto p-6 no-scrollbar space-y-6">
+            <!-- Items del carrito -->
+        </div>
+        <div class="p-6 border-t border-white/5 bg-[#141414]">
+            <div class="flex justify-between mb-4">
+                <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Total Estimado</span>
+                <span class="text-white font-black" id="cart-total">S/ 0.00</span>
+            </div>
+            <button onclick="checkoutWhatsApp()" class="w-full bg-white text-black py-4 text-[10px] font-black uppercase tracking-widest hover:bg-gray-200 transition-all">
+                Confirmar Pedido (WhatsApp)
+            </button>
+        </div>
+    </div>
+
+    <!-- Contenido Principal -->
     <div id="main-content">
         <div class="container mx-auto px-6 mt-10">
             <div class="flex gap-8 border-b border-white/5 pb-4 uppercase tracking-widest overflow-x-auto no-scrollbar">
@@ -41,36 +75,33 @@
                 <button onclick="filterProducts('BEADS')" class="category-btn" id="btn-BEADS">BEADS</button>
             </div>
         </div>
-        <main class="container mx-auto p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10" id="products-grid"></main>
+        <main class="container mx-auto p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="products-grid"></main>
     </div>
 
-    <!-- Contenedor de Vista de Producto Único -->
+    <!-- Vista Detalle Producto -->
     <div id="single-product-view" class="hidden container mx-auto p-6 min-h-screen">
-        <button onclick="window.location.href='index.html'" class="mb-8 text-[10px] font-black uppercase tracking-widest text-gray-500">← Volver al catálogo</button>
+        <button onclick="window.history.back()" class="mb-8 text-[10px] font-black uppercase tracking-widest text-gray-500">← Volver</button>
         <div id="product-detail-content"></div>
     </div>
 
     <script>
         const products = [
-            { id: 1, cat: "BOLSOS", name: "UTILITY DOPP KIT DISTRESSED CHOCOLATE", desc: "NECESER TODO TERRENO CON AMPLIO ESPACIO, BOLSILLO CON CIERRE, BOLSILLOS LATERALES Y HANDLE DE DOBLE AGARRE, PERFECTO PARA TUS ARTÍCULOS DE USO DIARIO (ASEO, TECH, ETC.)<br><br>MEDIDAS: 16 cm X 25 cm APROX<br>MATERIALES: CUERO DE RES FULL GRAIN, CANVAS Y CORDURA NYLON.", price: 179, imgs: ["DOPPKITmarron.png", "detalleDOPPKIT.png", "detalleDOPPKIT(2).png"], variants: [] },
-            { id: 2, cat: "BILLETERAS", name: "ZIPPERED WALLET", desc: "BILLETERA MINIMALISTA DE DISEÑO JAPONES PARA TARJETAS, BILLETES Y MONEDAS.<br><br>MEDIDAS: 9.5 CM X 11 CM APROX.<br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE LATÓN MACIZO.", price: 89, imgs: ["ZIPPERED.png", "ZIPPEREDdetalle.png"], variants: [] },
-            { id: 3, cat: "BILLETERAS", name: "GANADERO WALLET", desc: "BIFOLD HÍBRIDA CON ESPACIO PARA TARJETAS, BILLETES Y MINI HERRAMIENTAS.<br><br>MEDIDAS: 10.5 CM X 9 CM APROX.<br>MATERIALES: CUERO DE RES FULL GRAIN Y TELA CORDURA.", price: 109, imgs: ["GANADERO.png", "GANADEROabierto.png", "GANADEROdetalle.png"], varPhotos: { "MARRON": ["GANADERO.png", "GANADEROabierto.png", "GANADEROdetalle.png"], "NEGRO": ["GANADEROnegro.png", "GANADEROnegroabierto.png", "GANADEROdetallenegro.png"] }, variants: ["MARRON", "NEGRO"], selected: "MARRON" },
-            { id: 4, cat: "BILLETERAS", name: "DÍDAC WALLET", desc: "TARJETERO MINIMALISTA PERFECTO PARA USO DIARIO.<br><br>MEDIDAS: 6.7 cm X 10.5 cm APROX.<br>MATERIALES: CUERO DE RES FULL GRAIN.", price: 129, imgs: ["didac.png", "DIDACatras.png"], varPhotos: { "MARRON": ["didac.png", "DIDACatras.png"], "NEGRO": ["DIDACnegro.png"] }, variants: ["MARRON", "NEGRO"], selected: "MARRON" },
-            { id: 5, cat: "ACCESORIOS", name: "MULTITOOL CARD + FUNDA", desc: "TARJETA MULTIHERRAMIENTA CON 10 FUNCIONES.<br>MATERIAL: ACERO INOXIDABLE.", price: 89, imgs: ["MULTITOOL.png", "MULTITOOLfunda.png", "MULTITOOLfundanegra.png"], variants: [] },
-            { id: 6, cat: "ACCESORIOS", name: "UTILITY TRAY", desc: "BANDEJA PARA OBJETOS DE BOLSILLO.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y TELA TWEED.", price: 99, varPhotos: { "SMALL": ["BANDEJAS.png"], "MEDIUM": ["BANDEJAM.png"], "LARGE": ["BANDEJAL.png"] }, varPrices: { "SMALL": 99, "MEDIUM": 129, "LARGE": 159 }, variants: ["SMALL", "MEDIUM", "LARGE"], selected: "SMALL" },
-            { id: 7, cat: "ACCESORIOS", name: "COASTERS", desc: "SET DE POSAVASOS DE CUERO RÚSTICO.<br><br>MATERIALES: CUERO DE RES FULL GRAIN.", price: 89, imgs: ["COASTERS.png", "COASTERsola.png"], varPrices: { "SET DE 4": 89, "SET DE 6": 119 }, variants: ["SET DE 4", "SET DE 6"], selected: "SET DE 4" },
-            { id: 10, cat: "LLAVEROS", name: "EL GANCHO", desc: "LLAVERO CON MOSQUETÓN DE PERFIL TÁCTICO.<br><br>MATERIALES: CUERO DE RES FULL GRAIN.", price: 79, imgs: ["GANCHO.png"], varPhotos: { "MARRON": ["GANCHO.png"], "NEGRO": ["GANCHOnegro.png"] }, variants: ["MARRON", "NEGRO"], selected: "MARRON" },
-            { id: 11, cat: "BEADS", name: "SKULL BEAD", desc: "CUENTA DECORATIVA.<br>MATERIAL: LATÓN MACIZO.", price: 89, imgs: ["SKULLBEAD.png"], variants: [] },
-            { id: 12, cat: "BEADS", name: "BABY DEVIL BEAD", desc: "CUENTA DECORATIVA.<br>MATERIAL: LATON MACIZO.", price: 99, imgs: ["BABYDEVIL.png"], variants: [] }
+            { id: 1, cat: "BOLSOS", name: "UTILITY DOPP KIT DISTRESSED CHOCOLATE", desc: "NECESER TODO TERRENO CON AMPLIO ESPACIO, BOLSILLO CON CIERRE, BOLSILLOS LATERALES Y HANDLE DE DOBLE AGARRE, PERFECTO PARA TUS ARTÍCULOS DE USO DIARIO.<br><br>MEDIDAS: 16 cm X 25 cm APROX<br>MATERIALES: CUERO DE RES FULL GRAIN, CANVAS Y CORDURA.", price: 179, imgs: ["DOPPKITmarron.png", "detalleDOPPKIT.png"], variants: [] },
+            { id: 2, cat: "BILLETERAS", name: "ZIPPERED WALLET", desc: "BILLETERA MINIMALISTA DE DISEÑO JAPONES PARA TARJETAS, BILLETES Y MONEDAS.<br><br>MEDIDAS: 9.5 CM X 11 CM APROX.<br>MATERIALES: CUERO DE RES FULL GRAIN Y LATÓN.", price: 89, imgs: ["ZIPPERED.png", "ZIPPEREDdetalle.png"], variants: [] },
+            { id: 3, cat: "BILLETERAS", name: "GANADERO WALLET", desc: "BIFOLD HÍBRIDA CON ESPACIO PARA TARJETAS, BILLETES Y MINI HERRAMIENTAS.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y TELA CORDURA.", price: 109, imgs: ["GANADERO.png"], varPhotos: { "MARRON": ["GANADERO.png"], "NEGRO": ["GANADEROnegro.png"] }, variants: ["MARRON", "NEGRO"], selected: "MARRON" },
+            { id: 4, cat: "BILLETERAS", name: "DÍDAC WALLET", desc: "TARJETERO MINIMALISTA PERFECTO PARA USO DIARIO.<br><br>MATERIALES: CUERO DE RES FULL GRAIN.", price: 129, imgs: ["didac.png"], varPhotos: { "MARRON": ["didac.png"], "NEGRO": ["DIDACnegro.png"] }, variants: ["MARRON", "NEGRO"], selected: "MARRON" },
+            { id: 6, cat: "ACCESORIOS", name: "UTILITY TRAY", desc: "BANDEJA PARA COLOCAR OBJETOS DE BOLSILLO.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y TELA TWEED.", price: 99, varPhotos: { "SMALL": ["BANDEJAS.png"], "MEDIUM": ["BANDEJAM.png"], "LARGE": ["BANDEJAL.png"] }, varPrices: { "SMALL": 99, "MEDIUM": 129, "LARGE": 159 }, variants: ["SMALL", "MEDIUM", "LARGE"], selected: "SMALL" },
+            { id: 7, cat: "ACCESORIOS", name: "COASTERS", desc: "SET DE POSAVASOS DE CUERO RÚSTICO.<br><br>MATERIALES: CUERO DE RES FULL GRAIN.", price: 89, imgs: ["COASTERS.png"], varPrices: { "SET DE 4": 89, "SET DE 6": 119 }, variants: ["SET DE 4", "SET DE 6"], selected: "SET DE 4" },
+            { id: 10, cat: "LLAVEROS", name: "EL GANCHO", desc: "LLAVERO CON MOSQUETÓN DE PERFIL TÁCTICO.<br><br>MATERIALES: CUERO DE RES FULL GRAIN.", price: 79, imgs: ["GANCHO.png"], varPhotos: { "MARRON": ["GANCHO.png"], "NEGRO": ["GANCHOnegro.png"] }, variants: ["MARRON", "NEGRO"], selected: "MARRON" }
         ];
 
+        let cart = [];
         let currentImgIdx = {};
 
         function init() {
             const params = new URLSearchParams(window.location.search);
-            const productId = params.get('id');
-            if (productId) {
-                showSingleProduct(parseInt(productId));
+            if (params.get('id')) {
+                showSingleProduct(parseInt(params.get('id')));
             } else {
                 render();
             }
@@ -78,25 +109,30 @@
 
         function render(filter = 'TODOS') {
             document.getElementById('main-content').classList.remove('hidden');
+            document.getElementById('single-product-view').classList.add('hidden');
             const grid = document.getElementById('products-grid');
             grid.innerHTML = '';
             const filtered = filter === 'TODOS' ? products : products.filter(p => p.cat === filter);
 
             filtered.forEach(p => {
-                if(currentImgIdx[p.id] === undefined) currentImgIdx[p.id] = 0;
                 let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
                 let price = p.varPrices ? p.varPrices[p.selected] : p.price;
 
                 const div = document.createElement('div');
-                div.className = "product-card p-4 cursor-pointer";
-                div.onclick = () => window.location.href = `?id=${p.id}`;
+                div.className = "product-card p-4";
                 div.innerHTML = `
-                    <div class="aspect-square mb-4 overflow-hidden bg-black">
-                        <img src="${gallery[0]}" class="w-full h-full object-cover">
+                    <div class="aspect-square mb-4 overflow-hidden cursor-pointer bg-black" onclick="window.location.href='?id=${p.id}'">
+                        <img src="${gallery[0]}" class="w-full h-full object-cover hover:scale-105 transition-transform">
                     </div>
-                    <div class="flex justify-between items-start">
-                        <h3 class="font-bold text-[10px] text-white tracking-widest uppercase">${p.name}</h3>
-                        <span class="text-[10px] text-gray-400 font-bold">S/ ${price}</span>
+                    <div class="flex flex-col gap-2">
+                        <div class="flex justify-between items-start">
+                            <h3 class="font-bold text-[9px] text-white tracking-widest uppercase">${p.name}</h3>
+                            <span class="text-[10px] text-gray-400 font-bold">S/ ${price}</span>
+                        </div>
+                        <div class="flex gap-1 mt-1 mb-2">
+                            ${p.variants.map(v => `<button onclick="setVar(${p.id}, '${v}', 'grid')" class="variant-btn ${p.selected === v ? 'selected' : ''}">${v[0]}</button>`).join('')}
+                        </div>
+                        <button onclick="addToCart(${p.id})" class="w-full border border-white/10 py-2 text-[8px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all">Añadir</button>
                     </div>
                 `;
                 grid.appendChild(div);
@@ -124,40 +160,87 @@
                         <img src="${gallery[currentImgIdx[p.id]]}" class="w-full h-full object-cover">
                     </div>
                     <div class="flex flex-col justify-center">
-                        <h1 class="text-2xl font-black text-white tracking-tighter mb-2 uppercase">${p.name}</h1>
-                        <p class="text-xl text-gray-400 mb-8 font-bold">S/ ${price}</p>
+                        <h1 class="text-3xl font-black text-white tracking-tighter mb-2 uppercase">${p.name}</h1>
+                        <p class="text-xl text-gray-500 mb-8 font-bold">S/ ${price}</p>
                         <div class="border-t border-white/10 pt-6 mb-8">
                             <h4 class="text-[10px] font-black uppercase text-white/40 mb-4 tracking-widest">Descripción</h4>
                             <p class="text-xs leading-relaxed text-gray-300 uppercase font-bold">${p.desc}</p>
                         </div>
                         <div class="flex gap-2 mb-10">
-                            ${p.variants.map(v => `<button onclick="setVar(${p.id}, '${v}')" class="variant-btn ${p.selected === v ? 'selected' : ''}">${v}</button>`).join('')}
+                            ${p.variants.map(v => `<button onclick="setVar(${p.id}, '${v}', 'single')" class="variant-btn ${p.selected === v ? 'selected' : ''}">${v}</button>`).join('')}
                         </div>
-                        <button onclick="sendWhatsApp(${p.id})" class="w-full bg-white text-black py-5 text-[11px] font-black uppercase tracking-[0.2em] hover:invert transition-all">Pedir por WhatsApp</button>
+                        <button onclick="addToCart(${p.id})" class="w-full bg-white text-black py-5 text-[11px] font-black uppercase tracking-[0.2em] hover:invert transition-all">Añadir al Carrito</button>
                     </div>
                 </div>
             `;
         }
 
-        function setVar(id, v) {
+        function setVar(id, v, mode) {
             const p = products.find(prod => prod.id === id);
             p.selected = v;
             currentImgIdx[id] = 0;
-            showSingleProduct(id);
+            if(mode === 'single') showSingleProduct(id);
+            else render();
         }
 
-        function changeImg(id, dir) {
-            const p = products.find(prod => prod.id === id);
-            let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
-            currentImgIdx[id] = (currentImgIdx[id] + dir + gallery.length) % gallery.length;
-            showSingleProduct(id);
+        function toggleCart() {
+            document.getElementById('cart-sidebar').classList.toggle('open');
+            document.getElementById('cart-overlay').classList.toggle('active');
         }
 
-        function sendWhatsApp(id) {
+        function addToCart(id) {
             const p = products.find(prod => prod.id === id);
             const price = p.varPrices ? p.varPrices[p.selected] : p.price;
-            const variant = p.selected ? `Variante: ${p.selected}` : '';
-            const msg = `Hola 1811, quisiera comprar:\n\n*${p.name}*\n${variant}\nPrecio: S/ ${price}\n\nLink: ${window.location.href}`;
+            const item = { ...p, currentPrice: price, currentVariant: p.selected };
+            cart.push(item);
+            updateCartUI();
+            if(!document.getElementById('cart-sidebar').classList.contains('open')) toggleCart();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cart-items');
+            const count = document.getElementById('cart-count');
+            const total = document.getElementById('cart-total');
+            
+            count.innerText = cart.length;
+            container.innerHTML = '';
+            let sum = 0;
+
+            cart.forEach((item, index) => {
+                sum += item.currentPrice;
+                let gallery = (item.varPhotos && item.varPhotos[item.currentVariant]) ? item.varPhotos[item.currentVariant] : item.imgs;
+                
+                container.innerHTML += `
+                    <div class="flex gap-4 items-center border-b border-white/5 pb-4">
+                        <img src="${gallery[0]}" class="w-16 h-16 object-cover bg-black">
+                        <div class="flex-1">
+                            <h4 class="text-[9px] font-black text-white uppercase">${item.name}</h4>
+                            <p class="text-[8px] text-gray-500 uppercase">${item.currentVariant || ''}</p>
+                            <p class="text-[10px] font-bold text-white mt-1">S/ ${item.currentPrice}</p>
+                        </div>
+                        <button onclick="removeFromCart(${index})" class="text-xs text-red-900 font-black">✕</button>
+                    </div>
+                `;
+            });
+            total.innerText = `S/ ${sum.toFixed(2)}`;
+        }
+
+        function checkoutWhatsApp() {
+            if(cart.length === 0) return alert("Tu carrito está vacío");
+            let sum = 0;
+            let msg = `Hola 1811, quisiera realizar el siguiente pedido:\n\n`;
+            
+            cart.forEach(item => {
+                msg += `• *${item.name}* ${item.currentVariant ? '('+item.currentVariant+')' : ''} - S/ ${item.currentPrice}\n`;
+                sum += item.currentPrice;
+            });
+            
+            msg += `\n*TOTAL: S/ ${sum.toFixed(2)}*\n\nQuedo atento a tus indicaciones para el pago.`;
             window.open(`https://wa.me/51947833118?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
