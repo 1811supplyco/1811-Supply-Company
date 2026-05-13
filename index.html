@@ -4,84 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>1811 SUPPLY CO. | Official Store</title>
-    <!-- Fuentes: Medici Text (UnifrakturMaguntia) e Inter -->
     <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Tipografía EXACTA para 1811 */
-        .font-1811 { 
-            font-family: 'UnifrakturMaguntia', serif; 
-            font-size: 3.5rem; 
-            color: #ffffff;
-            line-height: 1;
-        }
-        /* Tipografía Coolvetica Style */
-        .font-supply { 
-            font-family: 'Inter', sans-serif; 
-            font-weight: 900; 
-            letter-spacing: -0.05em; 
-            color: #666;
-            font-size: 1.2rem;
-            text-transform: uppercase;
-        }
-        
-        body { background-color: #0a0a0a; color: #d1d1d1; font-family: 'Inter', sans-serif; margin: 0; }
-        
-        /* FUERZA EL COLOR: Eliminamos cualquier rastro de filtros */
-        img { 
-            filter: none !important; 
-            -webkit-filter: grayscale(0%) !important; 
-            filter: grayscale(0%) !important;
-            opacity: 1 !important;
-        }
-
+        .font-1811 { font-family: 'UnifrakturMaguntia', serif; font-size: 3.5rem; color: white; line-height: 1; }
+        .font-supply { font-family: 'Inter', sans-serif; font-weight: 900; letter-spacing: -0.05em; color: #666; font-size: 1.2rem; text-transform: uppercase; }
+        body { background-color: #0a0a0a; color: #d1d1d1; font-family: 'Inter', sans-serif; }
+        img { filter: none !important; opacity: 1 !important; }
         .product-card { background-color: #111111; border: 1px solid #1f1f1f; }
-        .category-btn { transition: all 0.2s; border-bottom: 2px solid transparent; cursor: pointer; padding-bottom: 4px; }
-        .category-btn.active { border-color: #ffffff; color: #ffffff; font-weight: 900; }
-        
+        .category-btn { transition: all 0.2s; border-bottom: 2px solid transparent; cursor: pointer; padding-bottom: 4px; white-space: nowrap; }
+        .category-btn.active { border-color: white; color: white; font-weight: 900; }
         .variant-btn { border: 1px solid #333; font-size: 9px; padding: 4px 8px; cursor: pointer; }
         .variant-btn.selected { background-color: white; color: black; font-weight: 900; }
-
-        input { background: #1a1a1a !important; border: 1px solid #333 !important; color: white !important; padding: 12px !important; width: 100%; margin-bottom: 15px; }
-        label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #555; display: block; margin-bottom: 5px; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
     <nav class="p-8 sticky top-0 bg-[#0a0a0a] z-50 border-b border-white/5">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center gap-4">
                 <span class="font-1811">1811</span>
                 <span class="font-supply">Supply Co.</span>
             </div>
-            <button onclick="toggleCart()" class="text-[10px] font-black tracking-widest text-white">
-                CARRITO (<span id="cart-count">0</span>)
+            <button onclick="toggleCart()" class="text-[10px] font-black tracking-widest text-white uppercase">
+                Carrito (<span id="cart-count">0</span>)
             </button>
         </div>
     </nav>
 
-    <!-- Categorías -->
+    <!-- BARRA DE CATEGORÍAS CORREGIDA -->
     <div class="container mx-auto px-6 mt-10">
-        <div class="flex gap-8 border-b border-white/5 pb-4 text-[10px] font-bold text-gray-500 uppercase tracking-widest overflow-x-auto">
+        <div class="flex gap-8 border-b border-white/5 pb-4 text-[10px] font-bold text-gray-500 uppercase tracking-widest overflow-x-auto no-scrollbar">
             <button onclick="filterProducts('TODOS')" class="category-btn active" id="btn-TODOS">TODOS</button>
             <button onclick="filterProducts('BILLETERAS')" class="category-btn" id="btn-BILLETERAS">BILLETERAS</button>
             <button onclick="filterProducts('ACCESORIOS')" class="category-btn" id="btn-ACCESORIOS">ACCESORIOS</button>
             <button onclick="filterProducts('BOLSOS')" class="category-btn" id="btn-BOLSOS">BOLSOS</button>
             <button onclick="filterProducts('CINTURONES')" class="category-btn" id="btn-CINTURONES">CINTURONES</button>
+            <button onclick="filterProducts('LLAVEROS')" class="category-btn" id="btn-LLAVEROS">LLAVEROS</button>
         </div>
     </div>
 
-    <!-- Tienda -->
     <main class="container mx-auto p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10" id="products-grid"></main>
 
-    <!-- Carrito -->
+    <!-- CARRITO (Oculto) -->
     <div id="cart-modal" class="hidden fixed inset-0 bg-black/95 z-[100] flex justify-end">
         <div class="bg-[#0c0c0c] w-full max-w-md h-full p-10 flex flex-col border-l border-white/10 overflow-y-auto">
             <div id="cart-view">
                 <div class="flex justify-between items-center mb-10 border-b border-white/10 pb-6">
-                    <h2 class="text-xs font-black uppercase text-white tracking-widest">Tu Bolsa</h2>
-                    <button onclick="toggleCart()" class="text-[10px] text-gray-500 uppercase">Cerrar</button>
+                    <h2 class="text-xs font-black uppercase text-white tracking-widest">Tu Selección</h2>
+                    <button onclick="toggleCart()" class="text-[10px] text-gray-500">Cerrar</button>
                 </div>
                 <div id="cart-items" class="space-y-6 mb-10"></div>
                 <div class="border-t border-white/10 pt-8">
@@ -94,15 +66,14 @@
             </div>
 
             <div id="checkout-view" class="hidden">
-                <button onclick="hideCheckout()" class="mb-8 text-[10px] text-gray-500 uppercase font-bold">← Volver</button>
-                <h2 class="text-xs font-black uppercase text-white mb-10 border-b border-white/10 pb-6">Datos de Envío</h2>
-                <form>
-                    <label>Nombres Completos</label><input type="text" id="f-nombre">
-                    <label>DNI</label><input type="number" id="f-dni">
-                    <label>Celular</label><input type="tel" id="f-cel">
-                    <label>Distrito / Provincia</label><input type="text" id="f-distrito">
-                    <label>Dirección y Referencia</label><input type="text" id="f-direccion">
-                    <button type="button" id="pay-button" onclick="processOrder()" class="w-full bg-[#128C7E] text-white py-5 mt-6 font-black uppercase tracking-widest text-[10px]">Haz tu compra por Yape o Plin</button>
+                <button onclick="hideCheckout()" class="mb-8 text-[10px] text-gray-600 uppercase font-bold">← Volver</button>
+                <form class="space-y-4">
+                    <input type="text" id="f-nombre" placeholder="Nombres Completos" class="w-full bg-[#1a1a1a] border border-[#333] p-3 text-white">
+                    <input type="number" id="f-dni" placeholder="DNI" class="w-full bg-[#1a1a1a] border border-[#333] p-3 text-white">
+                    <input type="tel" id="f-cel" placeholder="Celular" class="w-full bg-[#1a1a1a] border border-[#333] p-3 text-white">
+                    <input type="text" id="f-distrito" placeholder="Distrito / Provincia" class="w-full bg-[#1a1a1a] border border-[#333] p-3 text-white">
+                    <input type="text" id="f-direccion" placeholder="Dirección y Referencia" class="w-full bg-[#1a1a1a] border border-[#333] p-3 text-white">
+                    <button type="button" id="pay-button" onclick="processOrder()" class="w-full bg-[#128C7E] text-white py-5 font-black uppercase tracking-widest text-[10px]">Pagar por Yape o Plin</button>
                 </form>
             </div>
         </div>
@@ -110,14 +81,15 @@
 
     <script>
         const products = [
-            { id: 1, cat: "BOLSOS", name: "UTILITY DOPP KIT", desc: "Neceser full grain. 16x25cm.", price: 179, img: "DOPPKITdetalle.png", variants: [] },
-            { id: 2, cat: "BILLETERAS", name: "ZIPPERED WALLET", desc: "Cuero y cremallera de latón.", price: 89, img: "ZIPPERED.png", variants: [] },
+            { id: 1, cat: "BOLSOS", name: "UTILITY DOPP KIT", desc: "Neceser full grain.", price: 179, img: "DOPPKITdetalle.png", variants: [] },
+            { id: 2, cat: "BILLETERAS", name: "ZIPPERED WALLET", desc: "Cuero y latón.", price: 89, img: "ZIPPERED.png", variants: [] },
             { id: 3, cat: "BILLETERAS", name: "GANADERO WALLET", desc: "Híbrida para Victorinox.", price: 109, img: "GANADERO.png", varPhotos: { "NEGRO": "GANADEROnegro.png" }, variants: ["MARRON", "NEGRO"], selected: "MARRON" },
-            { id: 4, cat: "BILLETERAS", name: "DÍDAC WALLET", desc: "Tarjetero minimalista EDC.", price: 129, img: "didac.png", varPhotos: { "NEGRO": "DIDACnegro.png" }, variants: ["MARRON", "NEGRO"], selected: "MARRON" },
-            { id: 5, cat: "ACCESORIOS", name: "MULTITOOL CARD", desc: "Acero inoxidable 10 funciones.", price: 89, img: "MULTITOOL.png", variants: [] },
-            { id: 6, cat: "ACCESORIOS", name: "UTILITY TRAY", desc: "Bandeja de cuero y Tweed.", price: 99, img: "BANDEJAS.png", varPrices: { "SMALL": 99, "MEDIUM": 129, "LARGE": 159 }, variants: ["SMALL", "MEDIUM", "LARGE"], selected: "SMALL" },
-            { id: 7, cat: "ACCESORIOS", name: "PORTALENTES", desc: "Interior suave antirrayones.", price: 99, img: "PORTALENTES.png", variants: [] },
-            { id: 8, cat: "CINTURONES", name: "MIGHTY BELT", desc: "Correa robusta de alta resistencia.", price: 149, img: "MIGHTY.png", variants: [] }
+            { id: 4, cat: "BILLETERAS", name: "DÍDAC WALLET", desc: "Tarjetero minimalista.", price: 129, img: "didac.png", varPhotos: { "NEGRO": "DIDACnegro.png" }, variants: ["MARRON", "NEGRO"], selected: "MARRON" },
+            { id: 5, cat: "ACCESORIOS", name: "MULTITOOL CARD", desc: "10 funciones.", price: 89, img: "MULTITOOL.png", variants: [] },
+            { id: 6, cat: "ACCESORIOS", name: "UTILITY TRAY", desc: "Bandeja de cuero.", price: 99, img: "BANDEJAS.png", varPrices: { "SMALL": 99, "MEDIUM": 129, "LARGE": 159 }, variants: ["SMALL", "MEDIUM", "LARGE"], selected: "SMALL" },
+            { id: 7, cat: "ACCESORIOS", name: "PORTALENTES", desc: "Interior suave.", price: 99, img: "PORTALENTES.png", variants: [] },
+            { id: 8, cat: "CINTURONES", name: "MIGHTY BELT", desc: "Correa robusta.", price: 149, img: "MIGHTY.png", variants: [] },
+            { id: 9, cat: "LLAVEROS", name: "EDC KEYCHAIN", desc: "Organizador de llaves de cuero.", price: 45, img: "LLAVERO.png", variants: [] } // Ejemplo llavero
         ];
 
         let cart = [];
@@ -128,19 +100,23 @@
             
             const filtered = filter === 'TODOS' ? products : products.filter(p => p.cat === filter);
 
+            if(filtered.length === 0) {
+                grid.innerHTML = '<p class="text-gray-600 uppercase text-[10px] tracking-widest p-10">Próximamente...</p>';
+                return;
+            }
+
             filtered.forEach(p => {
-                const currentImg = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.img;
-                const currentPrice = p.varPrices ? p.varPrices[p.selected] : p.price;
+                const img = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.img;
+                const price = p.varPrices ? p.varPrices[p.selected] : p.price;
 
                 const div = document.createElement('div');
                 div.className = "product-card p-6";
                 div.innerHTML = `
-                    <img src="${currentImg}" class="w-full aspect-square object-cover mb-6">
+                    <img src="${img}" class="w-full aspect-square object-cover mb-6">
                     <div class="flex justify-between items-start mb-2">
                         <h3 class="font-black text-[11px] text-white tracking-widest uppercase">${p.name}</h3>
-                        <span class="text-xs text-gray-400">S/ ${currentPrice}</span>
+                        <span class="text-xs text-gray-400">S/ ${price}</span>
                     </div>
-                    <p class="text-[9px] text-gray-600 uppercase mb-6 h-8">${p.desc}</p>
                     <div class="flex gap-2 mb-8 h-8">
                         ${p.variants.map(v => `<button onclick="setVar(${p.id}, '${v}', '${filter}')" class="variant-btn ${p.selected === v ? 'selected' : ''}">${v}</button>`).join('')}
                     </div>
@@ -150,73 +126,43 @@
             });
         }
 
-        function setVar(id, v, f) {
-            const p = products.find(prod => prod.id === id);
-            p.selected = v;
-            render(f);
-        }
-
         function filterProducts(cat) {
             document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(`btn-${cat}`).classList.add('active');
             render(cat);
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // Te lleva arriba para ver los nuevos productos
         }
 
-        function add(id) {
-            const p = products.find(prod => prod.id === id);
-            cart.push({
-                name: p.name,
-                price: p.varPrices ? p.varPrices[p.selected] : p.price,
-                variant: p.selected || 'Estándar',
-                img: (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.img
-            });
-            updateCart();
-            toggleCart(true);
+        // Funciones de Carrito
+        function setVar(id, v, f) { const p = products.find(prod => prod.id === id); p.selected = v; render(f); }
+        function add(id) { 
+            const p = products.find(prod => prod.id === id); 
+            cart.push({ name: p.name, price: p.varPrices ? p.varPrices[p.selected] : p.price, img: (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.img }); 
+            updateCart(); 
+            toggleCart(true); 
         }
-
-        function updateCart() {
-            document.getElementById('cart-count').innerText = cart.length;
+        function updateCart() { 
+            document.getElementById('cart-count').innerText = cart.length; 
             document.getElementById('cart-items').innerHTML = cart.map((item, i) => `
                 <div class="flex gap-4 items-center border-b border-white/5 pb-4">
                     <img src="${item.img}" class="w-16 h-16 object-cover">
-                    <div class="flex-grow">
-                        <h4 class="text-[10px] font-black text-white uppercase">${item.name}</h4>
-                        <p class="text-[9px] text-white">S/ ${item.price}</p>
-                    </div>
-                    <button onclick="remove(${i})" class="text-red-900 px-2">✕</button>
-                </div>
-            `).join('');
+                    <div class="flex-grow text-[10px] uppercase font-black">${item.name}<br>S/ ${item.price}</div>
+                    <button onclick="remove(${i})" class="text-red-900">✕</button>
+                </div>`).join('');
             document.getElementById('cart-total').innerText = cart.reduce((s, i) => s + i.price, 0);
         }
-
         function remove(i) { cart.splice(i, 1); updateCart(); }
-        function toggleCart(s) { 
-            const m = document.getElementById('cart-modal');
-            if(s === true) m.classList.remove('hidden');
-            else if(s === false) m.classList.add('hidden');
-            else m.classList.toggle('hidden');
-        }
+        function toggleCart(s) { const m = document.getElementById('cart-modal'); s === true ? m.classList.remove('hidden') : (s === false ? m.classList.add('hidden') : m.classList.toggle('hidden')); }
         function showCheckout() { if(cart.length > 0) { document.getElementById('cart-view').classList.add('hidden'); document.getElementById('checkout-view').classList.remove('hidden'); } }
         function hideCheckout() { document.getElementById('cart-view').classList.remove('hidden'); document.getElementById('checkout-view').classList.add('hidden'); }
 
         async function processOrder() {
-            const campos = ['f-nombre', 'f-dni', 'f-cel', 'f-distrito', 'f-direccion'];
-            for(let f of campos) if(!document.getElementById(f).value) return alert("Completa los datos");
-
-            const btn = document.getElementById('pay-button');
             await navigator.clipboard.writeText("979253928");
-            btn.innerText = "NÚMERO COPIADO - ABRE YAPE";
-            btn.classList.replace('bg-[#128C7E]', 'bg-white');
-            btn.classList.replace('text-white', 'text-black');
-
-            let msg = `🔥 *ORDEN 1811* 🔥%0A%0A*CLIENTE:* ${document.getElementById('f-nombre').value}%0A*DNI:* ${document.getElementById('f-dni').value}%0A*CEL:* ${document.getElementById('f-cel').value}%0A*DESTINO:* ${document.getElementById('f-distrito').value}%0A*DIR:* ${document.getElementById('f-direccion').value}%0A%0A*PEDIDO:*%0A`;
-            cart.forEach(i => msg += `- ${i.name} [${i.variant}] | S/ ${i.price}%0A`);
-            msg += `%0A*TOTAL: S/ ${document.getElementById('cart-total').innerText}*`;
-            
-            setTimeout(() => { window.open(`https://wa.me/51947833118?text=${msg}`); }, 2000);
+            document.getElementById('pay-button').innerText = "NÚMERO COPIADO";
+            let msg = `🔥 *ORDEN 1811* 🔥%0A%0A*CLIENTE:* ${document.getElementById('f-nombre').value}%0A*CEL:* ${document.getElementById('f-cel').value}%0A%0A*TOTAL: S/ ${document.getElementById('cart-total').innerText}*`;
+            setTimeout(() => { window.open(`https://wa.me/51947833118?text=${msg}`); }, 1000);
         }
 
-        // Carga inicial
         render();
     </script>
 </body>
