@@ -4,17 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>1811 SUPPLY CO. | Official Store</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- Fuentes: Medici (UnifrakturMaguntia) e Inter (Base) -->
+    <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* Tipografías Personalizadas */
+        .font-1811 { font-family: 'UnifrakturMaguntia', serif; font-size: 2.2rem; line-height: 1; }
+        .font-supply { font-family: 'Helvetica', 'Arial', sans-serif; font-weight: 700; letter-spacing: -0.02em; } /* Coolvetica Style */
+        
         body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: #d1d1d1; }
-        .product-card { background-color: #111111; border: 1px solid #1f1f1f; transition: all 0.3s ease; }
-        .variant-btn { border: 1px solid #333; transition: all 0.2s; font-size: 8px; letter-spacing: 0.1em; }
+        .product-card { background-color: #111111; border: 1px solid #1f1f1f; }
+        .variant-btn { border: 1px solid #333; transition: all 0.2s; font-size: 8px; }
         .variant-btn.selected { background-color: white; color: black; border-color: white; font-weight: 900; }
         .category-btn { transition: all 0.2s ease; border-bottom: 2px solid transparent; }
         .category-btn.active { border-color: #ffffff; color: #ffffff; font-weight: 900; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Inputs del Formulario */
+        input { background: #1a1a1a !important; border: 1px solid #333 !important; color: white !important; font-size: 12px !important; padding: 12px !important; border-radius: 2px !important; }
+        input:focus { border-color: #666 !important; outline: none; }
+        label { font-[9px]; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #666; margin-bottom: 4px; display: block; }
     </style>
 </head>
 <body>
@@ -22,7 +30,10 @@
     <!-- Navbar -->
     <nav class="p-6 sticky top-0 bg-[#0a0a0a]/95 backdrop-blur-xl z-50 border-b border-white/5">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-black tracking-[0.3em] text-white uppercase">1811 <span class="text-gray-600 font-light text-sm">Supply Co.</span></h1>
+            <div class="flex items-baseline gap-2">
+                <span class="font-1811 text-white">1811</span>
+                <span class="font-supply text-gray-500 text-lg">Supply Co.</span>
+            </div>
             <button onclick="toggleCart()" class="text-[10px] font-bold tracking-widest uppercase flex items-center gap-2">
                 CARRITO <span id="cart-count" class="bg-white text-black px-2 py-0.5 rounded-sm">0</span>
             </button>
@@ -37,8 +48,6 @@
             <button onclick="filterProducts('ACCESORIOS')" class="category-btn" id="btn-ACCESORIOS">ACCESORIOS</button>
             <button onclick="filterProducts('BOLSOS')" class="category-btn" id="btn-BOLSOS">BOLSOS</button>
             <button onclick="filterProducts('CINTURONES')" class="category-btn" id="btn-CINTURONES">CINTURONES</button>
-            <button onclick="filterProducts('BEADS')" class="category-btn" id="btn-BEADS">BEADS</button>
-            <button onclick="filterProducts('LLAVEROS')" class="category-btn" id="btn-LLAVEROS">LLAVEROS</button>
         </div>
     </div>
 
@@ -47,77 +56,74 @@
 
     <!-- Modal Carrito -->
     <div id="cart-modal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-md z-[100] flex justify-end">
-        <div class="bg-[#0f0f0f] w-full max-w-md h-full p-8 flex flex-col border-l border-white/10 shadow-2xl">
-            <div class="flex justify-between items-center mb-10 border-b border-white/5 pb-6">
-                <h2 class="text-sm font-black tracking-widest uppercase text-white">Tu Selección</h2>
-                <button onclick="toggleCart()" class="text-[9px] uppercase font-bold text-gray-500">Cerrar</button>
-            </div>
-            <div id="cart-items" class="flex-grow overflow-y-auto space-y-6 no-scrollbar"></div>
-            <div class="border-t border-white/10 pt-8 mt-6">
-                <div class="flex justify-between items-center mb-8 px-2">
-                    <span class="uppercase text-[9px] tracking-widest font-bold text-gray-500">Total Neto</span>
-                    <span class="text-2xl font-light text-white">S/ <span id="cart-total">0</span></span>
+        <div class="bg-[#0f0f0f] w-full max-w-md h-full p-8 flex flex-col border-l border-white/10 shadow-2xl overflow-y-auto">
+            
+            <!-- Sección 1: Items del Carrito -->
+            <div id="cart-view">
+                <div class="flex justify-between items-center mb-10 border-b border-white/5 pb-6">
+                    <h2 class="text-sm font-black tracking-widest uppercase text-white">Tu Selección</h2>
+                    <button onclick="toggleCart()" class="text-[9px] uppercase font-bold text-gray-500">Cerrar</button>
                 </div>
-                <button onclick="sendWhatsApp()" class="w-full bg-[#128C7E] hover:bg-[#075E54] text-white py-5 font-black uppercase tracking-[0.2em] text-[10px] transition-all flex justify-center items-center gap-3 shadow-lg">
-                    Confirmar Pedido (WhatsApp)
-                </button>
+                <div id="cart-items" class="space-y-6 mb-8"></div>
+                <div class="border-t border-white/10 pt-8">
+                    <div class="flex justify-between items-center mb-8">
+                        <span class="text-[9px] font-bold text-gray-500 uppercase">Total</span>
+                        <span class="text-2xl font-light text-white">S/ <span id="cart-total">0</span></span>
+                    </div>
+                    <button onclick="showCheckout()" class="w-full bg-white text-black py-5 font-black uppercase tracking-[0.2em] text-[10px]">
+                        Continuar con el Pedido
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sección 2: Formulario de Despacho (Oculto inicialmente) -->
+            <div id="checkout-view" class="hidden">
+                <button onclick="hideCheckout()" class="mb-6 text-[9px] text-gray-500 uppercase font-bold">← Volver al carrito</button>
+                <h2 class="text-sm font-black tracking-widest uppercase text-white mb-8 border-b border-white/5 pb-4">Datos de Envío</h2>
+                
+                <form id="shipping-form" class="space-y-4">
+                    <div>
+                        <label>Nombres y Apellidos</label>
+                        <input type="text" id="f-nombre" class="w-full" required>
+                    </div>
+                    <div>
+                        <label>DNI</label>
+                        <input type="number" id="f-dni" class="w-full" required>
+                    </div>
+                    <div>
+                        <label>Celular</label>
+                        <input type="tel" id="f-cel" class="w-full" required>
+                    </div>
+                    <div>
+                        <label>Distrito / Provincia</label>
+                        <input type="text" id="f-distrito" class="w-full" required>
+                    </div>
+                    <div>
+                        <label>Dirección y Referencia</label>
+                        <input type="text" id="f-direccion" class="w-full" required>
+                    </div>
+
+                    <div class="pt-6">
+                        <button type="button" id="pay-button" onclick="processFinalOrder()" class="w-full bg-[#128C7E] text-white py-5 font-black uppercase tracking-[0.15em] text-[10px] transition-all">
+                            Haz tu compra por Yape o Plin
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
     <script>
+        // Los productos mantienen la estructura anterior
         const products = [
-            { 
-                id: 1, category: "BOLSOS", name: "UTILITY DOPP KIT", description: "Neceser todo terreno full grain. Medidas: 16x25cm.", price: 179, 
-                imgs: ["DOPPKITdetalle.png", "detalleDOPPKIT.png", "detalleDOPPKIT(2).png"], currentImg: 0, variants: [], selectedVariant: "" 
-            },
-            { 
-                id: 2, category: "BILLETERAS", name: "ZIPPERED WALLET", description: "Minimalista diseño japonés. Cuero full grain y latón.", price: 89, 
-                imgs: ["ZIPPERED.png", "ZIPPEREDdetalle.png"], currentImg: 0, variants: [], selectedVariant: "" 
-            },
-            { 
-                id: 3, category: "BILLETERAS", name: "GANADERO WALLET", description: "Bifold híbrida con espacios para Victorinox.", price: 109, 
-                imgs: ["GANADERO.png", "GANADEROabierto.png", "GANADEROdetalle.png"], 
-                variantPhotos: { "NEGRO": ["GANADEROnegro.png", "GANADEROnegroabierto.png", "GANADEROdetallenegro.png"] },
-                currentImg: 0, variants: ["MARRON", "NEGRO"], selectedVariant: "MARRON" 
-            },
-            { 
-                id: 4, category: "BILLETERAS", name: "DÍDAC WALLET", description: "Tarjetero minimalista para uso diario.", price: 129, 
-                imgs: ["didac.png", "DIDACatras.png"], 
-                variantPhotos: { "NEGRO": ["DIDACnegro.png"] },
-                currentImg: 0, variants: ["MARRON", "NEGRO"], selectedVariant: "MARRON" 
-            },
-            { 
-                id: 5, category: "ACCESORIOS", name: "MULTITOOL CARD + FUNDA", description: "Tarjeta 10 funciones en acero inoxidable.", price: 89, 
-                imgs: ["MULTITOOL.png", "MULTITOOLfunda.png", "MULTITOOLfundanegra.png"], currentImg: 0, variants: [], selectedVariant: "" 
-            },
-            { 
-                id: 6, category: "ACCESORIOS", name: "UTILITY TRAY", description: "Bandeja para objetos de bolsillo. Tweed y cuero.", price: 99, 
-                imgs: ["BANDEJAS.png"], 
-                variantPhotos: { "MEDIUM": ["BANDEJAM.png"], "LARGE": ["BANDEJAL.png"], "SMALL": ["BANDEJAS.png"] },
-                variantPrices: { "SMALL": 99, "MEDIUM": 129, "LARGE": 159 },
-                currentImg: 0, variants: ["SMALL", "MEDIUM", "LARGE"], selectedVariant: "SMALL" 
-            },
-            { 
-                id: 7, category: "ACCESORIOS", name: "PORTALENTES", description: "Funda con interior antirrayones y ojal.", price: 99, 
-                imgs: ["PORTALENTES.png", "PORTALENTESatras.png"], currentImg: 0, variants: [], selectedVariant: "" 
-            },
-            { 
-                id: 8, category: "CINTURONES", name: "MIGHTY BELT BLACK BUCKLE", description: "Correa todo terreno, acero pavonado negro.", price: 149, 
-                imgs: ["MIGHTY.png", "MIGHTYcompleta.png"], currentImg: 0, variants: [], selectedVariant: "" 
-            },
-            { 
-                id: 9, category: "LLAVEROS", name: "EL GANCHO", description: "Llavero mosquetón táctico acero inoxidable.", price: 79, 
-                imgs: ["GANCHO.png"], currentImg: 0, variants: ["MARRON", "NEGRO"], selectedVariant: "MARRON" 
-            },
-            { 
-                id: 10, category: "BEADS", name: "SKULL BEAD", description: "Cuenta decorativa latón macizo.", price: 89, 
-                imgs: ["BABYDEVIL.png"], currentImg: 0, variants: [], selectedVariant: "" 
-            },
-            { 
-                id: 11, category: "BEADS", name: "BABY DEVIL BEAD", description: "Cuenta decorativa latón macizo.", price: 99, 
-                imgs: ["SKULLBEAD.png"], currentImg: 0, variants: [], selectedVariant: "" 
-            }
+            { id: 1, category: "BOLSOS", name: "UTILITY DOPP KIT", description: "Neceser todo terreno full grain.", price: 179, imgs: ["DOPPKITdetalle.png"], variants: [], selectedVariant: "" },
+            { id: 2, category: "BILLETERAS", name: "ZIPPERED WALLET", description: "Minimalista diseño japonés.", price: 89, imgs: ["ZIPPERED.png"], variants: [], selectedVariant: "" },
+            { id: 3, category: "BILLETERAS", name: "GANADERO WALLET", description: "Bifold híbrida con espacios para Victorinox.", price: 109, imgs: ["GANADERO.png"], variantPhotos: { "NEGRO": ["GANADEROnegro.png"] }, variants: ["MARRON", "NEGRO"], selectedVariant: "MARRON" },
+            { id: 4, category: "BILLETERAS", name: "DÍDAC WALLET", description: "Tarjetero minimalista para uso diario.", price: 129, imgs: ["didac.png"], variantPhotos: { "NEGRO": ["DIDACnegro.png"] }, variants: ["MARRON", "NEGRO"], selectedVariant: "MARRON" },
+            { id: 5, category: "ACCESORIOS", name: "MULTITOOL CARD + FUNDA", description: "Tarjeta 10 funciones en acero inoxidable.", price: 89, imgs: ["MULTITOOL.png"], variants: [], selectedVariant: "" },
+            { id: 6, category: "ACCESORIOS", name: "UTILITY TRAY", description: "Bandeja para objetos de bolsillo.", price: 99, imgs: ["BANDEJAS.png"], variantPrices: { "SMALL": 99, "MEDIUM": 129, "LARGE": 159 }, variants: ["SMALL", "MEDIUM", "LARGE"], selectedVariant: "SMALL" },
+            { id: 7, category: "ACCESORIOS", name: "PORTALENTES", description: "Funda con interior antirrayones.", price: 99, imgs: ["PORTALENTES.png"], variants: [], selectedVariant: "" },
+            { id: 8, category: "CINTURONES", name: "MIGHTY BELT", description: "Correa todo terreno, acero pavonado.", price: 149, imgs: ["MIGHTY.png"], variants: [], selectedVariant: "" }
         ];
 
         let cart = [];
@@ -125,103 +131,107 @@
         function renderProducts(filter = 'TODOS') {
             const grid = document.getElementById('products-grid');
             const filtered = filter === 'TODOS' ? products : products.filter(p => p.category === filter);
-            
-            grid.innerHTML = filtered.map((p) => {
-                const pIdx = products.findIndex(prod => prod.id === p.id);
-                // Determinar qué imagen mostrar según variante
-                let displayImg = p.imgs[p.currentImg];
-                if(p.variantPhotos && p.variantPhotos[p.selectedVariant]) {
-                    displayImg = p.variantPhotos[p.selectedVariant][p.currentImg] || p.variantPhotos[p.selectedVariant][0];
-                }
-                // Determinar precio si tiene variantes de precio (Trays)
+            grid.innerHTML = filtered.map((p, pIdx) => {
+                let displayImg = p.imgs[0];
+                if(p.variantPhotos && p.variantPhotos[p.selectedVariant]) displayImg = p.variantPhotos[p.selectedVariant][0];
                 const displayPrice = p.variantPrices ? p.variantPrices[p.selectedVariant] : p.price;
-
                 return `
                 <div class="product-card p-5 rounded-sm">
-                    <div class="relative aspect-square mb-6 overflow-hidden bg-black">
-                        <img id="img-${pIdx}" onclick="nextImg(${pIdx})" src="${displayImg}" class="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity cursor-pointer">
-                    </div>
+                    <img src="${displayImg}" class="w-full aspect-square object-cover mb-4 grayscale hover:grayscale-0 transition-all">
                     <div class="flex justify-between items-start mb-1">
                         <h3 class="font-black text-[10px] uppercase tracking-widest text-white">${p.name}</h3>
                         <span class="text-xs font-light">S/ ${displayPrice}</span>
                     </div>
-                    <p class="text-[8px] text-gray-600 uppercase tracking-tight mb-4 h-8 overflow-hidden">${p.description}</p>
-                    
-                    ${p.variants.length > 0 ? `
-                        <div class="flex flex-wrap gap-2 mb-6">
-                            ${p.variants.map(v => `
-                                <button onclick="selectVariant(${pIdx}, '${v}')" 
-                                        class="variant-btn px-2 py-1 uppercase tracking-tighter ${p.selectedVariant === v ? 'selected' : ''}">${v}</button>
-                            `).join('')}
-                        </div>
-                    ` : '<div class="h-10"></div>'}
-
-                    <button onclick="addToCart(${p.id})" class="w-full bg-white text-black py-4 text-[9px] font-black uppercase tracking-[0.3em] hover:bg-gray-200 active:scale-95 transition-all">
-                        Añadir a la Bolsa
-                    </button>
-                </div>
-            `}).join('');
+                    <div class="flex gap-2 mb-4">${p.variants.map(v => `<button onclick="selectVariant(${products.indexOf(p)}, '${v}')" class="variant-btn px-2 py-1 uppercase ${p.selectedVariant === v ? 'selected' : ''}">${v}</button>`).join('')}</div>
+                    <button onclick="addToCart(${p.id})" class="w-full bg-white text-black py-4 text-[9px] font-black uppercase tracking-[0.3em]">Añadir</button>
+                </div>`;
+            }).join('');
         }
 
-        function selectVariant(pIdx, variant) {
-            products[pIdx].selectedVariant = variant;
-            products[pIdx].currentImg = 0; // Reiniciar a la primera foto de la variante
-            renderProducts(document.querySelector('.category-btn.active').innerText);
-        }
-
-        function nextImg(idx) {
-            const p = products[idx];
-            const currentList = (p.variantPhotos && p.variantPhotos[p.selectedVariant]) ? p.variantPhotos[p.selectedVariant] : p.imgs;
-            p.currentImg = (p.currentImg + 1) % currentList.length;
-            document.getElementById(`img-${idx}`).src = currentList[p.currentImg];
-        }
-
-        function filterProducts(category) {
-            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`btn-${category}`).classList.add('active');
-            renderProducts(category);
-        }
-
+        function selectVariant(idx, v) { products[idx].selectedVariant = v; renderProducts(); }
+        
         function addToCart(id) {
             const p = products.find(prod => prod.id === id);
-            const finalPrice = p.variantPrices ? p.variantPrices[p.selectedVariant] : p.price;
-            cart.push({...p, cartPrice: finalPrice, cartVariant: p.selectedVariant});
+            cart.push({...p, cartPrice: p.variantPrices ? p.variantPrices[p.selectedVariant] : p.price, cartVariant: p.selectedVariant});
             updateCart();
-            if(window.innerWidth > 768) toggleCart();
+            toggleCart(true);
         }
 
         function updateCart() {
             document.getElementById('cart-count').innerText = cart.length;
-            const itemsContainer = document.getElementById('cart-items');
-            itemsContainer.innerHTML = cart.map((item, index) => {
+            document.getElementById('cart-items').innerHTML = cart.map((item, index) => {
                 const img = (item.variantPhotos && item.variantPhotos[item.cartVariant]) ? item.variantPhotos[item.cartVariant][0] : item.imgs[0];
-                return `
-                <div class="flex gap-4 items-center border-b border-white/5 pb-4">
-                    <img src="${img}" class="w-12 h-12 object-cover grayscale">
+                return `<div class="flex gap-4 items-center border-b border-white/5 pb-4">
+                    <img src="${img}" class="w-14 h-14 object-cover"> <!-- A color en carrito -->
                     <div class="flex-grow">
                         <h4 class="text-[9px] font-black uppercase text-white">${item.name}</h4>
-                        <p class="text-[7px] text-gray-500 uppercase italic">${item.cartVariant || 'Standard'}</p>
-                        <p class="text-[10px] text-white mt-1">S/ ${item.cartPrice}</p>
+                        <p class="text-[7px] text-gray-500 italic">${item.cartVariant || ''}</p>
+                        <p class="text-[10px] text-white">S/ ${item.cartPrice}</p>
                     </div>
-                    <button onclick="removeFromCart(${index})" class="text-red-900 hover:text-red-500">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                    </button>
-                </div>
-            `}).join('');
-            const total = cart.reduce((sum, item) => sum + item.cartPrice, 0);
-            document.getElementById('cart-total').innerText = total;
+                    <button onclick="removeFromCart(${index})" class="text-red-700">X</button>
+                </div>`;
+            }).join('');
+            document.getElementById('cart-total').innerText = cart.reduce((sum, i) => sum + i.cartPrice, 0);
         }
 
         function removeFromCart(idx) { cart.splice(idx, 1); updateCart(); }
-        function toggleCart() { document.getElementById('cart-modal').classList.toggle('hidden'); }
+        
+        function toggleCart(forceOpen = false) {
+            const modal = document.getElementById('cart-modal');
+            if(forceOpen) modal.classList.remove('hidden');
+            else modal.classList.toggle('hidden');
+            hideCheckout();
+        }
 
-        function sendWhatsApp() {
-            if (cart.length === 0) return;
-            const phone = "51947833118";
-            let msg = "1811 SUPPLY CO. | NUEVO PEDIDO%0A%0A";
-            cart.forEach((item, i) => msg += `${i+1}. ${item.name} (${item.cartVariant || 'STND'}) | S/ ${item.cartPrice}%0A`);
-            msg += `%0A*TOTAL: S/ ${document.getElementById('cart-total').innerText}*%0A%0A_Favor confirmar disponibilidad._`;
-            window.open(`https://wa.me/${phone}?text=${msg}`);
+        function showCheckout() {
+            if(cart.length === 0) return alert("Tu carrito está vacío");
+            document.getElementById('cart-view').classList.add('hidden');
+            document.getElementById('checkout-view').classList.remove('hidden');
+        }
+
+        function hideCheckout() {
+            document.getElementById('cart-view').classList.remove('hidden');
+            document.getElementById('checkout-view').classList.add('hidden');
+        }
+
+        async function processFinalOrder() {
+            const btn = document.getElementById('pay-button');
+            const numYape = "979253928";
+            const phoneOwner = "51947833118";
+
+            // 1. Validar campos
+            const campos = ['f-nombre', 'f-dni', 'f-cel', 'f-distrito', 'f-direccion'];
+            for(let id of campos) {
+                if(!document.getElementById(id).value) return alert("Por favor completa todos los datos de envío");
+            }
+
+            // 2. Copiar número al portapapeles
+            try {
+                await navigator.clipboard.writeText(numYape);
+                btn.innerText = "PEGA ESTE NUMERO EN YAPE O PLIN";
+                btn.classList.replace('bg-[#128C7E]', 'bg-white');
+                btn.classList.replace('text-white', 'text-black');
+            } catch (err) { console.error('Error al copiar'); }
+
+            // 3. Generar mensaje de WhatsApp
+            let orderMsg = `🔥 *NUEVO PEDIDO 1811* 🔥%0A%0A`;
+            orderMsg += `*CLIENTE:* ${document.getElementById('f-nombre').value}%0A`;
+            orderMsg += `*DNI:* ${document.getElementById('f-dni').value}%0A`;
+            orderMsg += `*CEL:* ${document.getElementById('f-cel').value}%0A`;
+            orderMsg += `*DESTINO:* ${document.getElementById('f-distrito').value}%0A`;
+            orderMsg += `*DIRECCIÓN:* ${document.getElementById('f-direccion').value}%0A%0A`;
+            orderMsg += `*PRODUCTOS:*%0A`;
+            
+            cart.forEach((item, i) => {
+                orderMsg += `- ${item.name} (${item.cartVariant || 'STND'}) | S/ ${item.cartPrice}%0A`;
+            });
+
+            orderMsg += `%0A*TOTAL A PAGAR: S/ ${document.getElementById('cart-total').innerText}*`;
+
+            // Esperar un momento para que el usuario vea el cambio de texto del botón y luego redirigir
+            setTimeout(() => {
+                window.open(`https://wa.me/${phoneOwner}?text=${orderMsg}`);
+            }, 1500);
         }
 
         renderProducts();
