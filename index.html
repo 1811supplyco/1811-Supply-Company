@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1811 SUPPLY CO. | SHOP</title>
+    <title>1811 Supply Co. | Shop</title>
     <link rel="icon" type="image/jpeg" href="logo.jpeg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -404,7 +404,7 @@
             total.innerText = `S/ ${sum.toFixed(2)}`;
         }
 
-        function checkoutWhatsApp() {
+       function checkoutWhatsApp() {
             if(cart.length === 0) return;
             let sum = 0;
             let msg = `Hola 1811, quisiera realizar este pedido:\n\n`;
@@ -415,11 +415,25 @@
             msg += `\n*TOTAL ESTIMADO: S/ ${sum.toFixed(2)}*`;
             
             const phone = "51947833118";
-            // Usamos la API oficial que es la más recomendada para evitar bloqueos del navegador
-            const waUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`;
+            const encodedMsg = encodeURIComponent(msg);
+
+            // Intentamos el protocolo directo de la App primero
+            // Este formato suele saltarse la ventana de confirmación en la mayoría de visores de IG/FB
+            const whatsappUrl = `whatsapp://send?phone=${phone}&text=${encodedMsg}`;
             
-            // Intentamos abrirlo en una ventana nueva
-            window.open(waUrl, '_blank');
+            // Creamos un enlace invisible y simulamos el click para forzar la respuesta del sistema operativo
+            const link = document.createElement('a');
+            link.href = whatsappUrl;
+            link.setAttribute('target', '_self'); // Importante: _self ayuda a que no abra una pestaña en blanco
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Como respaldo (fallback), si en 500ms no ha salido de la web, usamos el método tradicional
+            setTimeout(() => {
+                window.location.href = `https://api.whatsapp.com/send?phone=${phone}&text=${encodedMsg}`;
+            }, 500);
         }
 
         init();
