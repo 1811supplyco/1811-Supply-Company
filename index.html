@@ -412,28 +412,25 @@
                 msg += `• *${item.name}* ${item.currentVariant ? '('+item.currentVariant+')' : ''} - S/ ${item.currentPrice}\n`;
                 sum += item.currentPrice;
             });
-            msg += `\n*TOTAL ESTIMADO: S/ ${sum.toFixed(2)}*`;
+            msg += `\n*TOTAL: S/ ${sum.toFixed(2)}*`;
             
             const phone = "51947833118";
             const encodedMsg = encodeURIComponent(msg);
-
-            // Intentamos el protocolo directo de la App primero
-            // Este formato suele saltarse la ventana de confirmación en la mayoría de visores de IG/FB
-            const whatsappUrl = `whatsapp://send?phone=${phone}&text=${encodedMsg}`;
             
-            // Creamos un enlace invisible y simulamos el click para forzar la respuesta del sistema operativo
-            const link = document.createElement('a');
-            link.href = whatsappUrl;
-            link.setAttribute('target', '_self'); // Importante: _self ayuda a que no abra una pestaña en blanco
-            
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            // Usamos el esquema de URL "wa.me" sin el "https://" inicial en algunos casos, 
+            // pero para forzar el salto desde Instagram, el protocolo 'whatsapp://' es el más directo.
+            const directAppUrl = `whatsapp://send?phone=${phone}&text=${encodedMsg}`;
+            const webFallbackUrl = `https://wa.me/${phone}?text=${encodedMsg}`;
 
-            // Como respaldo (fallback), si en 500ms no ha salido de la web, usamos el método tradicional
-            setTimeout(() => {
-                window.location.href = `https://api.whatsapp.com/send?phone=${phone}&text=${encodedMsg}`;
-            }, 500);
+            // Intentamos el salto directo al sistema operativo
+            // Esto intenta "ganarle" a la validación de Meta al no usar una URL web estándar (http)
+            window.location.replace(directAppUrl);
+
+            // Si el protocolo directo falla (ej. en escritorio o si no reconoce el deep link), 
+            // enviamos a la versión web optimizada en un tiempo mínimo.
+            setTimeout(function() {
+                window.location.href = webFallbackUrl;
+            }, 100);
         }
 
         init();
