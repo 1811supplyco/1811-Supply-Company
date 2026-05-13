@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1811 Supply Co. | Shop</title>
+    <title>1811 SUPPLY CO. | SHOP</title>
     <link rel="icon" type="image/jpeg" href="logo.jpeg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -214,7 +214,7 @@
                 id: 9, 
                 cat: "LLAVEROS", 
                 name: "EL GANCHO", 
-                desc: "LLAVERO CON MOSQUETÓN DE PERFIL TÁCTICO.<br><br>MEDIDAS: 13.5 cm X 3 cm APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN y HERRAJE DE ACERO INOXIDABLE", 
+                desc: "LLAVERO CON MOSQUETÓN DE PERFIL TÁCTICO.<br><br>MEDIDAS: 13.5 cm X 3 cm APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE ACERO INOXIDABLE", 
                 price: 79, 
                 varPhotos: { "CHOCOLATE": ["GANCHO.png"], "NEGRO": ["GANCHOnegro.png"] }, 
                 variants: ["CHOCOLATE", "NEGRO"], 
@@ -412,11 +412,14 @@
                 msg += `• *${item.name}* ${item.currentVariant ? '('+item.currentVariant+')' : ''} - S/ ${item.currentPrice}\n`;
                 sum += item.currentPrice;
             });
-            msg += `\n*TOTAL: S/ ${sum.toFixed(2)}*`;
+            msg += `\n*TOTAL ESTIMADO: S/ ${sum.toFixed(2)}*`;
             
-            // Corrección aplicada: se usa el protocolo directo para saltar a la app
             const phone = "51947833118";
-            window.location.href = `whatsapp://send?phone=${phone}&text=${encodeURIComponent(msg)}`;
+            // Usamos la API oficial que es la más recomendada para evitar bloqueos del navegador
+            const waUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`;
+            
+            // Intentamos abrirlo en una ventana nueva
+            window.open(waUrl, '_blank');
         }
 
         init();
