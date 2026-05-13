@@ -1,123 +1,365 @@
-<!-- Reemplaza la sección del botón flotante y el estilo por este bloque -->
-<style>
-    /* Nueva Barra de Categorías Flotante para Móvil */
-    .mobile-category-nav {
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 90%;
-        max-width: 400px;
-        background: rgba(15, 15, 15, 0.8);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 50px;
-        display: flex;
-        overflow-x: auto;
-        padding: 8px 15px;
-        z-index: 100;
-        scrollbar-width: none; /* Firefox */
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-    
-    .mobile-category-nav::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1811 SUPPLY CO. | Handcrafted Goods</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: white;
+            -webkit-font-smoothing: antialiased;
+        }
 
-    .mobile-nav-item {
-        flex: 0 0 auto;
-        padding: 8px 16px;
-        font-size: 9px;
-        font-weight: 900;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: #888;
-        transition: 0.3s;
-    }
+        /* Estética Minimalista */
+        .product-card {
+            background: #0f0f0f;
+            border: 1px solid #1a1a1a;
+            transition: all 0.3s ease;
+        }
 
-    .mobile-nav-item.active {
-        color: white;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 20px;
-    }
+        .variant-btn {
+            border: 1px solid #333;
+            padding: 4px 10px;
+            font-size: 8px;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: #666;
+            transition: 0.2s;
+        }
 
-    /* Ocultar en escritorio */
-    @media (min-width: 768px) {
-        .mobile-category-nav { display: none; }
-    }
-</style>
+        .variant-btn.selected {
+            border-color: white;
+            color: white;
+            background: rgba(255,255,255,0.05);
+        }
 
-<!-- Reemplaza el botón antiguo por esta estructura -->
-<div class="mobile-category-nav" id="floating-nav">
-    <button onclick="filterProducts('TODOS')" class="mobile-nav-item" id="m-btn-TODOS">Todos</button>
-    <button onclick="filterProducts('BILLETERAS')" class="mobile-nav-item" id="m-btn-BILLETERAS">Billeteras</button>
-    <button onclick="filterProducts('ACCESORIOS')" class="mobile-nav-item" id="m-btn-ACCESORIOS">Accesorios</button>
-    <button onclick="filterProducts('BOLSOS')" class="mobile-nav-item" id="m-btn-BOLSOS">Bolsos</button>
-    <button onclick="filterProducts('CINTURONES')" class="mobile-nav-item" id="m-btn-CINTURONES">Correas</button>
-    <button onclick="filterProducts('LLAVEROS')" class="mobile-nav-item" id="m-btn-LLAVEROS">Llaveros</button>
-    <button onclick="filterProducts('BEADS')" class="mobile-nav-item" id="m-btn-BEADS">Beads</button>
-</div>
-
-<script>
-    // Actualiza la función render para que también marque como activa la categoría en el menú flotante
-    function render(filter = 'TODOS') {
-        closeAll();
-        document.getElementById('main-content').classList.remove('hidden');
-        document.getElementById('single-product-view').classList.add('hidden');
+        /* Barra Flotante Premium */
+        .mobile-category-nav {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 450px;
+            background: rgba(15, 15, 15, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 100px;
+            display: flex;
+            overflow-x: auto;
+            padding: 10px 15px;
+            z-index: 1000;
+            scrollbar-width: none;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
         
-        // Reset de botones en escritorio
-        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-        const activeBtn = document.getElementById(`btn-${filter}`);
-        if(activeBtn) activeBtn.classList.add('active');
+        .mobile-category-nav::-webkit-scrollbar { display: none; }
 
-        // Reset de botones en móvil (la barra flotante)
-        document.querySelectorAll('.mobile-nav-item').forEach(b => b.classList.remove('active'));
-        const activeMobileBtn = document.getElementById(`m-btn-${filter}`);
-        if(activeMobileBtn) {
-            activeMobileBtn.classList.add('active');
-            // Scroll suave hacia el botón activo en la barrita
-            activeMobileBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        .mobile-nav-item {
+            flex: 0 0 auto;
+            padding: 8px 18px;
+            font-size: 9px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #555;
+            transition: 0.3s;
         }
 
-        const grid = document.getElementById('products-grid');
-        grid.innerHTML = '';
-        const filtered = filter === 'TODOS' ? products : products.filter(p => p.cat === filter);
-
-        // Si estamos filtrando, hacemos un scroll suave hacia arriba para ver los productos
-        if(filter !== 'TODOS') {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        .mobile-nav-item.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
         }
 
-        filtered.forEach(p => {
-            let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
-            let displayPrice = p.varPrices ? p.varPrices[p.selected] : p.price;
-            const div = document.createElement('div');
-            div.className = "product-card p-4";
-            div.innerHTML = `
-                <div class="aspect-square mb-4 overflow-hidden cursor-pointer bg-black" onclick="window.location.href='?id=${p.id}'">
-                    <img src="${gallery[0]}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 24px;
+        }
+        .left-arrow { left: 10px; }
+        .right-arrow { right: 10px; }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <nav class="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/5 px-6 py-4 flex justify-between items-center">
+        <h1 class="text-lg font-black tracking-tighter cursor-pointer" onclick="window.location.href='index.html'">1811 <span class="text-gray-500 font-light">SUPPLY CO.</span></h1>
+        <div class="flex items-center gap-6">
+            <button onclick="toggleCart()" class="relative">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                <span id="cart-count" class="absolute -top-2 -right-2 bg-white text-black text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Menu Escritorio -->
+    <div class="hidden md:flex justify-center gap-8 py-8 border-b border-white/5">
+        <button onclick="filterProducts('TODOS')" id="btn-TODOS" class="category-btn text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-white transition-colors active">Todos</button>
+        <button onclick="filterProducts('BILLETERAS')" id="btn-BILLETERAS" class="category-btn text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-white">Billeteras</button>
+        <button onclick="filterProducts('ACCESORIOS')" id="btn-ACCESORIOS" class="category-btn text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-white">Accesorios</button>
+        <button onclick="filterProducts('BOLSOS')" id="btn-BOLSOS" class="category-btn text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-white">Bolsos</button>
+    </div>
+
+    <!-- Barra de Categorías Flotante Móvil -->
+    <div class="mobile-category-nav" id="floating-nav">
+        <button onclick="filterProducts('TODOS')" class="mobile-nav-item active" id="m-btn-TODOS">Todos</button>
+        <button onclick="filterProducts('BILLETERAS')" class="mobile-nav-item" id="m-btn-BILLETERAS">Billeteras</button>
+        <button onclick="filterProducts('ACCESORIOS')" class="mobile-nav-item" id="m-btn-ACCESORIOS">Accesorios</button>
+        <button onclick="filterProducts('BOLSOS')" class="mobile-nav-item" id="m-btn-BOLSOS">Bolsos</button>
+        <button onclick="filterProducts('LLAVEROS')" class="mobile-nav-item" id="m-btn-LLAVEROS">Llaveros</button>
+    </div>
+
+    <!-- Contenedor Principal (Catálogo) -->
+    <main id="main-content" class="max-w-7xl mx-auto px-4 py-12">
+        <div id="products-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
+            <!-- Productos cargados vía JS -->
+        </div>
+    </main>
+
+    <!-- Vista de Producto Individual -->
+    <section id="single-product-view" class="hidden max-w-7xl mx-auto px-4 py-12">
+        <button onclick="window.location.href='index.html'" class="mb-8 text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-white flex items-center gap-2">
+            ← Volver al catálogo
+        </button>
+        <div id="product-detail-content"></div>
+    </section>
+
+    <!-- Overlay Carrito -->
+    <div id="cart-overlay" class="fixed inset-0 bg-black/90 z-[100] hidden flex justify-end">
+        <div class="w-full max-w-md bg-[#0a0a0a] h-full border-l border-white/10 p-8 flex flex-col">
+            <div class="flex justify-between items-center mb-12">
+                <h2 class="text-xl font-black uppercase tracking-tighter">Tu Carrito</h2>
+                <button onclick="toggleCart()" class="text-gray-500 hover:text-white">Cerrar</button>
+            </div>
+            <div id="cart-items" class="flex-1 overflow-y-auto space-y-6"></div>
+            <div class="pt-8 border-t border-white/10 mt-8">
+                <div class="flex justify-between text-lg font-black uppercase mb-6">
+                    <span>Total</span>
+                    <span id="cart-total">S/ 0</span>
                 </div>
-                <div class="flex flex-col flex-1">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-bold text-[10px] text-white tracking-widest uppercase">${p.name}</h3>
-                        <span class="text-[10px] text-gray-400 font-bold">S/ ${displayPrice}</span>
-                    </div>
-                    <div class="flex flex-wrap gap-1 mb-4">
-                        ${p.variants.map(v => `<button onclick="updateGridVar(${p.id}, '${v}', '${filter}')" class="variant-btn ${p.selected === v ? 'selected' : ''}">${v}</button>`).join('')}
-                    </div>
-                    <button onclick="addToCart(${p.id})" class="w-full bg-white text-black py-3 text-[9px] font-black uppercase tracking-widest">Añadir al Carrito</button>
-                </div>`;
-            grid.appendChild(div);
-        });
-    }
+                <button onclick="checkout()" class="w-full bg-white text-black py-5 text-[11px] font-black uppercase tracking-widest">Finalizar Pedido</button>
+            </div>
+        </div>
+    </div>
 
-    // Lógica para mostrar/ocultar la barra según el scroll
-    let lastScrollY = window.scrollY;
-    window.addEventListener('scroll', () => {
-        const nav = document.getElementById('floating-nav');
-        if (window.scrollY > 200) {
-            nav.style.display = 'flex';
-            nav.style.opacity = '1';
-        } else {
-            nav.style.opacity = '0';
+    <script>
+        const products = [
+            {
+                id: 1,
+                name: "Zippered Wallet",
+                cat: "BILLETERAS",
+                price: 120,
+                imgs: ["https://via.placeholder.com/600/000000/FFFFFF?text=Zipper+1", "https://via.placeholder.com/600/111111/FFFFFF?text=Zipper+2"],
+                variants: ["Cuero Negro", "Marrón"],
+                selected: "Cuero Negro",
+                desc: "Diseño compacto con cierre de alta resistencia para máxima seguridad."
+            },
+            {
+                id: 2,
+                name: "Billetera Condado",
+                cat: "BILLETERAS",
+                price: 85,
+                imgs: ["https://via.placeholder.com/600/222222/FFFFFF?text=Condado"],
+                variants: ["Natural", "Tabaco"],
+                selected: "Natural",
+                desc: "La billetera bifold clásica redefinida con bordes pulidos a mano."
+            },
+            {
+                id: 3,
+                name: "Mighty Belt",
+                cat: "ACCESORIOS",
+                price: 150,
+                imgs: ["https://via.placeholder.com/600/333333/FFFFFF?text=Belt"],
+                variants: ["Black Buckle", "Brass Buckle"],
+                selected: "Black Buckle",
+                desc: "Cinturón de cuero de grano completo hecho para durar toda la vida."
+            }
+        ];
+
+        let cart = [];
+        let currentImgIdx = {};
+
+        function init() {
+            const params = new URLSearchParams(window.location.search);
+            const productId = params.get('id');
+            const floatingNav = document.getElementById('floating-nav');
+
+            if (productId) {
+                if(floatingNav) floatingNav.classList.add('hidden');
+                showSingleProduct(parseInt(productId));
+            } else {
+                if(floatingNav) floatingNav.classList.remove('hidden');
+                render(params.get('cat') || 'TODOS');
+            }
+            updateCartUI();
         }
-    });
-</script>
+
+        function filterProducts(cat) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            render(cat);
+        }
+
+        function render(filter = 'TODOS') {
+            const grid = document.getElementById('products-grid');
+            if(!grid) return;
+
+            document.getElementById('main-content').classList.remove('hidden');
+            document.getElementById('single-product-view').classList.add('hidden');
+
+            // Actualizar botones (Desktop y Móvil)
+            document.querySelectorAll('.category-btn, .mobile-nav-item').forEach(b => b.classList.remove('active'));
+            
+            const activeM = document.getElementById(`m-btn-${filter}`);
+            if(activeM) {
+                activeM.classList.add('active');
+                activeM.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+
+            grid.innerHTML = '';
+            const filtered = filter === 'TODOS' ? products : products.filter(p => p.cat === filter);
+
+            filtered.forEach(p => {
+                const div = document.createElement('div');
+                div.className = "product-card p-4";
+                div.innerHTML = `
+                    <div class="aspect-square mb-4 overflow-hidden cursor-pointer bg-black" onclick="window.location.href='?id=${p.id}'">
+                        <img src="${p.imgs[0]}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="flex flex-col">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-[10px] text-white tracking-widest uppercase">${p.name}</h3>
+                            <span class="text-[10px] text-gray-400 font-bold">S/ ${p.price}</span>
+                        </div>
+                        <button onclick="addToCart(${p.id})" class="w-full bg-white text-black py-3 text-[9px] font-black uppercase tracking-widest mt-4">Añadir</button>
+                    </div>`;
+                grid.appendChild(div);
+            });
+        }
+
+        function showSingleProduct(id) {
+            const container = document.getElementById('product-detail-content');
+            const mainContent = document.getElementById('main-content');
+            const view = document.getElementById('single-product-view');
+
+            if(!container) return;
+
+            mainContent.classList.add('hidden');
+            view.classList.remove('hidden');
+
+            const p = products.find(prod => prod.id === id);
+            if(!p) return;
+
+            if(currentImgIdx[p.id] === undefined) currentImgIdx[p.id] = 0;
+
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <div class="relative aspect-square bg-black overflow-hidden">
+                        ${p.imgs.length > 1 ? `<div class="nav-arrow left-arrow" onclick="changeImg(${p.id}, -1)">‹</div>` : ''}
+                        ${p.imgs.length > 1 ? `<div class="nav-arrow right-arrow" onclick="changeImg(${p.id}, 1)">›</div>` : ''}
+                        <img src="${p.imgs[currentImgIdx[p.id]]}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex flex-col justify-center">
+                        <span class="text-[9px] text-white/40 font-black tracking-widest uppercase mb-2">${p.cat}</span>
+                        <h1 class="text-4xl font-black text-white uppercase mb-4">${p.name}</h1>
+                        <p class="text-2xl font-bold mb-6">S/ ${p.price}</p>
+                        <p class="text-[11px] text-gray-400 font-bold mb-8 uppercase leading-relaxed border-l border-white/20 pl-4">${p.desc}</p>
+                        <button onclick="addToCart(${p.id})" class="w-full bg-white text-black py-5 text-[11px] font-black uppercase tracking-widest">Añadir al Carrito</button>
+                    </div>
+                </div>`;
+        }
+
+        function changeImg(id, delta) {
+            const p = products.find(prod => prod.id === id);
+            currentImgIdx[id] = (currentImgIdx[id] + delta + p.imgs.length) % p.imgs.length;
+            showSingleProduct(id);
+        }
+
+        function addToCart(id) {
+            const p = products.find(prod => prod.id === id);
+            cart.push({...p});
+            updateCartUI();
+            toggleCart();
+        }
+
+        function updateCartUI() {
+            const list = document.getElementById('cart-items');
+            const count = document.getElementById('cart-count');
+            const total = document.getElementById('cart-total');
+            
+            count.innerText = cart.length;
+            list.innerHTML = '';
+            let sum = 0;
+
+            cart.forEach((item, index) => {
+                sum += item.price;
+                list.innerHTML += `
+                    <div class="flex gap-4 items-center border-b border-white/5 pb-4">
+                        <img src="${item.imgs[0]}" class="w-16 h-16 object-cover bg-black">
+                        <div class="flex-1">
+                            <h4 class="text-[10px] font-black uppercase">${item.name}</h4>
+                            <p class="text-[10px] text-gray-500">S/ ${item.price}</p>
+                        </div>
+                        <button onclick="removeFromCart(${index})" class="text-[10px] text-red-500 font-black uppercase">Quitar</button>
+                    </div>`;
+            });
+            total.innerText = `S/ ${sum}`;
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function toggleCart() {
+            document.getElementById('cart-overlay').classList.toggle('hidden');
+        }
+
+        function checkout() {
+            if(cart.length === 0) return alert("Tu carrito está vacío");
+            let msg = "Hola 1811, quiero comprar:\n\n";
+            cart.forEach(item => msg += `- ${item.name} (S/ ${item.price})\n`);
+            window.open(`https://wa.me/947833118?text=${encodeURIComponent(msg)}`);
+        }
+
+        // Mostrar/Ocultar barra flotante según scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('floating-nav');
+            const params = new URLSearchParams(window.location.search);
+            
+            if (!nav || params.get('id')) return;
+
+            if (window.scrollY > 150) {
+                nav.style.opacity = '1';
+                nav.style.pointerEvents = 'auto';
+            } else {
+                nav.style.opacity = '0';
+                nav.style.pointerEvents = 'none';
+            }
+        });
+
+        init();
+    </script>
+</body>
+</html>
