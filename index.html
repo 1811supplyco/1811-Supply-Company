@@ -3,41 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1811 SUPPLY CO.</title>
+    <title>1811 SUPPLY CO. | Official Store</title>
     <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .font-1811 { font-family: 'UnifrakturMaguntia', serif; font-size: 3.5rem; color: white; line-height: 1; }
         .font-supply { font-family: 'Inter', sans-serif; font-weight: 900; letter-spacing: -0.05em; color: #666; font-size: 1.2rem; text-transform: uppercase; }
-        body { background-color: #0a0a0a; color: #d1d1d1; font-family: 'Inter', sans-serif; }
-        img { filter: none !important; opacity: 1 !important; }
+        body { background-color: #0a0a0a; color: #d1d1d1; font-family: 'Inter', sans-serif; margin: 0; }
+        img { filter: none !important; opacity: 1 !important; transition: opacity 0.3s; }
         .product-card { background-color: #111111; border: 1px solid #1f1f1f; position: relative; overflow: hidden; }
         .category-btn { transition: all 0.2s; border-bottom: 2px solid transparent; cursor: pointer; padding-bottom: 4px; white-space: nowrap; }
         .category-btn.active { border-color: white; color: white; font-weight: 900; }
-        .info-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.95); padding: 2rem; display: flex; flex-direction: column; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 40; }
+        .info-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.96); padding: 1.5rem; display: flex; flex-direction: column; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 40; }
         .info-overlay.active { opacity: 1; pointer-events: auto; }
-        .nav-arrow { background: rgba(0,0,0,0.6); color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; position: absolute; top: 50%; transform: translateY(-50%); z-index: 30; font-weight: bold; border: 1px solid rgba(255,255,255,0.1); }
-        .variant-btn { border: 1px solid #333; font-size: 9px; padding: 5px 10px; cursor: pointer; color: #666; }
-        .variant-btn.selected { background-color: white; color: black; font-weight: 900; border-color: white; }
+        .nav-arrow { background: rgba(0,0,0,0.6); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; position: absolute; top: 50%; transform: translateY(-50%); z-index: 30; font-weight: bold; border: 1px solid rgba(255,255,255,0.1); }
+        .variant-btn { border: 1px solid #333; font-size: 9px; padding: 5px 10px; cursor: pointer; color: #666; font-weight: 900; text-transform: uppercase; }
+        .variant-btn.selected { background-color: white; color: black; border-color: white; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body>
 
-    <nav class="p-8 sticky top-0 bg-[#0a0a0a] z-[100] border-b border-white/5 text-center sm:text-left">
-        <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+    <nav class="p-8 sticky top-0 bg-[#0a0a0a] z-[100] border-b border-white/5">
+        <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center gap-4">
                 <span class="font-1811">1811</span>
                 <span class="font-supply">Supply Co.</span>
             </div>
-            <button onclick="toggleCart()" class="text-[10px] font-black tracking-widest text-white uppercase bg-white/5 px-4 py-2 border border-white/10">
-                CARRITO (<span id="cart-count">0</span>)
+            <button class="text-[10px] font-black tracking-widest text-white uppercase border border-white/10 px-4 py-2">
+                CARRITO (0)
             </button>
         </div>
     </nav>
 
-    <!-- MENU DE CATEGORÍAS -->
     <div class="container mx-auto px-6 mt-10">
-        <div class="flex gap-8 border-b border-white/5 pb-4 text-[10px] font-bold text-gray-500 uppercase tracking-widest overflow-x-auto">
+        <div class="flex gap-8 border-b border-white/5 pb-4 text-[10px] font-bold text-gray-500 uppercase tracking-widest overflow-x-auto no-scrollbar">
             <button onclick="filterProducts('TODOS')" class="category-btn active" id="btn-TODOS">TODOS</button>
             <button onclick="filterProducts('BILLETERAS')" class="category-btn" id="btn-BILLETERAS">BILLETERAS</button>
             <button onclick="filterProducts('ACCESORIOS')" class="category-btn" id="btn-ACCESORIOS">ACCESORIOS</button>
@@ -52,21 +52,70 @@
 
     <script>
         const products = [
-            { id: 1, cat: "BOLSOS", name: "UTILITY DOPP KIT", desc: "Neceser full grain de alta capacidad. Interior forrado en lona repelente al agua. Medidas: 25x16cm.", price: 179, imgs: ["DOPPKITdetalle.png"], variants: [] },
-            { id: 2, cat: "BILLETERAS", name: "ZIPPERED WALLET", desc: "Billetera con cierre de latón. Espacio para 8 tarjetas y billetes doblados.", price: 89, imgs: ["ZIPPERED.png", "ZIPPERED2.png"], variants: [] },
-            { id: 3, cat: "BILLETERAS", name: "GANADERO WALLET", desc: "Diseño robusto para el día a día. Cuero curtido al vegetal con espacio para Victorinox.", price: 109, imgs: ["GANADERO.png"], varPhotos: { "MARRON": ["GANADERO.png"], "NEGRO": ["GANADEROnegro.png"] }, variants: ["MARRON", "NEGRO"], selected: "MARRON" },
-            { id: 4, cat: "BILLETERAS", name: "DÍDAC WALLET", desc: "Tarjetero minimalista para el Everyday Carry.", price: 129, imgs: ["didac.png"], varPhotos: { "MARRON": ["didac.png"], "NEGRO": ["DIDACnegro.png"] }, variants: ["MARRON", "NEGRO"], selected: "MARRON" },
-            { id: 6, cat: "ACCESORIOS", name: "UTILITY TRAY", desc: "Bandeja de descarga para tus esenciales. Hecha de cuero genuino y Tweed.", price: 99, 
-                varPhotos: { 
-                    "SMALL": ["tray-s.png"], 
-                    "MEDIUM": ["tray-m.png"], 
-                    "LARGE": ["tray-l.png"] 
-                }, 
+            { 
+                id: 1, cat: "BOLSOS", name: "UTILITY DOPP KIT DISTRESSED CHOCOLATE", 
+                desc: "NECESER TODO TERRENO CON AMPLIO ESPACIO, BOLSILLO CON CIERRE, BOLSILLOS LATERALES Y HANDLE DE DOBLE AGARRE, PERFECTO PARA TUS ARTÍCULOS DE USO DIARIO (ASEO, TECH, ETC.)<br><br>MEDIDAS: 16 cm X 25 cm APROX (SIN CONTAR EL HANDLE)<br>MATERIALES: CUERO DE RES FULL GRAIN CANVAS DE ALTO GRAMAJE CORDURA NYLON, ACERO INOXIDABLE Y LATÓN", 
+                price: 179, imgs: ["DOPPKITdetalle.png", "detalleDOPPKIT.png", "detalleDOPPKIT(2).png"], variants: [] 
+            },
+            { 
+                id: 2, cat: "BILLETERAS", name: "ZIPPERED WALLET", 
+                desc: "BILLETERA MINIMALISTA DE DISEÑO JAPONES PARA TARJETAS, BILLETES Y MONEDAS<br><br>MEDIDAS: 9.5 CM X 11 CM APROX.<br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE LATÓN MACIZO", 
+                price: 89, imgs: ["ZIPPERED.png", "ZIPPEREDdetalle.png"], variants: [] 
+            },
+            { 
+                id: 3, cat: "BILLETERAS", name: "GANADERO WALLET", 
+                desc: "BIFOLD HÍBRIDA CON ESPACIO PARA TARJETAS, BILLETES Y 4 ESPACIOS PEQUEÑOS PARA MINI HERRAMIENTAS DE VICTORINOX (LAPICERO, MONDADIENTES, PINZAS, ETC.)<br><br>MEDIDAS: 10.5 CM X 9 CM APROX.<br>MATERIALES: CUERO DE RES FULL GRAIN Y TELA CORDURA", 
+                price: 109, imgs: ["GANADERO.png", "GANADEROabierto.png", "GANADEROdetalle.png"], 
+                varPhotos: { "MARRON": ["GANADERO.png", "GANADEROabierto.png", "GANADEROdetalle.png"], "NEGRO": ["GANADEROnegro.png", "GANADEROnegroabierto.png", "GANADEROdetallenegro.png"] }, 
+                variants: ["MARRON", "NEGRO"], selected: "MARRON" 
+            },
+            { 
+                id: 4, cat: "BILLETERAS", name: "DÍDAC WALLET", 
+                desc: "TARJETERO MINIMALISTA PERFECTO PARA USO DIARIO PUEDES LLEVAR TARJETAS Y BILLETES<br><br>MEDIDAS: 6.7 cm X 10.5 cm APROX.<br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE LATON / ACERO INOXIDABLE", 
+                price: 129, imgs: ["didac.png", "DIDACatras.png"], 
+                varPhotos: { "MARRON": ["didac.png", "DIDACatras.png"], "NEGRO": ["DIDACnegro.png"] }, 
+                variants: ["MARRON", "NEGRO"], selected: "MARRON" 
+            },
+            { 
+                id: 5, cat: "ACCESORIOS", name: "MULTITOOL CARD + FUNDA DE CUERO", 
+                desc: "TARJETA MULTIHERRAMIENTA CON 10 FUNCIONES<br>ABRE LATAS - ABRE CAJAS - DESTORNILLADOR PLANO - REGLA 4 CM - ABRE BOTELLAS - LLAVE INGLESA 6 MEDIDAS - LLAVE MARIPOSA - SIERRA - ORIFICIO PARA LANYARD - INDICADOR AUXILIAR DE DIRECCIÓN - MATERIAL: ACERO INOXIDABLE", 
+                price: 89, imgs: ["MULTITOOL.png", "MULTITOOLfunda.png", "MULTITOOLfundanegra.png"], variants: [] 
+            },
+            { 
+                id: 6, cat: "ACCESORIOS", name: "UTILITY TRAY", 
+                desc: "BANDEJA PARA COLOCAR OBJETOS DE BOLSILLO PERFECTO PARA TU CASA U OFICINA<br><br>MATERIALES: CUERO DE RES FULL GRAIN HERRAJE DE ACERO INOXIDABLE Y TELA TWEED", 
+                price: 99, 
+                varPhotos: { "SMALL": ["BANDEJAS.png"], "MEDIUM": ["BANDEJAM.png"], "LARGE": ["BANDEJAL.png"] }, 
                 varPrices: { "SMALL": 99, "MEDIUM": 129, "LARGE": 159 }, 
-                variants: ["SMALL", "MEDIUM", "LARGE"], selected: "SMALL" },
-            { id: 8, cat: "CINTURONES", name: "MIGHTY BELT", desc: "Correa de cuero de 4mm de grosor. Hebilla de acero inoxidable Black Buckle.", price: 149, imgs: ["MIGHTY.png", "MIGHTY2.png"], variants: [] },
-            { id: 10, cat: "BEADS", name: "SKULL BRASS BEAD", desc: "Abalorio de latón macizo para tus navajas o llaveros EDC.", price: 45, imgs: ["BEAD1.png", "BEAD1_alt.png"], variants: [] },
-            { id: 11, cat: "LLAVEROS", name: "LEATHER KEY FOB", desc: "Llavero de cuero genuino con herrajes de alta resistencia.", price: 35, imgs: ["LLAVERO.png"], variants: [] }
+                variants: ["SMALL", "MEDIUM", "LARGE"], selected: "SMALL" 
+            },
+            { 
+                id: 7, cat: "ACCESORIOS", name: "PORTALENTES", 
+                desc: "FUNDA PARA LENTES CON INTERIOR ANTIRRAYONES Y OJAL PARA ENGANCHE<br><br>MEDIDAS: 18 cm X 7.5 cm APROX.<br>MATERIALES: CUERO DE RES FULL GRAIN, HERRAJE DE LATÓN Y ACERO INOXIDABLE", 
+                price: 99, imgs: ["PORTALENTES.png", "PORTALENTESatras.png"], variants: [] 
+            },
+            { 
+                id: 8, cat: "CINTURONES", name: "MIGTHY BELT + BLACK BUCKLE", 
+                desc: "CORREA TODO TERRENO DE PERFIL CASUAL PERFECTA PARA TODAS TUS AVENTURAS<br><br>MEDIDAS: 4 cm DE ANCHO X LARGO PERSONALIZABLE<br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE ACERO INOXIDABLE PAVONADO EN NEGRO", 
+                price: 149, imgs: ["MIGHTY.png", "MIGHTYcompleta.png"], variants: [] 
+            },
+            { 
+                id: 9, cat: "LLAVEROS", name: "EL GANCHO", 
+                desc: "LLAVERO CON MOSQUETÓN DE PERFIL TÁCTICO<br><br>MEDIDAS: 13.5 cm X 3 cm APROX.<br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE ACERO INOXIDABLE", 
+                price: 79, imgs: ["GANCHO.png"], 
+                varPhotos: { "MARRON": ["GANCHO.png"], "NEGRO": ["GANCHO.png"] }, // Mismo nombre según tu lista
+                variants: ["MARRON", "NEGRO"], selected: "MARRON" 
+            },
+            { 
+                id: 10, cat: "BEADS", name: "SKULL BEAD", 
+                desc: "CUENTA DECORATIVA<br>MATERIAL: LATÓN MACIZO", 
+                price: 89, imgs: ["BABYDEVIL.png"], variants: [] // Nota: Usé el nombre de foto que indicaste para este item
+            },
+            { 
+                id: 11, cat: "BEADS", name: "BABY DEVIL BEAD", 
+                desc: "CUENTA DECORATIVA<br>MATERIAL: LATON MACIZO", 
+                price: 99, imgs: ["SKULLBEAD.png"], variants: [] // Nota: Usé el nombre de foto que indicaste para este item
+            }
         ];
 
         let currentImgIdx = {};
@@ -74,30 +123,26 @@
         function render(filter = 'TODOS') {
             const grid = document.getElementById('products-grid');
             grid.innerHTML = '';
-            
             const filtered = filter === 'TODOS' ? products : products.filter(p => p.cat === filter);
 
             filtered.forEach(p => {
                 if(currentImgIdx[p.id] === undefined) currentImgIdx[p.id] = 0;
-                
-                let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : (p.imgs || []);
-                const price = p.varPrices ? p.varPrices[p.selected] : p.price;
+                let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
+                let price = p.varPrices ? p.varPrices[p.selected] : p.price;
 
                 const div = document.createElement('div');
                 div.className = "product-card p-6";
                 div.innerHTML = `
-                    <div class="relative group aspect-square mb-6 overflow-hidden">
+                    <div class="relative aspect-square mb-6 overflow-hidden">
                         ${gallery.length > 1 ? `<div class="nav-arrow left-2" onclick="event.stopPropagation(); changeImg(${p.id}, -1, '${filter}')">‹</div>` : ''}
                         ${gallery.length > 1 ? `<div class="nav-arrow right-2" onclick="event.stopPropagation(); changeImg(${p.id}, 1, '${filter}')">›</div>` : ''}
                         
-                        <img src="${gallery[currentImgIdx[p.id]] || 'placeholder.png'}" 
-                             onclick="toggleInfo(${p.id})" 
-                             class="w-full h-full object-cover cursor-help">
+                        <img src="${gallery[currentImgIdx[p.id]]}" onclick="toggleInfo(${p.id})" class="w-full h-full object-cover cursor-help">
                         
                         <div id="info-${p.id}" class="info-overlay" onclick="toggleInfo(${p.id})">
-                            <h4 class="text-white font-black text-[10px] uppercase mb-4 border-b border-white/20 pb-2 tracking-widest">Descripción</h4>
-                            <p class="text-[11px] leading-relaxed text-gray-400 uppercase font-medium">${p.desc}</p>
-                            <p class="mt-8 text-[9px] text-white/50 font-bold uppercase tracking-[0.2em]">Toca para volver</p>
+                            <h4 class="text-white font-black text-[10px] uppercase mb-4 border-b border-white/20 pb-2">Descripción Detallada</h4>
+                            <p class="text-[10px] leading-relaxed text-gray-300 font-bold">${p.desc}</p>
+                            <p class="mt-8 text-[9px] text-white/40 font-bold uppercase tracking-widest text-center">Click para cerrar</p>
                         </div>
                     </div>
 
@@ -110,7 +155,7 @@
                         ${p.variants.map(v => `<button onclick="setVar(${p.id}, '${v}', '${filter}')" class="variant-btn ${p.selected === v ? 'selected' : ''}">${v}</button>`).join('')}
                     </div>
                     
-                    <button onclick="alert('Producto añadido')" class="w-full bg-white text-black py-4 text-[10px] font-black uppercase tracking-widest hover:invert transition-all">Añadir</button>
+                    <button class="w-full bg-white text-black py-4 text-[10px] font-black uppercase tracking-widest hover:bg-gray-200 transition-all">Pedir Artículo</button>
                 `;
                 grid.appendChild(div);
             });
