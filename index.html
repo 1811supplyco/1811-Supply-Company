@@ -8,82 +8,108 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #0a0a0a; color: #d1d1d1; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
-        .product-card { background-color: #111111; border: 1px solid #1f1f1f; transition: all 0.3s; }
-        .category-btn { transition: all 0.2s; border-bottom: 2px solid transparent; cursor: pointer; padding-bottom: 4px; font-size: 10px; font-weight: 900; color: #555; text-transform: uppercase; }
-        .category-btn.active { border-color: white; color: white; }
+        .product-card { background-color: #111111; border: 1px solid #1f1f1f; }
+        
+        /* Listado de Categorías Vertical */
+        .category-list { display: flex; flex-direction: column; gap: 10px; }
+        .category-btn { text-align: left; padding: 10px 0; border-bottom: 1px solid #1f1f1f; font-size: 11px; font-weight: 900; color: #555; text-transform: uppercase; transition: 0.3s; width: 100%; }
+        .category-btn.active { color: white; border-bottom-color: white; padding-left: 10px; }
+
         .variant-btn { border: 1px solid #333; font-size: 9px; padding: 5px 10px; cursor: pointer; color: #666; font-weight: 900; text-transform: uppercase; }
         .variant-btn.selected { background-color: white; color: black; border-color: white; }
         
-        #cart-sidebar { position: fixed; right: -100%; top: 0; width: 350px; height: 100%; background: #0f0f0f; z-index: 200; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-left: 1px solid #222; }
+        /* Cart Sidebar */
+        #cart-sidebar { position: fixed; right: -100%; top: 0; width: 85%; max-width: 350px; height: 100%; background: #0f0f0f; z-index: 200; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-left: 1px solid #222; }
         #cart-sidebar.open { right: 0; }
         .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 150; display: none; }
         .cart-overlay.active { display: block; }
+
+        /* Controles de Imagen Táctiles */
+        .nav-arrow { 
+            background: rgba(0,0,0,0.7); color: white; 
+            width: 45px; height: 45px; /* Más grandes para móvil */
+            display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; position: absolute; top: 50%; 
+            transform: translateY(-50%); z-index: 50; font-size: 20px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .left-arrow { left: 0; border-radius: 0 5px 5px 0; }
+        .right-arrow { right: 0; border-radius: 5px 0 0 5px; }
+
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .nav-arrow { background: rgba(0,0,0,0.6); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; position: absolute; top: 50%; transform: translateY(-50%); z-index: 30; }
     </style>
 </head>
 <body>
 
-    <nav class="p-6 sticky top-0 bg-[#0a0a0a] z-[100] border-b border-white/5">
+    <!-- Header -->
+    <nav class="p-4 md:p-6 sticky top-0 bg-[#0a0a0a] z-[100] border-b border-white/5">
         <div class="container mx-auto flex justify-between items-center">
-            <div class="w-10 md:w-32"></div>
-            <a href="index.html" class="flex justify-center">
-                <img src="logo.jpeg" alt="1811 Logo" class="h-16 md:h-20 w-auto object-contain">
+            <button onclick="toggleCategories()" class="md:hidden text-[10px] font-black uppercase tracking-widest text-white">Menú</button>
+            <a href="index.html" class="flex-1 flex justify-center md:justify-start">
+                <img src="logo.jpeg" alt="1811 Logo" class="h-12 md:h-20 w-auto object-contain">
             </a>
-            <button onclick="toggleCart()" class="relative border border-white/10 px-4 py-2 text-[10px] font-black tracking-widest text-white uppercase hover:bg-white hover:text-black transition-all">
+            <button onclick="toggleCart()" class="border border-white/10 px-4 py-2 text-[10px] font-black tracking-widest text-white uppercase">
                 CARRITO (<span id="cart-count">0</span>)
             </button>
         </div>
     </nav>
 
+    <!-- Overlay Carrito -->
     <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
 
+    <!-- Sidebar Carrito -->
     <div id="cart-sidebar" class="flex flex-col">
         <div class="p-6 border-b border-white/5 flex justify-between items-center">
-            <h2 class="text-[11px] font-black tracking-[0.3em] uppercase">Tu Carrito</h2>
-            <button onclick="toggleCart()" class="text-xs text-gray-500 hover:text-white uppercase font-bold">Cerrar</button>
+            <h2 class="text-[11px] font-black tracking-[0.3em] uppercase text-white">Tu Carrito</h2>
+            <button onclick="toggleCart()" class="text-xs text-gray-500 font-bold uppercase">✕</button>
         </div>
         <div id="cart-items" class="flex-1 overflow-y-auto p-6 no-scrollbar space-y-6"></div>
         <div class="p-6 border-t border-white/5 bg-[#141414]">
             <div class="flex justify-between mb-4">
-                <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Total Estimado</span>
+                <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Total</span>
                 <span class="text-white font-black" id="cart-total">S/ 0.00</span>
             </div>
-            <button onclick="checkoutWhatsApp()" class="w-full bg-white text-black py-4 text-[10px] font-black uppercase tracking-widest hover:bg-gray-200 transition-all">
-                Confirmar Pedido (WhatsApp)
-            </button>
+            <button onclick="checkoutWhatsApp()" class="w-full bg-white text-black py-4 text-[10px] font-black uppercase tracking-widest">Confirmar WhatsApp</button>
         </div>
     </div>
 
-    <div id="main-content">
-        <div class="container mx-auto px-6 mt-10">
-            <div class="flex gap-8 border-b border-white/5 pb-4 uppercase tracking-widest overflow-x-auto no-scrollbar">
-                <button onclick="filterProducts('TODOS')" class="category-btn active" id="btn-TODOS">TODOS</button>
-                <button onclick="filterProducts('BILLETERAS')" class="category-btn" id="btn-BILLETERAS">BILLETERAS</button>
-                <button onclick="filterProducts('ACCESORIOS')" class="category-btn" id="btn-ACCESORIOS">ACCESORIOS</button>
-                <button onclick="filterProducts('BOLSOS')" class="category-btn" id="btn-BOLSOS">BOLSOS</button>
-                <button onclick="filterProducts('CINTURONES')" class="category-btn" id="btn-CINTURONES">CINTURONES</button>
-                <button onclick="filterProducts('LLAVEROS')" class="category-btn" id="btn-LLAVEROS">LLAVEROS</button>
-                <button onclick="filterProducts('BEADS')" class="category-btn" id="btn-BEADS">BEADS</button>
+    <!-- Contenido Principal -->
+    <div id="main-content" class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+            
+            <!-- Sidebar Categorías (Listado) -->
+            <div id="category-panel" class="hidden md:block md:col-span-2">
+                <h3 class="text-[10px] font-black text-white/30 uppercase tracking-widest mb-6">Categorías</h3>
+                <div class="category-list">
+                    <button onclick="filterProducts('TODOS')" class="category-btn active" id="btn-TODOS">TODOS</button>
+                    <button onclick="filterProducts('BILLETERAS')" class="category-btn" id="btn-BILLETERAS">BILLETERAS</button>
+                    <button onclick="filterProducts('ACCESORIOS')" class="category-btn" id="btn-ACCESORIOS">ACCESORIOS</button>
+                    <button onclick="filterProducts('BOLSOS')" class="category-btn" id="btn-BOLSOS">BOLSOS</button>
+                    <button onclick="filterProducts('CINTURONES')" class="category-btn" id="btn-CINTURONES">CINTURONES</button>
+                    <button onclick="filterProducts('LLAVEROS')" class="category-btn" id="btn-LLAVEROS">LLAVEROS</button>
+                    <button onclick="filterProducts('BEADS')" class="category-btn" id="btn-BEADS">BEADS</button>
+                </div>
             </div>
+
+            <!-- Grilla Productos -->
+            <main class="md:col-span-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="products-grid"></main>
         </div>
-        <main class="container mx-auto p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="products-grid"></main>
     </div>
 
-    <div id="single-product-view" class="hidden container mx-auto p-6 min-h-screen">
-        <button onclick="window.history.back()" class="mb-8 text-[10px] font-black uppercase tracking-widest text-gray-500">← Volver</button>
+    <!-- Vista Detalle Producto -->
+    <div id="single-product-view" class="hidden container mx-auto px-4 py-8 min-h-screen">
+        <button onclick="goHome()" class="mb-8 text-[10px] font-black uppercase tracking-widest text-gray-500">← Volver al catálogo</button>
         <div id="product-detail-content"></div>
     </div>
 
     <script>
         const products = [
-            { id: 1, cat: "BOLSOS", name: "UTILITY DOPP KIT DISTRESSED CHOCOLATE", desc: "NECESER TODO TERRENO CON AMPLIO ESPACIO, BOLSILLO CON CIERRE, BOLSILLOS LATERALES Y HANDLE DE DOBLE AGARRE, PERFECTO PARA TUS ARTÍCULOS DE USO DIARIO.<br><br>MEDIDAS: 16 cm X 25 cm APROX<br>MATERIALES: CUERO DE RES FULL GRAIN, CANVAS Y CORDURA.", price: 179, imgs: ["DOPPKITmarron.png", "detalleDOPPKIT.png"], variants: [] },
-            { id: 2, cat: "BILLETERAS", name: "ZIPPERED WALLET", desc: "BILLETERA MINIMALISTA DE DISEÑO JAPONES PARA TARJETAS, BILLETES Y MONEDAS.<br><br>MEDIDAS: 9.5 CM X 11 CM APROX.<br>MATERIALES: CUERO DE RES FULL GRAIN Y LATÓN.", price: 89, imgs: ["ZIPPERED.png", "ZIPPEREDdetalle.png"], variants: [] },
-            { id: 3, cat: "BILLETERAS", name: "GANADERO WALLET", desc: "BIFOLD HÍBRIDA CON ESPACIO PARA TARJETAS, BILLETES Y MINI HERRAMIENTAS.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y TELA CORDURA.", price: 109, imgs: ["GANADERO.png"], varPhotos: { "MARRON": ["GANADERO.png"], "NEGRO": ["GANADEROnegro.png"] }, variants: ["MARRON", "NEGRO"], selected: "MARRON" },
-            { id: 4, cat: "BILLETERAS", name: "DÍDAC WALLET", desc: "TARJETERO MINIMALISTA PERFECTO PARA USO DIARIO.<br><br>MATERIALES: CUERO DE RES FULL GRAIN.", price: 129, imgs: ["didac.png"], varPhotos: { "MARRON": ["didac.png"], "NEGRO": ["DIDACnegro.png"] }, variants: ["MARRON", "NEGRO"], selected: "MARRON" },
-            { id: 6, cat: "ACCESORIOS", name: "UTILITY TRAY", desc: "BANDEJA PARA COLOCAR OBJETOS DE BOLSILLO.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y TELA TWEED.", price: 99, varPhotos: { "SMALL": ["BANDEJAS.png"], "MEDIUM": ["BANDEJAM.png"], "LARGE": ["BANDEJAL.png"] }, varPrices: { "SMALL": 99, "MEDIUM": 129, "LARGE": 159 }, variants: ["SMALL", "MEDIUM", "LARGE"], selected: "SMALL" },
-            { id: 7, cat: "ACCESORIOS", name: "COASTERS", desc: "SET DE POSAVASOS DE CUERO RÚSTICO.<br><br>MATERIALES: CUERO DE RES FULL GRAIN.", price: 89, imgs: ["COASTERS.png"], varPrices: { "SET DE 4": 89, "SET DE 6": 119 }, variants: ["SET DE 4", "SET DE 6"], selected: "SET DE 4" },
-            { id: 10, cat: "LLAVEROS", name: "EL GANCHO", desc: "LLAVERO CON MOSQUETÓN DE PERFIL TÁCTICO.<br><br>MATERIALES: CUERO DE RES FULL GRAIN.", price: 79, imgs: ["GANCHO.png"], varPhotos: { "MARRON": ["GANCHO.png"], "NEGRO": ["GANCHOnegro.png"] }, variants: ["MARRON", "NEGRO"], selected: "MARRON" }
+            { id: 1, cat: "BOLSOS", name: "UTILITY DOPP KIT DISTRESSED CHOCOLATE", desc: "NECESER TODO TERRENO CON AMPLIO ESPACIO, BOLSILLO CON CIERRE, BOLSILLOS LATERALES Y HANDLE DE DOBLE AGARRE.<br><br>MEDIDAS: 16 cm X 25 cm APROX.", price: 179, imgs: ["DOPPKITmarron.png", "detalleDOPPKIT.png"], variants: [] },
+            { id: 2, cat: "BILLETERAS", name: "ZIPPERED WALLET", desc: "BILLETERA MINIMALISTA DE DISEÑO JAPONES PARA TARJETAS, BILLETES Y MONEDAS.<br><br>MATERIAL: CUERO DE RES FULL GRAIN.", price: 89, imgs: ["ZIPPERED.png", "ZIPPEREDdetalle.png"], variants: [] },
+            { id: 3, cat: "BILLETERAS", name: "GANADERO WALLET", desc: "BIFOLD HÍBRIDA CON ESPACIO PARA TARJETAS, BILLETES Y MINI HERRAMIENTAS.<br><br>MATERIAL: CUERO DE RES FULL GRAIN.", price: 109, imgs: ["GANADERO.png"], varPhotos: { "MARRON": ["GANADERO.png"], "NEGRO": ["GANADEROnegro.png"] }, variants: ["MARRON", "NEGRO"], selected: "MARRON" },
+            { id: 4, cat: "BILLETERAS", name: "DÍDAC WALLET", desc: "TARJETERO MINIMALISTA PERFECTO PARA USO DIARIO.<br><br>MATERIAL: CUERO DE RES FULL GRAIN.", price: 129, imgs: ["didac.png"], varPhotos: { "MARRON": ["didac.png"], "NEGRO": ["DIDACnegro.png"] }, variants: ["MARRON", "NEGRO"], selected: "MARRON" },
+            { id: 6, cat: "ACCESORIOS", name: "UTILITY TRAY", desc: "BANDEJA PARA COLOCAR OBJETOS DE BOLSILLO.<br><br>MATERIAL: CUERO DE RES FULL GRAIN.", price: 99, varPhotos: { "SMALL": ["BANDEJAS.png"], "MEDIUM": ["BANDEJAM.png"], "LARGE": ["BANDEJAL.png"] }, varPrices: { "SMALL": 99, "MEDIUM": 129, "LARGE": 159 }, variants: ["SMALL", "MEDIUM", "LARGE"], selected: "SMALL" },
+            { id: 10, cat: "LLAVEROS", name: "EL GANCHO", desc: "LLAVERO CON MOSQUETÓN DE PERFIL TÁCTICO.<br><br>MATERIAL: CUERO DE RES FULL GRAIN.", price: 79, imgs: ["GANCHO.png"], varPhotos: { "MARRON": ["GANCHO.png"], "NEGRO": ["GANCHOnegro.png"] }, variants: ["MARRON", "NEGRO"], selected: "MARRON" }
         ];
 
         let cart = JSON.parse(localStorage.getItem('cart_1811')) || [];
@@ -99,9 +125,12 @@
             }
         }
 
-        function saveCart() {
-            localStorage.setItem('cart_1811', JSON.stringify(cart));
+        function toggleCategories() {
+            const panel = document.getElementById('category-panel');
+            panel.classList.toggle('hidden');
         }
+
+        function goHome() { window.location.href = "index.html"; }
 
         function render(filter = 'TODOS') {
             document.getElementById('main-content').classList.remove('hidden');
@@ -112,8 +141,6 @@
 
             filtered.forEach(p => {
                 let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
-                let price = p.varPrices ? p.varPrices[p.selected] : p.price;
-
                 const div = document.createElement('div');
                 div.className = "product-card p-4";
                 div.innerHTML = `
@@ -122,13 +149,10 @@
                     </div>
                     <div class="flex flex-col gap-2">
                         <div class="flex justify-between items-start">
-                            <h3 class="font-bold text-[9px] text-white tracking-widest uppercase">${p.name}</h3>
-                            <span class="text-[10px] text-gray-400 font-bold">S/ ${price}</span>
+                            <h3 class="font-bold text-[10px] text-white tracking-widest uppercase">${p.name}</h3>
+                            <span class="text-[10px] text-gray-500 font-bold">S/ ${p.price}</span>
                         </div>
-                        <div class="flex gap-1 mt-1 mb-2">
-                            ${p.variants.map(v => `<button onclick="setVar(${p.id}, '${v}', 'grid')" class="variant-btn ${p.selected === v ? 'selected' : ''}">${v[0]}</button>`).join('')}
-                        </div>
-                        <button onclick="addToCart(${p.id})" class="w-full border border-white/10 py-2 text-[8px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all">Añadir</button>
+                        <button onclick="addToCart(${p.id})" class="w-full border border-white/10 py-2 text-[8px] font-black uppercase tracking-widest mt-2">Añadir</button>
                     </div>
                 `;
                 grid.appendChild(div);
@@ -149,28 +173,35 @@
             container.innerHTML = `
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
                     <div class="relative aspect-square bg-black">
-                        ${gallery.length > 1 ? `<div class="nav-arrow left-2" onclick="changeImg(${p.id}, -1)">‹</div>` : ''}
-                        ${gallery.length > 1 ? `<div class="nav-arrow right-2" onclick="changeImg(${p.id}, 1)">›</div>` : ''}
+                        ${gallery.length > 1 ? `<div class="nav-arrow left-arrow" onclick="changeImg(${p.id}, -1)">‹</div>` : ''}
+                        ${gallery.length > 1 ? `<div class="nav-arrow right-arrow" onclick="changeImg(${p.id}, 1)">›</div>` : ''}
                         <img src="${gallery[currentImgIdx[p.id]]}" class="w-full h-full object-cover">
                     </div>
                     <div class="flex flex-col justify-center">
-                        <h1 class="text-3xl font-black text-white tracking-tighter mb-2 uppercase">${p.name}</h1>
-                        <p class="text-xl text-gray-500 mb-8 font-bold">S/ ${price}</p>
+                        <h1 class="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter mb-2">${p.name}</h1>
+                        <p class="text-xl text-gray-500 mb-6 font-bold">S/ ${price}</p>
                         <p class="text-xs leading-relaxed text-gray-300 uppercase font-bold mb-8">${p.desc}</p>
-                        <div class="flex gap-2 mb-10">
-                            ${p.variants.map(v => `<button onclick="setVar(${p.id}, '${v}', 'single')" class="variant-btn ${p.selected === v ? 'selected' : ''}">${v}</button>`).join('')}
+                        <div class="flex flex-wrap gap-2 mb-10">
+                            ${p.variants.map(v => `<button onclick="setVar(${p.id}, '${v}')" class="variant-btn ${p.selected === v ? 'selected' : ''}">${v}</button>`).join('')}
                         </div>
-                        <button onclick="addToCart(${p.id})" class="w-full bg-white text-black py-5 text-[11px] font-black uppercase tracking-[0.2em] hover:invert transition-all">Añadir al Carrito</button>
+                        <button onclick="addToCart(${p.id})" class="w-full bg-white text-black py-5 text-[11px] font-black uppercase tracking-widest">Añadir al Carrito</button>
                     </div>
                 </div>
             `;
         }
 
-        function setVar(id, v, mode) {
+        function setVar(id, v) {
             const p = products.find(prod => prod.id === id);
             p.selected = v;
             currentImgIdx[id] = 0;
-            if(mode === 'single') showSingleProduct(id); else render();
+            showSingleProduct(id);
+        }
+
+        function changeImg(id, dir) {
+            const p = products.find(prod => prod.id === id);
+            let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
+            currentImgIdx[id] = (currentImgIdx[id] + dir + gallery.length) % gallery.length;
+            showSingleProduct(id);
         }
 
         function toggleCart() {
@@ -182,14 +213,14 @@
             const p = products.find(prod => prod.id === id);
             const price = p.varPrices ? p.varPrices[p.selected] : p.price;
             cart.push({ ...p, currentPrice: price, currentVariant: p.selected });
-            saveCart();
+            localStorage.setItem('cart_1811', JSON.stringify(cart));
             updateCartUI();
-            if(!document.getElementById('cart-sidebar').classList.contains('open')) toggleCart();
+            toggleCart();
         }
 
         function removeFromCart(index) {
             cart.splice(index, 1);
-            saveCart();
+            localStorage.setItem('cart_1811', JSON.stringify(cart));
             updateCartUI();
         }
 
@@ -205,13 +236,13 @@
                 let gallery = (item.varPhotos && item.varPhotos[item.currentVariant]) ? item.varPhotos[item.currentVariant] : item.imgs;
                 container.innerHTML += `
                     <div class="flex gap-4 items-center border-b border-white/5 pb-4">
-                        <img src="${gallery[0]}" class="w-16 h-16 object-cover bg-black">
+                        <img src="${gallery[0]}" class="w-12 h-12 object-cover bg-black">
                         <div class="flex-1 text-[9px] uppercase font-black">
                             <h4 class="text-white">${item.name}</h4>
                             <p class="text-gray-500">${item.currentVariant || ''}</p>
                             <p class="text-white mt-1">S/ ${item.currentPrice}</p>
                         </div>
-                        <button onclick="removeFromCart(${index})" class="text-xs text-red-900 font-black">✕</button>
+                        <button onclick="removeFromCart(${index})" class="text-xs text-red-900">✕</button>
                     </div>`;
             });
             total.innerText = `S/ ${sum.toFixed(2)}`;
@@ -220,7 +251,7 @@
         function checkoutWhatsApp() {
             if(cart.length === 0) return;
             let sum = 0;
-            let msg = `Hola 1811, quisiera realizar el siguiente pedido:\n\n`;
+            let msg = `Hola 1811, quisiera este pedido:\n\n`;
             cart.forEach(item => {
                 msg += `• *${item.name}* ${item.currentVariant ? '('+item.currentVariant+')' : ''} - S/ ${item.currentPrice}\n`;
                 sum += item.currentPrice;
@@ -229,16 +260,10 @@
             window.open(`https://wa.me/51947833118?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        function changeImg(id, dir) {
-            const p = products.find(prod => prod.id === id);
-            let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
-            currentImgIdx[id] = (currentImgIdx[id] + dir + gallery.length) % gallery.length;
-            showSingleProduct(id);
-        }
-
         function filterProducts(cat) {
             document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(`btn-${cat}`).classList.add('active');
+            if (window.innerWidth < 768) toggleCategories();
             render(cat);
         }
 
