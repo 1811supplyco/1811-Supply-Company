@@ -24,18 +24,11 @@
         .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 150; display: none; }
         .cart-overlay.active { display: block; }
 
-        /* Icono de basura profesional */
-        .trash-btn {
-            color: #ef4444;
-            transition: transform 0.2s;
-            cursor: pointer;
-            padding: 5px;
-        }
+        .trash-btn { color: #ef4444; transition: transform 0.2s; cursor: pointer; padding: 5px; }
         .trash-btn:hover { transform: scale(1.1); color: #f87171; }
 
         .nav-arrow { 
-            background: rgba(0,0,0,0.7); color: white; 
-            width: 45px; height: 45px; 
+            background: rgba(0,0,0,0.7); color: white; width: 45px; height: 45px; 
             display: flex; align-items: center; justify-content: center; 
             cursor: pointer; position: absolute; top: 50%; 
             transform: translateY(-50%); z-index: 50; font-size: 20px;
@@ -52,7 +45,6 @@
         <div class="container mx-auto flex justify-between items-center">
             <button onclick="toggleCategories()" class="md:hidden text-[10px] font-black uppercase tracking-widest text-white bg-white/5 px-3 py-2 rounded">Categorías</button>
             <a href="index.html" class="flex-1 flex justify-center md:justify-start">
-                <!-- Logotipo Principal -->
                 <img src="logo2.png" alt="1811 Logo" class="h-10 md:h-16 w-auto object-contain">
             </a>
             <button onclick="toggleCart()" class="border border-white/10 px-4 py-2 text-[10px] font-black tracking-widest text-white uppercase">
@@ -108,7 +100,7 @@
             { id: 3, cat: "BILLETERAS", name: "GANADERO WALLET", desc: "BIFOLD HÍBRIDA CON ESPACIO PARA TARJETAS Y HERRAMIENTAS MINI.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y TELA CORDURA.", price: 109, varPhotos: { "MARRON": ["GANADERO.png", "GANADEROabierto.png"], "NEGRO": ["GANADEROnegro.png", "GANADEROnegroabierto.png"] }, variants: ["MARRON", "NEGRO"], selected: "MARRON" },
             { id: 4, cat: "BILLETERAS", name: "DÍDAC WALLET", desc: "TARJETERO MINIMALISTA PERFECTO PARA USO DIARIO.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y ACERO INOXIDABLE.", price: 129, varPhotos: { "MARRON": ["didac.png", "DIDACatras.png"], "NEGRO": ["DIDACnegro.png"] }, variants: ["MARRON", "NEGRO"], selected: "MARRON" },
             { id: 5, cat: "ACCESORIOS", name: "MULTITOOL CARD + FUNDA", desc: "TARJETA MULTIHERRAMIENTA CON 10 FUNCIONES.<br><br>MATERIAL: ACERO INOXIDABLE.", price: 89, varPhotos: { "CUERO": ["MULTITOOL.png", "MULTITOOLfunda.png"], "NEGRO": ["MULTITOOL.png", "MULTITOOLfundanegra.png"] }, variants: ["CUERO", "NEGRO"], selected: "CUERO" },
-            { id: 6, cat: "ACCESORIOS", name: "UTILITY TRAY", desc: "BANDEJA PARA OBJETOS DE BOLSILLO.<br><br>MATERIALES: CUERO DE RES Y TELA TWEED.", price: 99, varPhotos: { "SMALL": ["BANDEJAS.png"], "MEDIUM": ["BANDEJAM.png"], "LARGE": ["BANDEJAL.png"] }, varPrices: { "SMALL": 99, "MEDIUM": 129, "LARGE": 159 }, variants: ["SMALL", "MEDIUM", "LARGE"], selected: "SMALL" },
+            { id: 6, cat: "ACCESORIOS", name: "UTILITY TRAY", desc: "BANDEJA PARA COLOCAR OBJETOS DE BOLSILLO.<br><br>MATERIALES: CUERO DE RES Y TELA TWEED.", price: 99, varPhotos: { "SMALL": ["BANDEJAS.png"], "MEDIUM": ["BANDEJAM.png"], "LARGE": ["BANDEJAL.png"] }, varPrices: { "SMALL": 99, "MEDIUM": 129, "LARGE": 159 }, variants: ["SMALL", "MEDIUM", "LARGE"], selected: "SMALL" },
             { id: 7, cat: "ACCESORIOS", name: "PORTALENTES", desc: "FUNDA PARA LENTES CON INTERIOR ANTIRRAYONES.<br><br>MATERIALES: CUERO DE RES FULL GRAIN.", price: 99, imgs: ["PORTALENTES.png", "PORTALENTESatras.png"], variants: [] },
             { id: 8, cat: "CINTURONES", name: "MIGHTY BELT + BLACK BUCKLE", desc: "CORREA TODO TERRENO CON HEBILLA PAVONADA.<br><br>MATERIALES: CUERO DE RES Y ACERO INOXIDABLE.", price: 149, imgs: ["MIGHTY.png", "MIGHTYcompleta.png"], variants: [] },
             { id: 9, cat: "LLAVEROS", name: "EL GANCHO", desc: "LLAVERO CON MOSQUETÓN TÁCTICO.<br><br>MATERIALES: CUERO DE RES Y ACERO.", price: 79, varPhotos: { "MARRON": ["GANCHO.png"], "NEGRO": ["GANCHOnegro.png"] }, variants: ["MARRON", "NEGRO"], selected: "MARRON" },
@@ -123,16 +115,21 @@
             const params = new URLSearchParams(window.location.search);
             const category = params.get('cat');
             const productId = params.get('id');
-            if (productId) showSingleProduct(parseInt(productId));
-            else render(category || 'TODOS');
+
+            if (productId) {
+                showSingleProduct(parseInt(productId));
+            } else {
+                render(category || 'TODOS');
+            }
         }
 
         function toggleCategories() { document.getElementById('category-panel').classList.toggle('hidden'); }
-        function goHome() { window.location.href = window.location.pathname; }
+        function goHome() { window.location.href = "index.html"; }
 
         function render(filter = 'TODOS') {
             document.getElementById('main-content').classList.remove('hidden');
             document.getElementById('single-product-view').classList.add('hidden');
+            
             document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
             const activeBtn = document.getElementById(`btn-${filter}`);
             if(activeBtn) activeBtn.classList.add('active');
@@ -168,6 +165,23 @@
             });
         }
 
+        function filterProducts(cat) {
+            const params = new URLSearchParams(window.location.search);
+            // CORRECCIÓN: Si hay un ID de producto en la URL, recargar la página limpia con la categoría
+            if (params.get('id')) {
+                window.location.href = `index.html?cat=${cat}`;
+                return;
+            }
+            
+            // Si ya estamos en el inicio, solo renderizar
+            if (window.innerWidth < 768) document.getElementById('category-panel').classList.add('hidden');
+            render(cat);
+            // Actualizar URL sin recargar para mantener consistencia
+            const newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?cat=' + cat;
+            window.history.pushState({path:newurl},'',newurl);
+        }
+
+        // --- Funciones de Producto y Carrito se mantienen igual ---
         function updateGridVar(id, v, currentFilter) {
             const p = products.find(prod => prod.id === id);
             p.selected = v;
@@ -184,7 +198,6 @@
             if(currentImgIdx[p.id] === undefined) currentImgIdx[p.id] = 0;
             let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
             let price = p.varPrices ? p.varPrices[p.selected] : p.price;
-
             container.innerHTML = `
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
                     <div class="relative aspect-square bg-black overflow-hidden rounded-sm">
@@ -202,8 +215,7 @@
                         </div>
                         <button onclick="addToCart(${p.id})" class="w-full bg-white text-black py-5 text-[11px] font-black uppercase tracking-[0.2em]">Añadir al Carrito</button>
                     </div>
-                </div>
-            `;
+                </div>`;
         }
 
         function setVar(id, v) {
@@ -218,13 +230,6 @@
             let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
             currentImgIdx[id] = (currentImgIdx[id] + dir + gallery.length) % gallery.length;
             showSingleProduct(id);
-        }
-
-        function filterProducts(cat) {
-            const params = new URLSearchParams(window.location.search);
-            if (params.get('id')) { window.location.href = `index.html?cat=${cat}`; return; }
-            if (window.innerWidth < 768) toggleCategories();
-            render(cat);
         }
 
         function toggleCart() {
