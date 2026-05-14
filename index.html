@@ -248,7 +248,22 @@
                 varPrices: { "JUEGO DE 4": 89, "JUEGO DE 6": 119 }, 
                 variants: ["JUEGO DE 4", "JUEGO DE 6"], 
                 selected: "JUEGO DE 4" 
+            },
+            { 
+                id: 13, 
+                cat: "BILLETERAS", 
+                name: "MINI TRUCKER WALLET", 
+                desc: "BILLETERA DE CAMIONERO CON AMPLIO ESPACIO PARA MONEDAS, ESPACIO PARA BILLETES (DOBLADOS) Y ESPECIAL EN EL MEDIO PARA TARJETAS, CUENTA CON OJAL PARA ENGANCHAR CADENA..<br><br>MATERIALES: CUERO DE RES FULL GRAIN, LATON Y ACERO INOXIDABLE", 
+                price: 129, 
+                varPhotos: { 
+                    "SIN CADENA": ["trucker1.png", "trucker2.png"], 
+                    "CON CADENA": ["trucker3.png"]
+                }, 
+                varPrices: { "SIN CADENA": 129, "CON CADENA": 159}, 
+                variants: ["CON CADENA", "SIN CADENA"], 
+                selected: "CON CADENA" 
             }
+            
         ];
 
         let cart = JSON.parse(localStorage.getItem('cart_1811')) || [];
@@ -412,7 +427,7 @@
                 msg += `• *${item.name}* ${item.currentVariant ? '('+item.currentVariant+')' : ''} - S/ ${item.currentPrice}\n`;
                 sum += item.currentPrice;
             });
-            msg += `\n*TOTAL ESTIMADO: S/ ${sum.toFixed(2)}*`;
+            msg += `\n*TOTAL: S/ ${sum.toFixed(2)}*`;
             
             const phone = "51947833118";
             const encodedMsg = encodeURIComponent(msg);
