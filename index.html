@@ -22,6 +22,10 @@
         .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 150; display: none; }
         .cart-overlay.active { display: block; }
 
+        .nav-arrow { background: rgba(0,0,0,0.7); color: white; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; cursor: pointer; position: absolute; top: 50%; transform: translateY(-50%); z-index: 50; font-size: 20px; }
+        .left-arrow { left: 0; }
+        .right-arrow { right: 0; }
+
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
         body.product-open #mobile-cat-trigger { display: block; }
@@ -29,25 +33,9 @@
         #category-panel-mobile { position: fixed; top: 104px; left: 0; width: 100%; background: #0a0a0a; z-index: 90; padding: 20px; border-bottom: 1px solid #1f1f1f; display: none; }
         #category-panel-mobile.active { display: block; }
 
-        /* ESTILOS PARA EL DESLIZAMIENTO DE FOTOS */
-        .product-gallery-slider { 
-            display: flex; 
-            overflow-x: auto; 
-            scroll-snap-type: x mandatory; 
-            scroll-behavior: smooth; 
-            -webkit-overflow-scrolling: touch;
-            width: 100%;
-            height: 100%;
-        }
-        .product-gallery-slider img { 
-            flex: 0 0 100%; 
-            width: 100%;
-            height: 100%;
-            scroll-snap-align: start; 
-            object-fit: cover; 
-        }
-
+        /* NUEVOS ESTILOS PARA SLIDERS [cite: 262] */
         .category-slider { display: flex; overflow-x: auto; scroll-behavior: smooth; gap: 15px; padding: 10px 0; }
+        .category-slider::-webkit-scrollbar { display: none; }
         .category-banner { background: #111; border: 1px solid #1f1f1f; padding: 20px; margin-bottom: 40px; border-radius: 4px; }
     </style>
 </head>
@@ -159,12 +147,14 @@
             { id: 10, cat: "BEADS", name: "SKULL BEAD", desc: "CUENTA DECORATIVA.<br><br>MATERIAL: LATÓN MACIZO", price: 89, imgs: ["SKULLBEAD.png"], variants: [] },
             { id: 11, cat: "BEADS", name: "BABY DEVIL BEAD", desc: "CUENTA DECORATIVA.<br><br>MATERIAL: LATÓN MACIZO", price: 99, imgs: ["BABYDEVIL.png"], variants: [] },
             { id: 12, cat: "ACCESORIOS", name: "COASTERS", desc: "SET DE POSAVASOS DE CUERO DE PERFIL RÚSTICO INDISPENSABLES PARA TU CRISTALERIA / TAZAS Y BUENAZO PARA TUS REUNIONES.<br><br>MEDIDAS: 11 cm (DIAMETRO)<br><br>MATERIALES: CUERO DE RES FULL GRAIN", price: 89, varPhotos: { "JUEGO DE 4": ["COASTERS.png", "COASTERsola.png"], "JUEGO DE 6": ["COASTERS.png", "COASTERsola.png"] }, varPrices: { "JUEGO DE 4": 89, "JUEGO DE 6": 119 }, variants: ["JUEGO DE 4", "JUEGO DE 6"], selected: "JUEGO DE 4" },
-            { id: 13, cat: "BILLETERAS", name: "MINI TRUCKER WALLET", desc: "BILLETERA DE CAMIONERO CON AMPLIO ESPACIO PARA MONEDAS, ESPACIO PARA BILLETES (DOBLADOS) Y ESPACIO EN EL MEDIO PARA TARJETAS, CUENTA CON OJAL PARA ENGANCHAR CADENA..<br><br>MATERIALES: CUERO DE RES FULL GRAIN, LATON y ACERO INOXIDABLE", price: 129, varPhotos: { "SIN CADENA": ["trucker1.png", "trucker2.png"], "CON CADENA": ["trucker3.png"] }, varPrices: { "SIN CADENA": 129, "CON CADENA": 159}, variants: ["SIN CADENA", "CON CADENA"], selected: "SIN CADENA" },
+            { id: 13, cat: "BILLETERAS", name: "MINI TRUCKER WALLET", desc: "BILLETERA DE CAMIONERO CON AMPLIO ESPACIO PARA MONEDAS, ESPACIO PARA BILLETES (DOBLADOS) Y ESPACIO EN EL MEDIO PARA TARJETAS, CUENTA CON OJAL PARA ENGANCHAR CADENA..<br><br>MATERIALES: CUERO DE RES FULL GRAIN, LATON Y ACERO INOXIDABLE", price: 129, varPhotos: { "SIN CADENA": ["trucker1.png", "trucker2.png"], "CON CADENA": ["trucker3.png"] }, varPrices: { "SIN CADENA": 129, "CON CADENA": 159}, variants: ["SIN CADENA", "CON CADENA"], selected: "SIN CADENA" },
             { id: 14, cat: "BEADS", name: "HORNED SKULL BEAD", desc: "CUENTA DECORATIVA.<br><br>MATERIAL: LATÓN MACIZO", price: 59, imgs: ["hornbead.webp"], variants: [] }
         ];
 
         let cart = JSON.parse(localStorage.getItem('cart_1811')) || [];
+        let currentImgIdx = {};
 
+        // 3. LÓGICA DE INICIO MODIFICADA [cite: 262]
         function init() {
             updateCartUI(); 
             const params = new URLSearchParams(window.location.search);
@@ -190,7 +180,7 @@
             document.getElementById('btn-TODOS').classList.add('active');
 
             const grid = document.getElementById('products-grid');
-            grid.className = "md:col-span-10 flex flex-col";
+            grid.className = "md:col-span-10 flex flex-col"; // Layout vertical para banners
             grid.innerHTML = '';
 
             const categories = ["BILLETERAS", "ACCESORIOS", "BOLSOS", "CINTURONES", "LLAVEROS", "BEADS"];
@@ -203,4 +193,185 @@
                 section.className = "category-banner";
                 section.innerHTML = `
                     <div class="flex justify-between items-center mb-4 border-b border-white/5 pb-2">
-                        <h2 class="text-
+                        <h2 class="text-[10px] font-black tracking-widest text-white uppercase">${cat}</h2>
+                        <button onclick="filterProducts('${cat}')" class="text-[9px] text-gray-500 font-bold uppercase hover:text-white">Ver Todo →</button>
+                    </div>
+                    <div class="category-slider no-scrollbar">
+                        ${catProducts.map(p => `
+                            <div class="min-w-[160px] md:min-w-[220px] cursor-pointer group" onclick="window.location.href='?id=${p.id}'">
+                                <div class="aspect-square bg-black mb-2 overflow-hidden">
+                                    <img src="${p.imgs ? p.imgs[0] : p.varPhotos[p.selected][0]}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                </div>
+                                <h4 class="text-[8px] md:text-[9px] font-black text-white uppercase truncate">${p.name}</h4>
+                                <p class="text-[8px] text-gray-400 font-bold">S/ ${p.price}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                grid.appendChild(section);
+            });
+        }
+
+        function render(filter = 'TODOS') {
+            document.getElementById('body-tag').classList.remove('product-open');
+            document.getElementById('main-content').classList.remove('hidden');
+            document.getElementById('single-product-view').classList.add('hidden');
+            document.getElementById('category-panel-mobile').classList.remove('active');
+            document.getElementById('view-title').innerText = filter;
+            
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            const activeBtn = document.getElementById(`btn-${filter}`);
+            if(activeBtn) activeBtn.classList.add('active');
+
+            const grid = document.getElementById('products-grid');
+            grid.className = "md:col-span-10 grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6";
+            grid.innerHTML = '';
+            
+            const filtered = products.filter(p => p.cat === filter);
+            filtered.forEach(p => {
+                let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
+                let displayPrice = p.varPrices ? p.varPrices[p.selected] : p.price;
+                const div = document.createElement('div');
+                div.className = "product-card p-2 md:p-4";
+                div.innerHTML = `
+                    <div class="aspect-square mb-2 md:mb-4 overflow-hidden cursor-pointer bg-black" onclick="window.location.href='?id=${p.id}'">
+                        <img src="${gallery[0]}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="flex flex-col flex-1">
+                        <div class="flex flex-col mb-2">
+                            <h3 class="font-bold text-[8px] md:text-[10px] text-white tracking-widest uppercase mb-1">${p.name}</h3>
+                            <span class="text-[9px] md:text-[10px] text-gray-400 font-bold">S/ ${displayPrice}</span>
+                        </div>
+                        <div class="mt-auto flex flex-col gap-2">
+                            <button onclick="addToCart(${p.id})" class="w-full bg-white text-black py-2 md:py-3 text-[8px] md:text-[9px] font-black uppercase tracking-widest hover:bg-gray-200 transition-all">Añadir</button>
+                        </div>
+                    </div>`;
+                grid.appendChild(div);
+            });
+        }
+
+        function filterProducts(cat) { window.location.href = `index.html?cat=${cat}`; }
+
+        function showSingleProduct(id) {
+            document.getElementById('body-tag').classList.add('product-open');
+            document.getElementById('main-content').classList.add('hidden');
+            document.getElementById('category-panel-mobile').classList.remove('active');
+            const view = document.getElementById('single-product-view');
+            const container = document.getElementById('product-detail-content');
+            view.classList.remove('hidden');
+            const p = products.find(prod => prod.id === id);
+            if(!p) return;
+            
+            if(currentImgIdx[p.id] === undefined) currentImgIdx[p.id] = 0;
+            let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
+            let price = p.varPrices ? p.varPrices[p.selected] : p.price;
+            let extraDesc = p.varDesc ? `<br>${p.varDesc[p.selected]}` : '';
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+                    <div class="relative aspect-square bg-black overflow-hidden rounded-sm">
+                        ${gallery.length > 1 ? `<div class="nav-arrow left-arrow" onclick="changeImg(${p.id}, -1)">‹</div>` : ''}
+                        ${gallery.length > 1 ? `<div class="nav-arrow right-arrow" onclick="changeImg(${p.id}, 1)">›</div>` : ''}
+                        <img src="${gallery[currentImgIdx[p.id]]}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex flex-col justify-center">
+                        <span class="text-[9px] text-white/40 font-black tracking-[0.3em] uppercase mb-2">${p.cat}</span>
+                        <h1 class="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter mb-2 leading-none">${p.name}</h1>
+                        <p class="text-xl md:text-2xl text-white font-bold mb-6">S/ ${price}</p>
+                        <div class="text-[11px] leading-relaxed text-gray-400 uppercase font-bold mb-8 border-l border-white/20 pl-4">
+                            ${p.desc}
+                            ${extraDesc}
+                        </div>
+                        <div class="flex flex-wrap gap-2 mb-10">
+                            ${p.variants.map(v => `<button onclick="setVar(${p.id}, '${v}')" class="variant-btn ${p.selected === v ? 'selected' : ''}">${v}</button>`).join('')}
+                        </div>
+                        <button onclick="addToCart(${p.id})" class="w-full bg-white text-black py-5 text-[11px] font-black uppercase tracking-[0.2em] active:scale-95 transition-all">Añadir al Carrito</button>
+                    </div>
+                </div>`;
+        }
+
+        function setVar(id, v) {
+            const p = products.find(prod => prod.id === id);
+            p.selected = v;
+            currentImgIdx[id] = 0;
+            showSingleProduct(id);
+        }
+
+        function changeImg(id, dir) {
+            const p = products.find(prod => prod.id === id);
+            let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
+            currentImgIdx[id] = (currentImgIdx[id] + dir + gallery.length) % gallery.length;
+            showSingleProduct(id);
+        }
+
+        function toggleCart() {
+            document.getElementById('cart-sidebar').classList.toggle('open');
+            document.getElementById('cart-overlay').classList.toggle('active');
+        }
+
+        function addToCart(id) {
+            const p = products.find(prod => prod.id === id);
+            const price = p.varPrices ? p.varPrices[p.selected] : p.price;
+            cart.push({ ...p, currentPrice: price, currentVariant: p.selected });
+            localStorage.setItem('cart_1811', JSON.stringify(cart));
+            updateCartUI();
+            if(!document.getElementById('cart-sidebar').classList.contains('open')) toggleCart();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            localStorage.setItem('cart_1811', JSON.stringify(cart));
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cart-items');
+            const count = document.getElementById('cart-count');
+            const total = document.getElementById('cart-total');
+            count.innerText = cart.length;
+            container.innerHTML = '';
+            let sum = 0;
+            cart.forEach((item, index) => {
+                sum += item.currentPrice;
+                let gallery = (item.varPhotos && item.varPhotos[item.currentVariant]) ? item.varPhotos[item.currentVariant] : item.imgs;
+                container.innerHTML += `
+                    <div class="flex gap-4 items-center border-b border-white/5 pb-4">
+                        <img src="${gallery[0]}" class="w-16 h-16 object-cover bg-black rounded-sm">
+                        <div class="flex-1 text-[9px] uppercase font-black">
+                            <h4 class="text-white">${item.name}</h4>
+                            <p class="text-gray-500">${item.currentVariant || ''}</p>
+                            <p class="text-white mt-1">S/ ${item.currentPrice}</p>
+                        </div>
+                        <button class="text-red-500 text-xs" onclick="removeFromCart(${index})">Eliminar</button>
+                    </div>`;
+            });
+            total.innerText = `S/ ${sum.toFixed(2)}`;
+        }
+
+       function checkoutWhatsApp() {
+            if(cart.length === 0) return;
+            let sum = 0;
+            let msg = `Hola 1811, quisiera realizar este pedido:\n\n`;
+            cart.forEach(item => {
+                msg += `• *${item.name}* ${item.currentVariant ? '('+item.currentVariant+')' : ''} - S/ ${item.currentPrice}\n`;
+                sum += item.currentPrice;
+            });
+            msg += `\n*TOTAL: S/ ${sum.toFixed(2)}*`;
+            const phone = "51947833118";
+            const encodedMsg = encodeURIComponent(msg);
+            const whatsappUrl = `whatsapp://send?phone=${phone}&text=${encodedMsg}`;
+            const link = document.createElement('a');
+            link.href = whatsappUrl;
+            link.setAttribute('target', '_self');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            setTimeout(() => { window.location.href = `https://api.whatsapp.com/send?phone=${phone}&text=${encodedMsg}`; }, 500);
+        }
+
+        function toggleCategoriesMobile() { document.getElementById('category-panel-mobile').classList.toggle('active'); }
+        function goHome() { window.location.href = "index.html"; }
+
+        init();
+    </script>
+</body>
+</html>
