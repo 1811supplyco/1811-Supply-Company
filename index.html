@@ -23,9 +23,13 @@
         .cart-overlay.active { display: block; }
 
         /* ESTILOS PARA EL CARRUSEL TIPO INSTAGRAM */
-        .product-gallery-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
-        .product-gallery-carousel::-webkit-scrollbar { display: none; }
-        .product-gallery-carousel img { flex: 0 0 100%; scroll-snap-align: start; object-cover: cover; }
+/* Áreas de clic laterales e indicadores estilo Instagram */
+.nav-area { position: absolute; top: 0; height: 100%; width: 35%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 60; }
+.left-area { left: 0; }
+.right-area { right: 0; }
+.nav-arrow-mini { background: rgba(255, 255, 255, 0.1); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; opacity: 0; transition: all 0.2s ease; backdrop-filter: blur(4px); }
+.nav-area:hover .nav-arrow-mini { opacity: 1; background: rgba(255, 255, 255, 0.9); color: black; }
+@media (max-width: 768px) { .nav-arrow-mini { display: none; } .nav-area { width: 45%; } }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
@@ -152,7 +156,8 @@
         ];
 
         let cart = JSON.parse(localStorage.getItem('cart_1811')) || [];
-
+let currentImgIdx = {}; // Para guardar en qué foto va cada producto
+        
         function init() {
             updateCartUI(); 
             const params = new URLSearchParams(window.location.search);
@@ -250,44 +255,64 @@
 
         function filterProducts(cat) { window.location.href = `index.html?cat=${cat}`; }
 
-        function showSingleProduct(id) {
-            document.getElementById('body-tag').classList.add('product-open');
-            document.getElementById('main-content').classList.add('hidden');
-            document.getElementById('category-panel-mobile').classList.remove('active');
-            const view = document.getElementById('single-product-view');
-            const container = document.getElementById('product-detail-content');
-            view.classList.remove('hidden');
-            const p = products.find(prod => prod.id === id);
-            if(!p) return;
-            
-            let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
-            let price = p.varPrices ? p.varPrices[p.selected] : p.price;
-            let extraDesc = p.varDesc ? `<br>${p.varDesc[p.selected]}` : '';
-            
-            container.innerHTML = `
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
-                    <div class="relative aspect-square bg-black overflow-hidden rounded-sm">
-                        <div class="product-gallery-carousel w-full h-full">
-                            ${gallery.map(img => `<img src="${img}" class="w-full h-full object-cover">`).join('')}
-                        </div>
-                        ${gallery.length > 1 ? '<div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2 pointer-events-none"><div class="bg-black/50 px-2 py-1 rounded text-[8px] text-white font-bold uppercase tracking-widest">Desliza para ver más</div></div>' : ''}
-                    </div>
+function showSingleProduct(id) {
+    document.getElementById('body-tag').classList.add('product-open');
+    document.getElementById('main-content').classList.add('hidden');
+    document.getElementById('category-panel-mobile').classList.remove('active');
+    const view = document.getElementById('single-product-view');
+    const container = document.getElementById('product-detail-content');
+    view.classList.remove('hidden');
+    const p = products.find(prod => prod.id === id);
+    if(!p) return;
 
-                    <div class="flex flex-col justify-center">
-                        <span class="text-[9px] text-white/40 font-black tracking-[0.3em] uppercase mb-2">${p.cat}</span>
-                        <h1 class="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter mb-2 leading-none">${p.name}</h1>
-                        <p class="text-xl md:text-2xl text-white font-bold mb-6">S/ ${price}</p>
-                        <div class="text-[11px] leading-relaxed text-gray-400 uppercase font-bold mb-8 border-l border-white/20 pl-4">
-                            ${p.desc}
-                            ${extraDesc}
-                        </div>
-                        <div class="flex flex-wrap gap-2 mb-10">
-                            ${p.variants.map(v => `<button onclick="setVar(${p.id}, '${v}')" class="variant-btn ${p.selected === v ? 'selected' : ''}">${v}</button>`).join('')}
-                        </div>
-                        <button onclick="addToCart(${p.id})" class="w-full bg-white text-black py-5 text-[11px] font-black uppercase tracking-[0.2em] active:scale-95 transition-all">Añadir al Carrito</button>
-                    </div>
-                </div>`;
-        }
+    // Lógica de imágenes y variantes
+    if (!currentImgIdx[p.id]) currentImgIdx[p.id] = 0;
+    let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
+    let price = p.varPrices ? p.varPrices[p.selected] : p.price;
+    let extraDesc = p.varDesc ? `<br>${p.varDesc[p.selected]}` : '';
+
+    container.innerHTML = `
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+            <div class="relative aspect-square bg-black overflow-hidden rounded-sm group">
+                ${gallery.length > 1 ? `
+                <div class="nav-area left-area" onclick="changeImg(${p.id}, -1)">
+                    <div class="nav-arrow-mini">❮</div>
+                </div>
+                <div class="nav-area right-area" onclick="changeImg(${p.id}, 1)">
+                    <div class="nav-arrow-mini">❯</div>
+                </div>
+                <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-1.5 z-[70] pointer-events-none">
+                    ${gallery.map((_, i) => `
+                        <div class="w-1.5 h-1.5 rounded-full transition-all ${i === currentImgIdx[p.id] ? 'bg-white scale-110' : 'bg-white/30'}"></div>
+                    `).join('')}
+                </div>
+                ` : ''}
+                <img src="${gallery[currentImgIdx[p.id]]}" class="w-full h-full object-cover">
+            </div>
+
+            <div class="flex flex-col justify-center">
+                <span class="text-[9px] text-white/40 font-black tracking-[0.3em] uppercase mb-2">${p.cat}</span>
+                <h1 class="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter mb-2 leading-none">${p.name}</h1>
+                <p class="text-xl md:text-2xl text-white font-bold mb-6">S/ ${price}</p>
+                <div class="text-[11px] leading-relaxed text-gray-400 uppercase font-bold mb-8 border-l border-white/20 pl-4">
+                    ${p.desc}
+                    ${extraDesc}
+                </div>
+                <div class="flex flex-wrap gap-2 mb-10">
+                    ${p.variants.map(v => `<button onclick="setVar(${p.id}, '${v}')" class="variant-btn ${p.selected === v ? 'selected' : ''}">${v}</button>`).join('')}
+                </div>
+                <button onclick="addToCart(${p.id})" class="w-full bg-white text-black py-5 text-[11px] font-black uppercase tracking-[0.2em] active:scale-95 transition-all">Añadir al Carrito</button>
+            </div>
+        </div>`;
+}
+
+// FUNCIÓN NUEVA PARA CAMBIAR IMAGEN
+function changeImg(id, step) {
+    const p = products.find(x => x.id === id);
+    let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
+    currentImgIdx[id] = (currentImgIdx[id] + step + gallery.length) % gallery.length;
+    showSingleProduct(id);
+}
 
         function setVar(id, v) {
             const p = products.find(prod => prod.id === id);
@@ -340,25 +365,21 @@
         }
 
        function checkoutWhatsApp() {
-            if(cart.length === 0) return;
-            let sum = 0;
-            let msg = `Hola 1811, quisiera realizar este pedido:\n\n`;
-            cart.forEach(item => {
-                msg += `• *${item.name}* ${item.currentVariant ? '('+item.currentVariant+')' : ''} - S/ ${item.currentPrice}\n`;
-                sum += item.currentPrice;
-            });
-            msg += `\n*TOTAL: S/ ${sum.toFixed(2)}*`;
-            const phone = "51947833118";
-            const encodedMsg = encodeURIComponent(msg);
-            const whatsappUrl = `whatsapp://send?phone=${phone}&text=${encodedMsg}`;
-            const link = document.createElement('a');
-            link.href = whatsappUrl;
-            link.setAttribute('target', '_self');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            setTimeout(() => { window.location.href = `https://api.whatsapp.com/send?phone=${phone}&text=${encodedMsg}`; }, 500);
-        }
+    if(cart.length === 0) return;
+    let sum = 0;
+    let msg = `Hola 1811, quisiera realizar este pedido:\n\n`;
+    cart.forEach(item => {
+        msg += `• *${item.name}* ${item.currentVariant ? '('+item.currentVariant+')' : ''} - S/ ${item.currentPrice}\n`;
+        sum += item.currentPrice;
+    });
+    msg += `\n*TOTAL: S/ ${sum.toFixed(2)}*`;
+    
+    const phone = "51947833118";
+    const encodedMsg = encodeURIComponent(msg);
+
+    // PROTOCOLO ÚNICO: Esto obliga al celular a buscar la App de frente
+    window.location.href = `whatsapp://send?phone=${phone}&text=${encodedMsg}`;
+}
 
         function toggleCategoriesMobile() { document.getElementById('category-panel-mobile').classList.toggle('active'); }
         function goHome() { window.location.href = "index.html"; }
