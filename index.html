@@ -22,10 +22,6 @@
         .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 150; display: none; }
         .cart-overlay.active { display: block; }
 
-        .nav-arrow { background: rgba(0,0,0,0.7); color: white; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; cursor: pointer; position: absolute; top: 50%; transform: translateY(-50%); z-index: 50; font-size: 20px; }
-        .left-arrow { left: 0; }
-        .right-arrow { right: 0; }
-
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
         body.product-open #mobile-cat-trigger { display: block; }
@@ -33,10 +29,14 @@
         #category-panel-mobile { position: fixed; top: 104px; left: 0; width: 100%; background: #0a0a0a; z-index: 90; padding: 20px; border-bottom: 1px solid #1f1f1f; display: none; }
         #category-panel-mobile.active { display: block; }
 
-        /* NUEVOS ESTILOS PARA SLIDERS [cite: 262] */
         .category-slider { display: flex; overflow-x: auto; scroll-behavior: smooth; gap: 15px; padding: 10px 0; }
         .category-slider::-webkit-scrollbar { display: none; }
         .category-banner { background: #111; border: 1px solid #1f1f1f; padding: 20px; margin-bottom: 40px; border-radius: 4px; }
+
+        /* NUEVO ESTILO PARA EL DESLIZAMIENTO DE FOTOS DEL PRODUCTO */
+        .product-gallery-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
+        .product-gallery-slider img { flex: 0 0 100%; scroll-snap-align: start; object-fit: cover; }
+        .product-gallery-slider::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body id="body-tag">
@@ -147,14 +147,12 @@
             { id: 10, cat: "BEADS", name: "SKULL BEAD", desc: "CUENTA DECORATIVA.<br><br>MATERIAL: LATÓN MACIZO", price: 89, imgs: ["SKULLBEAD.png"], variants: [] },
             { id: 11, cat: "BEADS", name: "BABY DEVIL BEAD", desc: "CUENTA DECORATIVA.<br><br>MATERIAL: LATÓN MACIZO", price: 99, imgs: ["BABYDEVIL.png"], variants: [] },
             { id: 12, cat: "ACCESORIOS", name: "COASTERS", desc: "SET DE POSAVASOS DE CUERO DE PERFIL RÚSTICO INDISPENSABLES PARA TU CRISTALERIA / TAZAS Y BUENAZO PARA TUS REUNIONES.<br><br>MEDIDAS: 11 cm (DIAMETRO)<br><br>MATERIALES: CUERO DE RES FULL GRAIN", price: 89, varPhotos: { "JUEGO DE 4": ["COASTERS.png", "COASTERsola.png"], "JUEGO DE 6": ["COASTERS.png", "COASTERsola.png"] }, varPrices: { "JUEGO DE 4": 89, "JUEGO DE 6": 119 }, variants: ["JUEGO DE 4", "JUEGO DE 6"], selected: "JUEGO DE 4" },
-            { id: 13, cat: "BILLETERAS", name: "MINI TRUCKER WALLET", desc: "BILLETERA DE CAMIONERO CON AMPLIO ESPACIO PARA MONEDAS, ESPACIO PARA BILLETES (DOBLADOS) Y ESPACIO EN EL MEDIO PARA TARJETAS, CUENTA CON OJAL PARA ENGANCHAR CADENA..<br><br>MATERIALES: CUERO DE RES FULL GRAIN, LATON Y ACERO INOXIDABLE", price: 129, varPhotos: { "SIN CADENA": ["trucker1.png", "trucker2.png"], "CON CADENA": ["trucker3.png"] }, varPrices: { "SIN CADENA": 129, "CON CADENA": 159}, variants: ["SIN CADENA", "CON CADENA"], selected: "SIN CADENA" },
+            { id: 13, cat: "BILLETERAS", name: "MINI TRUCKER WALLET", desc: "BILLETERA DE CAMIONERO CON AMPLIO ESPACIO PARA MONEDAS, ESPACIO PARA BILLETES (DOBLADOS) Y ESPACIO EN EL MEDIO PARA TARJETAS, CUENTA CON OJAL PARA ENGANCHAR CADENA..<br><br>MATERIALES: CUERO DE RES FULL GRAIN, LATON y ACERO INOXIDABLE", price: 129, varPhotos: { "SIN CADENA": ["trucker1.png", "trucker2.png"], "CON CADENA": ["trucker3.png"] }, varPrices: { "SIN CADENA": 129, "CON CADENA": 159}, variants: ["SIN CADENA", "CON CADENA"], selected: "SIN CADENA" },
             { id: 14, cat: "BEADS", name: "HORNED SKULL BEAD", desc: "CUENTA DECORATIVA.<br><br>MATERIAL: LATÓN MACIZO", price: 59, imgs: ["hornbead.webp"], variants: [] }
         ];
 
         let cart = JSON.parse(localStorage.getItem('cart_1811')) || [];
-        let currentImgIdx = {};
 
-        // 3. LÓGICA DE INICIO MODIFICADA [cite: 262]
         function init() {
             updateCartUI(); 
             const params = new URLSearchParams(window.location.search);
@@ -180,7 +178,7 @@
             document.getElementById('btn-TODOS').classList.add('active');
 
             const grid = document.getElementById('products-grid');
-            grid.className = "md:col-span-10 flex flex-col"; // Layout vertical para banners
+            grid.className = "md:col-span-10 flex flex-col";
             grid.innerHTML = '';
 
             const categories = ["BILLETERAS", "ACCESORIOS", "BOLSOS", "CINTURONES", "LLAVEROS", "BEADS"];
@@ -262,16 +260,15 @@
             const p = products.find(prod => prod.id === id);
             if(!p) return;
             
-            if(currentImgIdx[p.id] === undefined) currentImgIdx[p.id] = 0;
             let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
             let price = p.varPrices ? p.varPrices[p.selected] : p.price;
             let extraDesc = p.varDesc ? `<br>${p.varDesc[p.selected]}` : '';
+            
+            // MODIFICACIÓN: Estructura de galería deslizable
             container.innerHTML = `
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
-                    <div class="relative aspect-square bg-black overflow-hidden rounded-sm">
-                        ${gallery.length > 1 ? `<div class="nav-arrow left-arrow" onclick="changeImg(${p.id}, -1)">‹</div>` : ''}
-                        ${gallery.length > 1 ? `<div class="nav-arrow right-arrow" onclick="changeImg(${p.id}, 1)">›</div>` : ''}
-                        <img src="${gallery[currentImgIdx[p.id]]}" class="w-full h-full object-cover">
+                    <div class="relative aspect-square bg-black overflow-hidden rounded-sm product-gallery-slider no-scrollbar">
+                        ${gallery.map(img => `<img src="${img}" class="w-full h-full object-cover">`).join('')}
                     </div>
                     <div class="flex flex-col justify-center">
                         <span class="text-[9px] text-white/40 font-black tracking-[0.3em] uppercase mb-2">${p.cat}</span>
@@ -292,14 +289,6 @@
         function setVar(id, v) {
             const p = products.find(prod => prod.id === id);
             p.selected = v;
-            currentImgIdx[id] = 0;
-            showSingleProduct(id);
-        }
-
-        function changeImg(id, dir) {
-            const p = products.find(prod => prod.id === id);
-            let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
-            currentImgIdx[id] = (currentImgIdx[id] + dir + gallery.length) % gallery.length;
             showSingleProduct(id);
         }
 
@@ -365,13 +354,4 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            setTimeout(() => { window.location.href = `https://api.whatsapp.com/send?phone=${phone}&text=${encodedMsg}`; }, 500);
-        }
-
-        function toggleCategoriesMobile() { document.getElementById('category-panel-mobile').classList.toggle('active'); }
-        function goHome() { window.location.href = "index.html"; }
-
-        init();
-    </script>
-</body>
-</html>
+            setTimeout(() => { window.location.href = `https://
