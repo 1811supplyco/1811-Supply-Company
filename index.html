@@ -50,7 +50,7 @@
         #category-panel-mobile.active { display: block; }
         .category-slider { display: flex; overflow-x: auto; scroll-behavior: smooth; gap: 15px; padding: 10px 0; }
         .category-slider::-webkit-scrollbar { display: none; }
-        .category-banner { background: #111; border: 1px solid #1f1f1f; padding: 20px; margin-bottom: 40px; border-radius: 4px; }
+        .category-banner { background: #11; border: 1px solid #1f1f1f; padding: 20px; margin-bottom: 40px; border-radius: 4px; }
         .titulo-destacado { font-family: 'Oswald', sans-serif !important; font-weight: 700; line-height: 1.2; letter-spacing: 0.05em; }
     </style>
 </head>
@@ -74,7 +74,7 @@
         </div>
     </nav>
 
-    <div id="category-panel-mobile" class="md:hidden">
+    <div id="category-panel-mobile" class="hidden">
         <div class="grid grid-cols-2 gap-2">
             <button onclick="filterProducts('TODOS')" class="text-[9px] font-black p-3 border border-white/10 text-white uppercase">INICIO</button>
             <button onclick="filterProducts('BILLETERAS')" class="text-[9px] font-black p-3 border border-white/10 text-white uppercase">BILLETERAS</button>
@@ -267,6 +267,7 @@
 
         function filterProducts(cat) { window.location.href = `index.html?cat=${cat}`; }
 
+        // Muestra la vista de un solo producto
         function showSingleProduct(id) {
             document.getElementById('body-tag').classList.add('product-open');
             document.getElementById('main-content').classList.add('hidden');
