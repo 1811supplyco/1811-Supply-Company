@@ -175,8 +175,8 @@
         ];
 
         let cart = JSON.parse(localStorage.getItem('cart_1811')) || [];
-        let currentImgIdx = {};
-
+        let currentImgIdx = {}; 
+        
         function init() {
             updateCartUI(); 
             const params = new URLSearchParams(window.location.search);
@@ -289,6 +289,7 @@
             let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
             let price = p.varPrices ? p.varPrices[p.selected] : p.price;
             let extraDesc = p.varDesc ? `<br>${p.varDesc[p.selected]}` : '';
+
             container.innerHTML = `
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
                     <div class="relative aspect-square bg-black overflow-hidden rounded-sm group">
@@ -353,6 +354,7 @@
             const carousel = document.getElementById(`carousel-${id}`);
             const p = products.find(x => x.id === id);
             let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
+            
             const newIdx = Math.round(carousel.scrollLeft / carousel.clientWidth);
             if(newIdx !== currentImgIdx[id]) {
                 currentImgIdx[id] = newIdx;
