@@ -1,433 +1,851 @@
 <!DOCTYPE html>
+
 <html lang="es">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>1811 Supply Co. | Shop</title>
-    <meta name="description" content="Artículos Everyday Carry (EDC) y marroquinería hechos a mano en Perú. Billeteras, cinturones, llaveros y accesorios con los mejores materiales.">
+
     <link rel="icon" type="image/jpeg" href="images/icono.jpeg">
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Oswald:wght@700&display=swap" rel="stylesheet">
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <style>
+
         body { background-color: #0a0a0a; color: #d1d1d1; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
+
         .product-card { background-color: #111111; border: 1px solid #1f1f1f; display: flex; flex-direction: column; height: 100%; }
+
         
+
         .category-btn { text-align: left; padding: 12px 0; border-bottom: 1px solid #1f1f1f; font-size: 11px; font-weight: 900; color: #555; text-transform: uppercase; transition: 0.3s; width: 100%; }
+
         .category-btn.active { color: white; border-bottom-color: white; padding-left: 10px; }
 
+
+
         .variant-btn { border: 1px solid #333; font-size: 9px; padding: 6px 10px; cursor: pointer; color: #666; font-weight: 900; text-transform: uppercase; transition: 0.2s; }
+
         .variant-btn.selected { background-color: white; color: black; border-color: white; }
+
         
+
         #cart-sidebar { position: fixed; right: -100%; top: 0; width: 85%; max-width: 380px; height: 100%; background: #0f0f0f; z-index: 200; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-left: 1px solid #222; }
+
         #cart-sidebar.open { right: 0; }
+
         .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 150; display: none; }
+
         .cart-overlay.active { display: block; }
 
+
+
         /* ESTILOS CARRUSEL TÁCTIL + PC */
+
         .carousel-container {
+
             display: flex;
+
             overflow-x: auto;
+
             scroll-snap-type: x mandatory;
+
             scroll-behavior: smooth;
+
             -webkit-overflow-scrolling: touch;
+
             height: 100%;
+
         }
+
         .carousel-container::-webkit-scrollbar { display: none; }
+
         .carousel-item { min-width: 100%; height: 100%; scroll-snap-align: start; }
 
+
+
         .nav-area { position: absolute; top: 0; height: 100%; width: 35%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 60; }
+
         .left-area { left: 0; }
+
         .right-area { right: 0; }
+
         .nav-arrow-mini { background: rgba(255, 255, 255, 0.1); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; opacity: 0; transition: all 0.2s ease; backdrop-filter: blur(4px); }
+
         .nav-area:hover .nav-arrow-mini { opacity: 1; background: rgba(255, 255, 255, 0.9); color: black; }
+
         
+
         @media (max-width: 768px) { 
+
             .nav-area { display: none; } 
+
         }
 
+
+
         .no-scrollbar::-webkit-scrollbar { display: none; }
+
         body.product-open #mobile-cat-trigger { display: block; }
+
         #category-panel-mobile { position: fixed; top: 104px; left: 0; width: 100%; background: #0a0a0a; z-index: 90; padding: 20px; border-bottom: 1px solid #1f1f1f; display: none; }
+
         #category-panel-mobile.active { display: block; }
+
         .category-slider { display: flex; overflow-x: auto; scroll-behavior: smooth; gap: 15px; padding: 10px 0; }
+
         .category-slider::-webkit-scrollbar { display: none; }
+
         .category-banner { background: #111; border: 1px solid #1f1f1f; padding: 20px; margin-bottom: 40px; border-radius: 4px; }
+
         .titulo-destacado { font-family: 'Oswald', sans-serif !important; font-weight: 700; line-height: 1.2; letter-spacing: 0.05em; }
+
     </style>
+
 </head>
+
 <body id="body-tag">
 
+
+
     <div class="bg-white text-black text-[9px] font-black tracking-[0.2em] py-2 text-center uppercase sticky top-0 z-[110]">
+
         ENVÍOS GRATIS PARA TODO LIMA
+
     </div>
+
+
 
     <nav class="p-4 md:p-6 sticky top-[30px] bg-[#0a0a0a] z-[100] border-b border-white/5">
+
         <div class="container mx-auto flex justify-between items-center">
+
             <div class="flex items-center gap-4">
+
                 <a href="index.html" class="block">
+
                     <img src="logo2.png" alt="1811 Logo" class="h-10 md:h-16 w-auto object-contain">
+
                 </a>
+
                 <button id="mobile-cat-trigger" onclick="toggleCategoriesMobile()" class="md:hidden text-[10px] font-black uppercase tracking-widest text-white bg-white/5 px-3 py-2 rounded">Categorías</button>
+
             </div>
+
             <button onclick="toggleCart()" class="border border-white/10 px-4 py-2 text-[10px] font-black tracking-widest text-white uppercase">
+
                 CARRITO (<span id="cart-count">0</span>)
+
             </button>
+
         </div>
+
     </nav>
 
+
+
     <div id="category-panel-mobile" class="md:hidden">
+
         <div class="grid grid-cols-2 gap-2">
+
             <button onclick="filterProducts('TODOS')" class="text-[9px] font-black p-3 border border-white/10 text-white uppercase">INICIO</button>
+
             <button onclick="filterProducts('BILLETERAS')" class="text-[9px] font-black p-3 border border-white/10 text-white uppercase">BILLETERAS</button>
+
             <button onclick="filterProducts('ACCESORIOS')" class="text-[9px] font-black p-3 border border-white/10 text-white uppercase">ACCESORIOS</button>
+
             <button onclick="filterProducts('BOLSOS')" class="text-[9px] font-black p-3 border border-white/10 text-white uppercase">BOLSOS</button>
+
             <button onclick="filterProducts('CINTURONES')" class="text-[9px] font-black p-3 border border-white/10 text-white uppercase">CINTURONES</button>
+
             <button onclick="filterProducts('LLAVEROS')" class="text-[9px] font-black p-3 border border-white/10 text-white uppercase">LLAVEROS</button>
+
             <button onclick="filterProducts('BEADS')" class="text-[9px] font-black p-3 border border-white/10 text-white uppercase">BEADS</button>
+
         </div>
+
     </div>
+
+
 
     <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
 
+
+
     <div id="cart-sidebar" class="flex flex-col">
+
         <div class="p-6 border-b border-white/5 flex justify-between items-center">
+
             <h2 class="text-[11px] font-black tracking-[0.3em] uppercase text-white">Tu Selección</h2>
+
             <button onclick="toggleCart()" class="text-xs text-gray-500 font-bold uppercase">Cerrar</button>
+
         </div>
+
         <div id="cart-items" class="flex-1 overflow-y-auto p-6 no-scrollbar space-y-6"></div>
+
         <div class="p-6 border-t border-white/5 bg-[#141414]">
+
             <div class="flex justify-between mb-4">
+
                 <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Total Estimado</span>
+
                 <span class="text-white font-black" id="cart-total">S/ 0.00</span>
+
             </div>
+
             <button onclick="checkoutWhatsApp()" class="w-full bg-white text-black py-4 text-[10px] font-black uppercase tracking-widest hover:bg-gray-200 transition-all">Enviar pedido a WhatsApp</button>
+
         </div>
+
     </div>
+
+
 
     <div id="main-content" class="container mx-auto px-4 py-6">
+
         <div class="mb-10 text-center md:text-left">
+
             <h2 id="view-title" class="titulo-destacado text-[20px] md:text-[28px] text-white uppercase">
+
                 ARTICULOS BRAVAZOS CON LOS MEJORES MATERIALES HECHOS EN PERÚ
+
             </h2>
+
             <div class="h-[1px] w-12 bg-white/20 mt-4 mx-auto md:mx-0"></div>
+
         </div>
+
+
 
         <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+
             <div id="category-panel" class="hidden md:block md:col-span-2">
+
                 <h3 class="text-[9px] font-black text-white/30 uppercase tracking-[0.3em] mb-4">Filtrar</h3>
+
                 <div class="category-list">
+
                     <button onclick="filterProducts('TODOS')" class="category-btn" id="btn-TODOS">INICIO</button>
+
                     <button onclick="filterProducts('BILLETERAS')" class="category-btn" id="btn-BILLETERAS">BILLETERAS</button>
+
                     <button onclick="filterProducts('ACCESORIOS')" class="category-btn" id="btn-ACCESORIOS">ACCESORIOS</button>
+
                     <button onclick="filterProducts('BOLSOS')" class="category-btn" id="btn-BOLSOS">BOLSOS</button>
+
                     <button onclick="filterProducts('CINTURONES')" class="category-btn" id="btn-CINTURONES">CINTURONES</button>
+
                     <button onclick="filterProducts('LLAVEROS')" class="category-btn" id="btn-LLAVEROS">LLAVEROS</button>
+
                     <button onclick="filterProducts('BEADS')" class="category-btn" id="btn-BEADS">BEADS</button>
+
                 </div>
+
             </div>
+
             <main class="md:col-span-10" id="products-grid"></main>
+
         </div>
+
     </div>
+
+
 
     <div id="single-product-view" class="hidden container mx-auto px-4 py-6 min-h-screen">
+
         <button onclick="goHome()" class="mb-6 text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-white transition-colors">← Regresar al catálogo</button>
+
         <div id="product-detail-content"></div>
+
     </div>
 
+
+
     <footer class="mt-20 border-t border-white/10 p-8 bg-[#0a0a0a]">
+
         <div class="container mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+
             <div class="text-[9px] font-bold text-gray-500 uppercase tracking-widest leading-loose">
+
                 REALIZAMOS ENVIOS GRATIS PARA TODO LIMA<br>
+
                 LOS ENVIOS A PROVINCIA SE ENVIARAN MEDIANTE SHALOM<br><br>
+
                 ENVIOS INTERNACIONALES PREVIA COORDINACION<br>
+
                 LIMA - PERÚ
+
             </div>
+
             <div class="flex items-center gap-4">
+
                 <a href="https://www.instagram.com/1811supplyco/" target="_blank" class="hover:opacity-70 transition-opacity">
+
                     <svg class="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849s-.011 3.585-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.849-.07c-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849s.012-3.584.07-4.849c.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.667.072 4.947c.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072s3.667-.014 4.947-.072c4.358-.2 6.78-2.618 6.98-6.98.058-1.28.072-1.689.072-4.947s-.014-3.667-.072-4.947c-.2-4.358-2.618-6.78-6.98-6.98-1.28-.058-1.689-.072-4.948-.072zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+
                 </a>
+
             </div>
+
         </div>
+
     </footer>
 
+
+
     <script>
+
         const products = [
+
             { id: 1, cat: "BOLSOS", name: "UTILITY DOPP KIT DISTRESSED CHOCOLATE", desc: "NECESER TODO TERRENO CON AMPLIO ESPACIO, BOLSILLO CON CIERRE, BOLSILLOS LATERALES Y HANDLE DE DOBLE AGARRE, PERFECTO PARA TUS ARTÍCULOS DE USO DIARIO (ASEO, TECH, ETC.)<br><br>MEDIDAS: 16 cm X 25 cm APROX (SIN CONTAR EL HANDLE)<br><br>MATERIALES: CUERO DE RES FULL GRAIN, CANVAS DE ALTO GRAMAJE, CORDURA NYLON, ACERO INOXIDABLE Y LATÓN", price: 179, imgs: ["images/DOPPKITmarron.webp", "images/detalleDOPPKIT.webp", "images/detalleDOPPKIT2.webp"], variants: [] },
+
             { id: 15, cat: "BOLSOS", name: "UTILITY DOPP KIT CAMO", desc: "NECESER TODO TERRENO CON AMPLIO ESPACIO, BOLSILLO CON CIERRE, BOLSILLOS LATERALES Y HANDLE DE DOBLE AGARRE, PERFECTO PARA TUS ARTÍCULOS DE USO DIARIO (ASEO, TECH, ETC.)<br><br>MEDIDAS: 16 cm X 25 cm APROX (SIN CONTAR EL HANDLE)<br><br>MATERIALES: CUERO DE RES FULL GRAIN, CORDURA NYLON, ACERO INOXIDABLE Y LATÓN", price: 179, imgs: ["images/camodoppkit.webp", "images/camodoppkit2.webp", "images/camodoppkit1.webp"], variants: [] },
+
             { id: 2, cat: "BILLETERAS", name: "ZIPPERED WALLET", desc: "BILLETERA MINIMALISTA DE DISEÑO JAPONES PARA TARJETAS, BILLETES Y MONEDAS.<br><br>MEDIDAS: 9.5 CM X 11 CM APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE LATÓN MACIZO", price: 89, imgs: ["images/ZIPPERED.webp", "images/ZIPPEREDdetalle.webp"], variants: [] },
+
             { id: 3, cat: "BILLETERAS", name: "GANADERO WALLET", desc: "BIFOLD HÍBRIDA CON ESPACIO PARA TARJETAS, BILLETES Y 4 ESPACIOS PEQUEÑOS PARA MINI HERRAMIENTAS DE VICTORINOX (LAPICERO, MONDADIENTES, PINZAS, ETC.)<br><br>MEDIDAS: 10.5 CM X 9 CM APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y TELA CORDURA", price: 109, varPhotos: { "CHOCOLATE": ["images/GANADERO.webp", "images/GANADEROabierto.webp", "images/GANADEROdetalle.webp"], "NEGRO": ["images/GANADEROnegro.webp", "images/GANADEROnegroabierto.webp", "images/GANADEROdetallenegro.webp"] }, variants: ["CHOCOLATE", "NEGRO"], selected: "CHOCOLATE" },
+
             { id: 4, cat: "BILLETERAS", name: "DÍDAC WALLET", desc: "TARJETERO MINIMALISTA PERFECTO PARA USO DIARIO PUEDES LLEWAR TARJETAS Y BILLETES.<br><br>MEDIDAS: 6.7 cm X 10.5 cm APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE LATON / ACERO INOXIDABLE", price: 129, varPhotos: { "CHOCOLATE": ["images/didac.webp", "images/DIDACatras.webp"], "NEGRO": ["images/DIDACnegro.webp"] }, variants: ["CHOCOLATE", "NEGRO"], selected: "CHOCOLATE" },
+
             { id: 5, cat: "ACCESORIOS", name: "MULTITOOL CARD + FUNDA DE CUERO", desc: "TARJETA MULTIHERRAMIENTA CON 10 FUNCIONES:<br>• ABRE LATAS<br>• ABRE CAJAS<br>• DESTORNILLADOR PLANO<br>• REGLA 4 CM<br>• ABRE BOTELLAS<br>• LLAVE INGLESA 6 MEDIDAS<br>• LLAVE MARIPOSA<br>• SIERRA<br>• ORIFICIO PARA LANYARD<br>• INDICADOR AUXILIAR DE DIRECCIÓN<br><br>MATERIAL: ACERO INOXIDABLE", price: 89, varPhotos: { "CHOCOLATE": ["images/MULTITOOL.webp", "images/MULTITOOLfunda.webp"], "NEGRO": ["images/MULTITOOL.webp", "images/MULTITOOLfundanegra.webp"] }, variants: ["CHOCOLATE", "NEGRO"], selected: "CHOCOLATE" },
+
             { id: 6, cat: "ACCESORIOS", name: "UTILITY TRAY", desc: "BANDEJA PARA COLOCAR OBJETOS DE BOLSILLO PERFECTO PARA TU CASA U OFICINA.<br><br>MATERIALES: CUERO DE RES FULL GRAIN, HERRAJE DE ACERO INOXIDABLE Y TELA TWEED", price: 99, varPhotos: { "SMALL": ["images/BANDEJAS.webp"], "MEDIUM": ["images/BANDEJAM.webp"], "LARGE": ["images/BANDEJAL.webp"] }, varPrices: { "SMALL": 99, "MEDIUM": 129, "LARGE": 159 }, varDesc: { "SMALL": "MEDIDAS: 14 cm X 14 cm APROX.", "MEDIUM": "MEDIDAS: 20 cm X 20 cm APROX.", "LARGE": "MEDIDAS: 20 cm X 30 cm APROX." }, variants: ["SMALL", "MEDIUM", "LARGE"], selected: "SMALL" },
+
             { id: 7, cat: "ACCESORIOS", name: "PORTALENTES", desc: "FUNDA PARA LENTES CON INTERIOR ANTIRRAYONES Y OJAL PARA ENGANCHE.<br><br>MEDIDAS: 18 cm X 7.5 cm APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN, HERRAJE DE LATÓN Y ACERO INOXIDABLE", price: 99, imgs: ["images/PORTALENTES.webp", "images/PORTALENTESatras.webp"], variants: [] },
+
             { id: 8, cat: "CINTURONES", name: "MIGHTY BELT + BLACK BUCKLE", desc: "CORREA TODO TERRENO DE PERFIL CASUAL PERFECTA PARA TODAS TUS AVENTURAS.<br><br>MEDIDAS: 4 cm DE ANCHO X LARGO PERSONALIZABLE.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE ACERO INOXIDABLE PAVONADO EN NEGRO", price: 149, imgs: ["images/MIGHTY.webp", "images/MIGHTYcompleta.webp"], variants: [] },
+
             { id: 9, cat: "LLAVEROS", name: "EL GANCHO", desc: "LLAVERO CON MOSQUETÓN DE PERFIL TÁCTICO.<br><br>MEDIDAS: 13.5 cm X 3 cm APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE ACERO INOXIDABLE", price: 79, varPhotos: { "CHOCOLATE": ["images/GANCHO.webp"], "NEGRO": ["images/GANCHOnegro.webp"] }, variants: ["CHOCOLATE", "NEGRO"], selected: "CHOCOLATE" },
+
             { id: 10, cat: "BEADS", name: "SKULL BEAD", desc: "CUENTA DECORATIVA.<br><br>MATERIAL: LATÓN MACIZO", price: 89, imgs: ["images/SKULLBEAD.webp"], variants: [] },
+
             { id: 11, cat: "BEADS", name: "BABY DEVIL BEAD", desc: "CUENTA DECORATIVA.<br><br>MATERIAL: LATÓN MACIZO", price: 99, imgs: ["images/BABYDEVIL.webp"], variants: [] },
+
             { id: 12, cat: "ACCESORIOS", name: "COASTERS", desc: "SET DE POSAVASOS DE CUERO DE PERFIL RÚSTICO INDISPENSABLES PARA TU CRISTALERIA / TAZAS Y BUENAZO PARA TUS REUNIONES.<br><br>MEDIDAS: 11 cm (DIAMETRO)<br><br>MATERIALES: CUERO DE RES FULL GRAIN", price: 89, varPhotos: { "JUEGO DE 4": ["images/COASTERS.webp", "images/COASTERsola.webp"], "JUEGO DE 6": ["images/COASTERS.webp", "images/COASTERsola.webp"] }, varPrices: { "JUEGO DE 4": 89, "JUEGO DE 6": 119 }, variants: ["JUEGO DE 4", "JUEGO DE 6"], selected: "JUEGO DE 4" },
+
             { id: 13, cat: "BILLETERAS", name: "MINI TRUCKER WALLET", desc: "BILLETERA DE CAMIONERO CON AMPLIO ESPACIO PARA MONEDAS, ESPACIO PARA BILLETES (DOBLADOS) Y ESPACIO EN EL MEDIO PARA TARJETAS, CUENTA CON OJAL PARA ENGANCHAR CADENA..<br><br>MATERIALES: CUERO DE RES FULL GRAIN, LATON y ACERO INOXIDABLE", price: 129, varPhotos: { "SIN CADENA": ["images/trucker1.webp", "images/trucker2.webp"], "CON CADENA": ["images/trucker3.webp"] }, varPrices: { "SIN CADENA": 129, "CON CADENA": 159}, variants: ["SIN CADENA", "CON CADENA"], selected: "SIN CADENA" },
+
             { id: 14, cat: "BEADS", name: "HORNED SKULL BEAD", desc: "CUENTA DECORATIVA.<br><br>MATERIAL: LATÓN MACIZO", price: 59, imgs: ["images/hornbead.webp"], variants: [] }
+
         ];
 
+
+
         let cart = JSON.parse(localStorage.getItem('cart_1811')) || [];
+
         let currentImgIdx = {}; 
+
         
+
         function init() {
+
             updateCartUI(); 
+
             const params = new URLSearchParams(window.location.search);
+
             const productId = params.get('id');
+
             const cat = params.get('cat');
 
+
+
             if (productId) {
+
                 showSingleProduct(parseInt(productId));
+
             } else if (cat && cat !== 'TODOS') {
+
                 render(cat);
+
             } else {
+
                 renderHomeWithBanners();
+
             }
+
         }
 
+
+
         function renderHomeWithBanners() {
+
             document.getElementById('body-tag').classList.remove('product-open');
+
             document.getElementById('main-content').classList.remove('hidden');
+
             document.getElementById('single-product-view').classList.add('hidden');
+
             document.getElementById('view-title').innerHTML = "ARTICULOS BRAVAZOS CON LOS MEJORES MATERIALES HECHOS EN PERÚ";
+
             
+
             document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+
             document.getElementById('btn-TODOS').classList.add('active');
 
+
+
             const grid = document.getElementById('products-grid');
+
             grid.className = "md:col-span-10 flex flex-col"; 
+
             grid.innerHTML = '';
+
+
 
             const categories = ["BILLETERAS", "ACCESORIOS", "BOLSOS", "CINTURONES", "LLAVEROS", "BEADS"];
 
+
+
             categories.forEach(cat => {
+
                 const catProducts = products.filter(p => p.cat === cat);
+
                 if(catProducts.length === 0) return;
 
+
+
                 const section = document.createElement('div');
+
                 section.className = "category-banner";
+
                 section.innerHTML = `
+
                     <div class="flex justify-between items-center mb-4 border-b border-white/5 pb-2">
+
                         <h2 class="text-[10px] font-black tracking-widest text-white uppercase">${cat}</h2>
+
                         <button onclick="filterProducts('${cat}')" class="text-[9px] text-gray-500 font-bold uppercase hover:text-white">Ver Todo →</button>
+
                     </div>
+
                     <div class="category-slider no-scrollbar">
+
                         ${catProducts.map(p => `
+
                             <div class="min-w-[160px] md:min-w-[220px] cursor-pointer group" onclick="window.location.href='?id=${p.id}'">
+
                                 <div class="aspect-square bg-black mb-2 overflow-hidden">
+
                                     <img src="${p.imgs ? p.imgs[0] : p.varPhotos[p.selected][0]}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+
                                 </div>
+
                                 <h4 class="text-[8px] md:text-[9px] font-black text-white uppercase truncate">${p.name}</h4>
+
                                 <p class="text-[8px] text-gray-400 font-bold">S/ ${p.price}</p>
+
                             </div>
+
                         `).join('')}
+
                     </div>
+
                 `;
+
                 grid.appendChild(section);
+
             });
+
         }
+
+
 
         function render(filter = 'TODOS') {
+
             document.getElementById('body-tag').classList.remove('product-open');
+
             document.getElementById('main-content').classList.remove('hidden');
+
             document.getElementById('single-product-view').classList.add('hidden');
+
             document.getElementById('category-panel-mobile').classList.remove('active');
+
             document.getElementById('view-title').innerText = filter;
+
             
+
             document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+
             const activeBtn = document.getElementById(`btn-${filter}`);
+
             if(activeBtn) activeBtn.classList.add('active');
 
+
+
             const grid = document.getElementById('products-grid');
+
             grid.className = "md:col-span-10 grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6";
+
             grid.innerHTML = '';
+
             
+
             const filtered = products.filter(p => p.cat === filter);
+
             filtered.forEach(p => {
+
                 let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
+
                 let displayPrice = p.varPrices ? p.varPrices[p.selected] : p.price;
+
                 const div = document.createElement('div');
+
                 div.className = "product-card p-2 md:p-4";
+
                 div.innerHTML = `
+
                     <div class="aspect-square mb-2 md:mb-4 overflow-hidden cursor-pointer bg-black" onclick="window.location.href='?id=${p.id}'">
+
                         <img src="${gallery[0]}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+
                     </div>
+
                     <div class="flex flex-col flex-1">
+
                         <div class="flex flex-col mb-2">
+
                             <h3 class="font-bold text-[8px] md:text-[10px] text-white tracking-widest uppercase mb-1">${p.name}</h3>
+
                             <span class="text-[9px] md:text-[10px] text-gray-400 font-bold">S/ ${displayPrice}</span>
+
                         </div>
+
                         <div class="mt-auto flex flex-col gap-2">
+
                             <button onclick="addToCart(${p.id})" class="w-full bg-white text-black py-2 md:py-3 text-[8px] md:text-[9px] font-black uppercase tracking-widest hover:bg-gray-200 transition-all">Añadir</button>
+
                         </div>
+
                     </div>`;
+
                 grid.appendChild(div);
+
             });
+
         }
+
+
 
         function filterProducts(cat) { window.location.href = `index.html?cat=${cat}`; }
 
+
+
         function showSingleProduct(id) {
+
             document.getElementById('body-tag').classList.add('product-open');
+
             document.getElementById('main-content').classList.add('hidden');
+
             document.getElementById('category-panel-mobile').classList.remove('active');
+
             const view = document.getElementById('single-product-view');
+
             const container = document.getElementById('product-detail-content');
+
             view.classList.remove('hidden');
+
             
+
             const p = products.find(prod => prod.id === id);
+
             if(!p) return;
 
+
+
             if (currentImgIdx[p.id] === undefined) currentImgIdx[p.id] = 0;
+
             let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
+
             let price = p.varPrices ? p.varPrices[p.selected] : p.price;
+
             let extraDesc = p.varDesc ? `<br>${p.varDesc[p.selected]}` : '';
 
+
+
             container.innerHTML = `
+
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+
                     <div class="relative aspect-square bg-black overflow-hidden rounded-sm group">
+
                         <div class="carousel-container" id="carousel-${p.id}" onscroll="updateDotsOnScroll(${p.id})">
+
                             ${gallery.map((img, i) => `
+
                                 <div class="carousel-item">
+
                                     <img src="${img}" class="w-full h-full object-cover">
+
                                 </div>
+
                             `).join('')}
+
                         </div>
+
+
 
                         ${gallery.length > 1 ? `
+
                         <div class="nav-area left-area" onclick="changeImg(${p.id}, -1)">
+
                             <div class="nav-arrow-mini">❮</div>
+
                         </div>
+
                         <div class="nav-area right-area" onclick="changeImg(${p.id}, 1)">
+
                             <div class="nav-arrow-mini">❯</div>
+
                         </div>
+
                         
+
                         <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-1.5 z-[70] pointer-events-none">
+
                             ${gallery.map((_, i) => `
+
                                 <div id="dot-${p.id}-${i}" class="w-1.5 h-1.5 rounded-full transition-all ${i === currentImgIdx[p.id] ? 'bg-white scale-110' : 'bg-white/30'}"></div>
+
                             `).join('')}
+
                         </div>
+
                         ` : ''}
+
                     </div>
+
+
 
                     <div class="flex flex-col justify-center">
+
                         <span class="text-[9px] text-white/40 font-black tracking-[0.3em] uppercase mb-2">${p.cat}</span>
+
                         <h1 class="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter mb-2 leading-none">${p.name}</h1>
+
                         <p class="text-xl md:text-2xl text-white font-bold mb-6">S/ ${price}</p>
+
                         <div class="text-[11px] leading-relaxed text-gray-400 uppercase font-bold mb-8 border-l border-white/20 pl-4">
+
                             ${p.desc}
+
                             ${extraDesc}
+
                         </div>
+
                         <div class="flex flex-wrap gap-2 mb-10">
+
                             ${p.variants.map(v => `<button onclick="setVar(${p.id}, '${v}')" class="variant-btn ${p.selected === v ? 'selected' : ''}">${v}</button>`).join('')}
+
                         </div>
+
                         <button onclick="addToCart(${p.id})" class="w-full bg-white text-black py-5 text-[11px] font-black uppercase tracking-[0.2em] active:scale-95 transition-all">Añadir al Carrito</button>
+
                     </div>
+
                 </div>`;
+
             
+
             // Posicionar el scroll en la imagen guardada
+
             setTimeout(() => {
+
                 const carousel = document.getElementById(`carousel-${p.id}`);
+
                 if(carousel) carousel.scrollLeft = carousel.clientWidth * currentImgIdx[p.id];
+
             }, 10);
+
         }
+
+
 
         // Cambio manual por clic (PC)
+
         function changeImg(id, step) {
+
             const p = products.find(x => x.id === id);
+
             let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
+
             const carousel = document.getElementById(`carousel-${id}`);
+
             
+
             currentImgIdx[id] = (currentImgIdx[id] + step + gallery.length) % gallery.length;
+
             carousel.scrollTo({ left: carousel.clientWidth * currentImgIdx[id], behavior: 'smooth' });
+
         }
+
+
 
         // Sincronizar puntos al deslizar (Celular)
+
         function updateDotsOnScroll(id) {
+
             const carousel = document.getElementById(`carousel-${id}`);
+
             const p = products.find(x => x.id === id);
+
             let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
+
             
+
             const newIdx = Math.round(carousel.scrollLeft / carousel.clientWidth);
+
             if(newIdx !== currentImgIdx[id]) {
+
                 currentImgIdx[id] = newIdx;
+
                 gallery.forEach((_, i) => {
+
                     const dot = document.getElementById(`dot-${id}-${i}`);
+
                     if(dot) dot.className = `w-1.5 h-1.5 rounded-full transition-all ${i === newIdx ? 'bg-white scale-110' : 'bg-white/30'}`;
+
                 });
+
             }
+
         }
+
+
 
         function setVar(id, v) {
+
             const p = products.find(prod => prod.id === id);
+
             p.selected = v;
+
             currentImgIdx[id] = 0; // Reiniciar a la primera foto de la variante
+
             showSingleProduct(id);
+
         }
+
+
 
         function toggleCart() {
+
             document.getElementById('cart-sidebar').classList.toggle('open');
+
             document.getElementById('cart-overlay').classList.toggle('active');
+
         }
+
+
 
         function addToCart(id) {
+
             const p = products.find(prod => prod.id === id);
+
             const price = p.varPrices ? p.varPrices[p.selected] : p.price;
+
             cart.push({ ...p, currentPrice: price, currentVariant: p.selected });
+
             localStorage.setItem('cart_1811', JSON.stringify(cart));
+
             updateCartUI();
+
             if(!document.getElementById('cart-sidebar').classList.contains('open')) toggleCart();
+
         }
+
+
 
         function removeFromCart(index) {
+
             cart.splice(index, 1);
+
             localStorage.setItem('cart_1811', JSON.stringify(cart));
+
             updateCartUI();
+
         }
+
+
 
         function updateCartUI() {
+
             const container = document.getElementById('cart-items');
+
             const count = document.getElementById('cart-count');
+
             const total = document.getElementById('cart-total');
+
             count.innerText = cart.length;
+
             container.innerHTML = '';
+
             let sum = 0;
+
             cart.forEach((item, index) => {
+
                 sum += item.currentPrice;
+
                 let gallery = (item.varPhotos && item.varPhotos[item.currentVariant]) ? item.varPhotos[item.currentVariant] : item.imgs;
+
                 container.innerHTML += `
+
                     <div class="flex gap-4 items-center border-b border-white/5 pb-4">
+
                         <img src="${gallery[0]}" class="w-16 h-16 object-cover bg-black rounded-sm">
+
                         <div class="flex-1 text-[9px] uppercase font-black">
+
                             <h4 class="text-white">${item.name}</h4>
+
                             <p class="text-gray-500">${item.currentVariant || ''}</p>
+
                             <p class="text-white mt-1">S/ ${item.currentPrice}</p>
+
                         </div>
+
                         <button class="text-red-500 text-xs" onclick="removeFromCart(${index})">Eliminar</button>
+
                     </div>`;
+
             });
+
             total.innerText = `S/ ${sum.toFixed(2)}`;
+
         }
+
+
 
         function checkoutWhatsApp() {
+
             if(cart.length === 0) return;
+
             let sum = 0;
+
             let msg = `Hola 1811, quisiera realizar este pedido:\n\n`;
+
             cart.forEach(item => {
+
                 msg += `• *${item.name}* ${item.currentVariant ? '('+item.currentVariant+')' : ''} - S/ ${item.currentPrice}\n`;
+
                 sum += item.currentPrice;
+
             });
+
             msg += `\n*TOTAL: S/ ${sum.toFixed(2)}*`;
+
             const phone = "51947833118";
+
             window.location.href = `whatsapp://send?phone=${phone}&text=${encodeURIComponent(msg)}`;
+
         }
 
-        function toggleCategoriesMobile() { document.getElementById('category-panel-mobile').classList.toggle('active'); }
-        function goHome() { window.location.href = "index.html"; }
 
-        init();
-    </script>
-</body>
-</html>
+
+        function toggleCategoriesMobile() { document.getElementById('category-panel-mobile').class
