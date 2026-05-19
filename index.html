@@ -27,13 +27,7 @@
         #cart-sidebar.open { right: 0; }
         .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 150; display: none; }
         .cart-overlay.active { display: block; }
-/* FORZAR FORMATO 1X1 EN TODO EL INICIO AUTOMÁTICAMENTE */
-        .category-slider img, #products-grid img {
-            width: 100% !important;
-            height: 100% !important;
-            aspect-ratio: 1 / 1 !important;
-            object-fit: contain !important;
-        }
+
         /* ESTILOS CARRUSEL TÁCTIL + PC */
         .carousel-container {
             display: flex;
@@ -176,15 +170,13 @@
             { id: 10, cat: "BEADS", name: "SKULL BEAD", desc: "CUENTA DECORATIVA.<br><br>MATERIAL: LATÓN MACIZO", price: 89, imgs: ["images/SKULLBEAD.webp"], variants: [] },
             { id: 11, cat: "BEADS", name: "BABY DEVIL BEAD", desc: "CUENTA DECORATIVA.<br><br>MATERIAL: LATÓN MACIZO", price: 99, imgs: ["images/BABYDEVIL.webp"], variants: [] },
             { id: 12, cat: "ACCESORIOS", name: "COASTERS", desc: "SET DE POSAVASOS DE CUERO DE PERFIL RÚSTICO INDISPENSABLES PARA TU CRISTALERIA / TAZAS Y BUENAZO PARA TUS REUNIONES.<br><br>MEDIDAS: 11 cm (DIAMETRO)<br><br>MATERIALES: CUERO DE RES FULL GRAIN", price: 89, varPhotos: { "JUEGO DE 4": ["images/COASTERS.webp", "images/COASTERsola.webp"], "JUEGO DE 6": ["images/COASTERS.webp", "images/COASTERsola.webp"] }, varPrices: { "JUEGO DE 4": 89, "JUEGO DE 6": 119 }, variants: ["JUEGO DE 4", "JUEGO DE 6"], selected: "JUEGO DE 4" },
-            { id: 16, cat: "LLAVEROS", name: "CARAVINER U", desc: "MOSQUETÓN/LLAVERO QUE SE PUEDE MONTAR EN LA CORREA.<br><br>MEDIDAS: MEDIDAS: 3.5 CM X 7.5 CM APROX.<br>MATERIAL: LATÓN MACIZO", price: 79, imgs: ["images/caraviner.webp", "images/caraviner2.webp"], variants: [] },
-            { id: 17, cat: "BEADS", name: "MODELO 01 BEAD", desc: "CUENTA DECORATIVA.<br><br>MATERIAL: LATÓN MACIZO", price: 89, imgs: ["images/01bead.webp"], variants: [] },
             { id: 13, cat: "BILLETERAS", name: "MINI TRUCKER WALLET", desc: "BILLETERA DE CAMIONERO CON AMPLIO ESPACIO PARA MONEDAS, ESPACIO PARA BILLETES (DOBLADOS) Y ESPACIO EN EL MEDIO PARA TARJETAS, CUENTA CON OJAL PARA ENGANCHAR CADENA..<br><br>MATERIALES: CUERO DE RES FULL GRAIN, LATON y ACERO INOXIDABLE", price: 129, varPhotos: { "SIN CADENA": ["images/trucker1.webp", "images/trucker2.webp"], "CON CADENA": ["images/trucker3.webp"] }, varPrices: { "SIN CADENA": 129, "CON CADENA": 159}, variants: ["SIN CADENA", "CON CADENA"], selected: "SIN CADENA" },
             { id: 14, cat: "BEADS", name: "HORNED SKULL BEAD", desc: "CUENTA DECORATIVA.<br><br>MATERIAL: LATÓN MACIZO", price: 59, imgs: ["images/hornbead.webp"], variants: [] }
         ];
 
         let cart = JSON.parse(localStorage.getItem('cart_1811')) || [];
-        let currentImgIdx = {}; 
-        
+        let currentImgIdx = {};
+
         function init() {
             updateCartUI(); 
             const params = new URLSearchParams(window.location.search);
@@ -212,7 +204,6 @@
             const grid = document.getElementById('products-grid');
             grid.className = "md:col-span-10 flex flex-col"; 
             grid.innerHTML = '';
-
             const categories = ["BILLETERAS", "ACCESORIOS", "BOLSOS", "CINTURONES", "LLAVEROS", "BEADS"];
 
             categories.forEach(cat => {
@@ -256,7 +247,6 @@
             const grid = document.getElementById('products-grid');
             grid.className = "md:col-span-10 grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6";
             grid.innerHTML = '';
-            
             const filtered = products.filter(p => p.cat === filter);
             filtered.forEach(p => {
                 let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
@@ -297,7 +287,6 @@
             let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
             let price = p.varPrices ? p.varPrices[p.selected] : p.price;
             let extraDesc = p.varDesc ? `<br>${p.varDesc[p.selected]}` : '';
-
             container.innerHTML = `
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
                     <div class="relative aspect-square bg-black overflow-hidden rounded-sm group">
@@ -316,7 +305,6 @@
                         <div class="nav-area right-area" onclick="changeImg(${p.id}, 1)">
                             <div class="nav-arrow-mini">❯</div>
                         </div>
-                        
                         <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-1.5 z-[70] pointer-events-none">
                             ${gallery.map((_, i) => `
                                 <div id="dot-${p.id}-${i}" class="w-1.5 h-1.5 rounded-full transition-all ${i === currentImgIdx[p.id] ? 'bg-white scale-110' : 'bg-white/30'}"></div>
@@ -340,29 +328,24 @@
                     </div>
                 </div>`;
             
-            // Posicionar el scroll en la imagen guardada
             setTimeout(() => {
                 const carousel = document.getElementById(`carousel-${p.id}`);
                 if(carousel) carousel.scrollLeft = carousel.clientWidth * currentImgIdx[p.id];
             }, 10);
         }
 
-        // Cambio manual por clic (PC)
         function changeImg(id, step) {
             const p = products.find(x => x.id === id);
             let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
             const carousel = document.getElementById(`carousel-${id}`);
-            
             currentImgIdx[id] = (currentImgIdx[id] + step + gallery.length) % gallery.length;
             carousel.scrollTo({ left: carousel.clientWidth * currentImgIdx[id], behavior: 'smooth' });
         }
 
-        // Sincronizar puntos al deslizar (Celular)
         function updateDotsOnScroll(id) {
             const carousel = document.getElementById(`carousel-${id}`);
             const p = products.find(x => x.id === id);
             let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
-            
             const newIdx = Math.round(carousel.scrollLeft / carousel.clientWidth);
             if(newIdx !== currentImgIdx[id]) {
                 currentImgIdx[id] = newIdx;
@@ -376,7 +359,7 @@
         function setVar(id, v) {
             const p = products.find(prod => prod.id === id);
             p.selected = v;
-            currentImgIdx[id] = 0; // Reiniciar a la primera foto de la variante
+            currentImgIdx[id] = 0; 
             showSingleProduct(id);
         }
 
@@ -439,7 +422,6 @@
 
         function toggleCategoriesMobile() { document.getElementById('category-panel-mobile').classList.toggle('active'); }
         
-        // Ejecutar init al cargar la página
         window.onload = init;
     </script>
 </body>
