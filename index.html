@@ -157,28 +157,28 @@
 
     <script>
         const products = [
-            { id: 1, cat: "BOLSOS", name: "UTILITY DOPP KIT DISTRESSED CHOCOLATE", desc: "NECESER TODO TERRENO CON AMPLIO ESPACIO, BOLSILLO CON CIERRE, BOLSILLOS LATERALES Y HANDLE DE DOBLE AGARRE, PERFECTO PARA TUS ARTÍCULOS DE USO DIARIO (ASEO, TECH, ETC.)<br><br>MEDIDAS: 16 cm X 25 cm APROX (SIN CONTAR EL HANDLE)<br><br>MATERIALES: CUERO DE RES FULL GRAIN, CANVAS DE ALTO GRAMAJE, CORDURA NYLON, ACERO INOXIDABLE Y LATÓN", price: "179.00", imgs: ["images/DOPPKITmarron.webp", "images/detalleDOPPKIT.webp", "images/detalleDOPPKIT2.webp"], variants: [] },
-            { id: 15, cat: "BOLSOS", name: "UTILITY DOPP KIT CAMO", desc: "NECESER TODO TERRENO CON AMPLIO ESPACIO, BOLSILLO CON CIERRE, BOLSILLOS LATERALES Y HANDLE DE DOBLE AGARRE, PERFECTO PARA TUS ARTÍCULOS DE USO DIARIO (ASEO, TECH, ETC.)<br><br>MEDIDAS: 16 cm X 25 cm APROX (SIN CONTAR EL HANDLE)<br><br>MATERIALES: CUERO DE RES FULL GRAIN, CORDURA NYLON, ACERO INOXIDABLE Y LATÓN", price: "179.00", imgs: ["images/camodoppkit.webp", "images/camodoppkit2.webp", "images/camodoppkit1.webp"], variants: [] },
-            { id: 2, cat: "BILLETERAS", name: "ZIPPERED WALLET", desc: "BILLETERA MINIMALISTA DE DISEÑO JAPONES PARA TARJETAS, BILLETES Y MONEDAS.<br><br>MEDIDAS: 9.5 CM X 11 CM APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE LATÓN MACIZO", price: "89.00", imgs: ["images/ZIPPERED.webp", "images/ZIPPEREDdetalle.webp"], variants: [] },
-            { id: 3, cat: "BILLETERAS", name: "GANADERO WALLET", desc: "BIFOLD HÍBRIDA CON ESPACIO PARA TARJETAS, BILLETES Y 4 ESPACIOS PEQUEÑOS PARA MINI HERRAMIENTAS DE VICTORINOX (LAPICERO, MONDADIENTES, PINZAS, ETC.)<br><br>MEDIDAS: 10.5 CM X 9 CM APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y TELA CORDURA", price: "109.00", varPhotos: { "CHOCOLATE": ["images/GANADERO.webp", "images/GANADEROabierto.webp", "images/GANADEROdetalle.webp"], "NEGRO": ["images/GANADEROnegro.webp", "images/GANADEROnegroabierto.webp", "images/GANADEROdetallenegro.webp"] }, variants: ["CHOCOLATE", "NEGRO"], selected: "CHOCOLATE" },
-            { id: 4, cat: "BILLETERAS", name: "DÍDAC WALLET", desc: "TARJETERO MINIMALISTA PERFECTO PARA USO DIARIO PUEDES LLEWAR TARJETAS Y BILLETES.<br><br>MEDIDAS: 6.7 cm X 10.5 cm APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE LATON / ACERO INOXIDABLE", price: "129.00", varPhotos: { "CHOCOLATE": ["images/didac.webp", "images/DIDACatras.webp"], "NEGRO": ["images/DIDACnegro.webp"] }, variants: ["CHOCOLATE", "NEGRO"], selected: "CHOCOLATE" },
-            { id: 5, cat: "ACCESORIOS", name: "MULTITOOL CARD + FUNDA DE CUERO", desc: "TARJETA MULTIHERRAMIENTA CON 10 FUNCIONES:<br>• ABRE LATAS<br>• ABRE CAJAS<br>• DESTORNILLADOR PLANO<br>• REGLA 4 CM<br>• ABRE BOTELLAS<br>• LLAVE INGLESA 6 MEDIDAS<br>• LLAVE MARIPOSA<br>• SIERRA<br>• ORIFICIO PARA LANYARD<br>• INDICADOR AUXILIAR DE DIRECCIÓN<br><br>MATERIAL: ACERO INOXIDABLE", price: "89.00", varPhotos: { "CHOCOLATE": ["images/MULTITOOL.webp", "images/MULTITOOLfunda.webp"], "NEGRO": ["images/MULTITOOL.webp", "images/MULTITOOLfundanegra.webp"] }, variants: ["CHOCOLATE", "NEGRO"], selected: "CHOCOLATE" },
-            { id: 6, cat: "ACCESORIOS", name: "UTILITY TRAY", desc: "BANDEJA PARA COLOCAR OBJETOS DE BOLSILLO PERFECTO PARA TU CASA U OFICINA.<br><br>MATERIALES: CUERO DE RES FULL GRAIN, HERRAJE DE ACERO INOXIDABLE Y TELA TWEED", price: "99.00", varPhotos: { "SMALL": ["images/BANDEJAS.webp"], "MEDIUM": ["images/BANDEJAM.webp"], "LARGE": ["images/BANDEJAL.webp"] }, varPrices: { "SMALL": "99.00", "MEDIUM": "129.00", "LARGE": "159.00" }, varDesc: { "SMALL": "MEDIDAS: 14 cm X 14 cm APROX.", "MEDIUM": "MEDIDAS: 20 cm X 20 cm APROX.", "LARGE": "MEDIDAS: 20 cm X 30 cm APROX." }, variants: ["SMALL", "MEDIUM", "LARGE"], selected: "SMALL" },
-            { id: 7, cat: "ACCESORIOS", name: "PORTALENTES", desc: "FUNDA PARA LENTES CON INTERIOR ANTIRRAYONES Y OJAL PARA ENGANCHE.<br><br>MEDIDAS: 18 cm X 7.5 cm APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN, HERRAJE DE LATÓN Y ACERO INOXIDABLE", price: "99.00", imgs: ["images/PORTALENTES.webp", "images/PORTALENTESatras.webp"], variants: [] },
-            { id: 8, cat: "CINTURONES", name: "MIGHTY BELT + BLACK BUCKLE", desc: "CORREA TODO TERRENO DE PERFIL CASUAL PERFECTA PARA TODAS TUS AVENTURAS.<br><br>MEDIDAS: 4 cm DE ANCHO X LARGO PERSONALIZABLE.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE ACERO INOXIDABLE PAVONADO EN NEGRO", price: "149.00", imgs: ["images/MIGHTY.webp", "images/MIGHTYcompleta.webp"], variants: [] },
-            { id: 16, cat: "LLAVEROS", name: "CARABINER U", desc: "MOSQUETÓN/LLAVERO QUE SE PUEDE MONTAR EN LA CORREA.<br><br>MEDIDAS: MEDIDAS: 3.5 CM X 7.5 CM APROX.<br>MATERIAL: LATÓN MACIZO", price: "79.00", imgs: ["images/caraviner.webp", "images/caraviner2.webp"], variants: [] },
-            { id: 17, cat: "BEADS", name: "BEAD - MODELO 01", desc: "CUENTA DECORATIVA.<br><br>MATERIAL: LATÓN MACIZO", price: "89.00", imgs: ["images/01bead.webp"], variants: [] },
-            { id: 9, cat: "LLAVEROS", name: "EL GANCHO", desc: "LLAVERO CON MOSQUETÓN DE PERFIL TÁCTICO.<br><br>MEDIDAS: 13.5 cm X 3 cm APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN AND HERRAJE DE ACERO INOXIDABLE", price: "79.00", varPhotos: { "CHOCOLATE": ["images/GANCHO.webp"], "NEGRO": ["images/GANCHOnegro.webp"] }, variants: ["CHOCOLATE", "NEGRO"], selected: "CHOCOLATE" },
-            { id: 10, cat: "BEADS", name: "SKULL BEAD", desc: "CUENTA DECORATIVA.<br><br>MATERIAL: LATÓN MACIZO", price: "89.00", imgs: ["images/SKULLBEAD.webp"], variants: [] },
-            { id: 11, cat: "BEADS", name: "BABY DEVIL BEAD", desc: "CUENTA DECORATIVA.<br><br>MATERIAL: LATÓN MACIZO", price: "99.00", imgs: ["images/BABYDEVIL.webp"], variants: [] },
-            { id: 12, cat: "ACCESORIOS", name: "COASTERS", desc: "SET DE POSAVASOS DE CUERO DE PERFIL RÚSTICO INDISPENSABLES PARA TU CRISTALERIA / TAZAS Y BUENAZO PARA TUS REUNIONES.<br><br>MEDIDAS: 11 cm (DIAMETRO)<br><br>MATERIALES: CUERO DE RES FULL GRAIN", price: "89.00", varPhotos: { "JUEGO DE 4": ["images/COASTERS.webp", "images/COASTERsola.webp"], "JUEGO DE 6": ["images/COASTERS.webp", "images/COASTERsola.webp"] }, varPrices: { "JUEGO DE 4": "89.00", "JUEGO DE 6": "119.00" }, variants: ["JUEGO DE 4", "JUEGO DE 6"], selected: "JUEGO DE 4" },
-            { id: 13, cat: "BILLETERAS", name: "MINI TRUCKER WALLET", desc: "BILLETERA DE CAMIONERO CON AMPLIO ESPACIO PARA MONEDAS, ESPACIO PARA BILLETES (DOBLADOS) Y ESPACIO EN EL MEDIO PARA TARJETAS, CUENTA CON OJAL PARA ENGANCHAR CADENA..<br><br>MATERIALES: CUERO DE RES FULL GRAIN, LATON y ACERO INOXIDABLE", price: 129.00, varPhotos: { "SIN CADENA": ["images/trucker1.webp", "images/trucker2.webp"], "CON CADENA": ["images/trucker3.webp"] }, varPrices: { "SIN CADENA": "129.00", "CON CADENA": "159.00"}, variants: ["SIN CADENA", "CON CADENA"], selected: "SIN CADENA" },
-            { id: 14, cat: "BEADS", name: "HORNED SKULL BEAD", desc: "CUENTA DECORATIVA.<br><br>MATERIAL: LATÓN MACIZO", price: "59.00", imgs: ["images/hornbead.webp"], variants: [] }
+            { id: 1, cat: "BOLSOS", name: "UTILITY DOPP KIT DISTRESSED CHOCOLATE", desc: "NECESER TODO TERRENO CON AMPLIO ESPACIO, BOLSILLO CON CIERRE, BOLSILLOS LATERALES Y HANDLE DE DOBLE AGARRE, PERFECTO PARA TUS ARTÍCULOS DE USO DIARIO (ASEO, TECH, ETC.)<br><br>MEDIDAS: 16 cm X 25 cm APROX (SIN CONTAR EL HANDLE)<br><br>MATERIALES: CUERO DE RES FULL GRAIN, CANVAS DE ALTO GRAMAJE, CORDURA NYLON, ACERO INOXIDABLE Y LATÓN", price: 179, imgs: ["images/DOPPKITmarron.webp", "images/detalleDOPPKIT.webp", "images/detalleDOPPKIT2.webp"], variants: [] },
+            { id: 15, cat: "BOLSOS", name: "UTILITY DOPP KIT CAMO", desc: "NECESER TODO TERRENO CON AMPLIO ESPACIO, BOLSILLO CON CIERRE, BOLSILLOS LATERALES Y HANDLE DE DOBLE AGARRE, PERFECTO PARA TUS ARTÍCULOS DE USO DIARIO (ASEO, TECH, ETC.)<br><br>MEDIDAS: 16 cm X 25 cm APROX (SIN CONTAR EL HANDLE)<br><br>MATERIALES: CUERO DE RES FULL GRAIN, CORDURA NYLON, ACERO INOXIDABLE Y LATÓN", price: 179, imgs: ["images/camodoppkit.webp", "images/camodoppkit2.webp", "images/camodoppkit1.webp"], variants: [] },
+            { id: 2, cat: "BILLETERAS", name: "ZIPPERED WALLET", desc: "BILLETERA MINIMALISTA DE DISEÑO JAPONES PARA TARJETAS, BILLETES Y MONEDAS.<br><br>MEDIDAS: 9.5 CM X 11 CM APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE LATÓN MACIZO", price: 89, imgs: ["images/ZIPPERED.webp", "images/ZIPPEREDdetalle.webp"], variants: [] },
+            { id: 3, cat: "BILLETERAS", name: "GANADERO WALLET", desc: "BIFOLD HÍBRIDA CON ESPACIO PARA TARJETAS, BILLETES Y 4 ESPACIOS PEQUEÑOS PARA MINI HERRAMIENTAS DE VICTORINOX (LAPICERO, MONDADIENTES, PINZAS, ETC.)<br><br>MEDIDAS: 10.5 CM X 9 CM APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y TELA CORDURA", price: 109, varPhotos: { "CHOCOLATE": ["images/GANADERO.webp", "images/GANADEROabierto.webp", "images/GANADEROdetalle.webp"], "NEGRO": ["images/GANADEROnegro.webp", "images/GANADEROnegroabierto.webp", "images/GANADEROdetallenegro.webp"] }, variants: ["CHOCOLATE", "NEGRO"], selected: "CHOCOLATE" },
+            { id: 4, cat: "BILLETERAS", name: "DÍDAC WALLET", desc: "TARJETERO MINIMALISTA PERFECTO PARA USO DIARIO PUEDES LLEWAR TARJETAS Y BILLETES.<br><br>MEDIDAS: 6.7 cm X 10.5 cm APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE LATON / ACERO INOXIDABLE", price: 129, varPhotos: { "CHOCOLATE": ["images/didac.webp", "images/DIDACatras.webp"], "NEGRO": ["images/DIDACnegro.webp"] }, variants: ["CHOCOLATE", "NEGRO"], selected: "CHOCOLATE" },
+            { id: 5, cat: "ACCESORIOS", name: "MULTITOOL CARD + FUNDA DE CUERO", desc: "TARJETA MULTIHERRAMIENTA CON 10 FUNCIONES:<br>• ABRE LATAS<br>• ABRE CAJAS<br>• DESTORNILLADOR PLANO<br>• REGLA 4 CM<br>• ABRE BOTELLAS<br>• LLAVE INGLESA 6 MEDIDAS<br>• LLAVE MARIPOSA<br>• SIERRA<br>• ORIFICIO PARA LANYARD<br>• INDICADOR AUXILIAR DE DIRECCIÓN<br><br>MATERIAL: ACERO INOXIDABLE", price: 89, varPhotos: { "CHOCOLATE": ["images/MULTITOOL.webp", "images/MULTITOOLfunda.webp"], "NEGRO": ["images/MULTITOOL.webp", "images/MULTITOOLfundanegra.webp"] }, variants: ["CHOCOLATE", "NEGRO"], selected: "CHOCOLATE" },
+            { id: 6, cat: "ACCESORIOS", name: "UTILITY TRAY", desc: "BANDEJA PARA COLOCAR OBJETOS DE BOLSILLO PERFECTO PARA TU CASA U OFICINA.<br><br>MATERIALES: CUERO DE RES FULL GRAIN, HERRAJE DE ACERO INOXIDABLE Y TELA TWEED", price: 99, varPhotos: { "SMALL": ["images/BANDEJAS.webp"], "MEDIUM": ["images/BANDEJAM.webp"], "LARGE": ["images/BANDEJAL.webp"] }, varPrices: { "SMALL": 99, "MEDIUM": 129, "LARGE": 159 }, varDesc: { "SMALL": "MEDIDAS: 14 cm X 14 cm APROX.", "MEDIUM": "MEDIDAS: 20 cm X 20 cm APROX.", "LARGE": "MEDIDAS: 20 cm X 30 cm APROX." }, variants: ["SMALL", "MEDIUM", "LARGE"], selected: "SMALL" },
+            { id: 7, cat: "ACCESORIOS", name: "PORTALENTES", desc: "FUNDA PARA LENTES CON INTERIOR ANTIRRAYONES Y OJAL PARA ENGANCHE.<br><br>MEDIDAS: 18 cm X 7.5 cm APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN, HERRAJE DE LATÓN Y ACERO INOXIDABLE", price: 99, imgs: ["images/PORTALENTES.webp", "images/PORTALENTESatras.webp"], variants: [] },
+            { id: 8, cat: "CINTURONES", name: "MIGHTY BELT + BLACK BUCKLE", desc: "CORREA TODO TERRENO DE PERFIL CASUAL PERFECTA PARA TODAS TUS AVENTURAS.<br><br>MEDIDAS: 4 cm DE ANCHO X LARGO PERSONALIZABLE.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE ACERO INOXIDABLE PAVONADO EN NEGRO", price: 149, imgs: ["images/MIGHTY.webp", "images/MIGHTYcompleta.webp"], variants: [] },
+            { id: 9, cat: "LLAVEROS", name: "EL GANCHO", desc: "LLAVERO CON MOSQUETÓN DE PERFIL TÁCTICO.<br><br>MEDIDAS: 13.5 cm X 3 cm APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN AND HERRAJE DE ACERO INOXIDABLE", price: 79, varPhotos: { "CHOCOLATE": ["images/GANCHO.webp"], "NEGRO": ["images/GANCHOnegro.webp"] }, variants: ["CHOCOLATE", "NEGRO"], selected: "CHOCOLATE" },
+            { id: 10, cat: "BEADS", name: "SKULL BEAD", desc: "CUENTA DECORATIVA.<br><br>MATERIAL: LATÓN MACIZO", price: 89, imgs: ["images/SKULLBEAD.webp"], variants: [] },
+            { id: 11, cat: "BEADS", name: "BABY DEVIL BEAD", desc: "CUENTA DECORATIVA.<br><br>MATERIAL: LATÓN MACIZO", price: 99, imgs: ["images/BABYDEVIL.webp"], variants: [] },
+            { id: 12, cat: "ACCESORIOS", name: "COASTERS", desc: "SET DE POSAVASOS DE CUERO DE PERFIL RÚSTICO INDISPENSABLES PARA TU CRISTALERIA / TAZAS Y BUENAZO PARA TUS REUNIONES.<br><br>MEDIDAS: 11 cm (DIAMETRO)<br><br>MATERIALES: CUERO DE RES FULL GRAIN", price: 89, varPhotos: { "JUEGO DE 4": ["images/COASTERS.webp", "images/COASTERsola.webp"], "JUEGO DE 6": ["images/COASTERS.webp", "images/COASTERsola.webp"] }, varPrices: { "JUEGO DE 4": 89, "JUEGO DE 6": 119 }, variants: ["JUEGO DE 4", "JUEGO DE 6"], selected: "JUEGO DE 4" },
+            { id: 16, cat: "LLAVEROS", name: "CARAVINER U", desc: "MOSQUETÓN/LLAVERO QUE SE PUEDE MONTAR EN LA CORREA.<br><br>MEDIDAS: MEDIDAS: 3.5 CM X 7.5 CM APROX.<br>MATERIAL: LATÓN MACIZO", price: 79, imgs: ["images/caraviner.webp","images/caraviner2.webp"], variants: [] },
+            { id: 17, cat: "BEADS", name: "MODELO 01 BEAD", desc: "CUENTA DECORATIVA.<br><br>MATERIAL: LATÓN MACIZO", price: 89, imgs: ["images/01bead.webp"], variants: [] },
+            { id: 13, cat: "BILLETERAS", name: "MINI TRUCKER WALLET", desc: "BILLETERA DE CAMIONERO CON AMPLIO ESPACIO PARA MONEDAS, ESPACIO PARA BILLETES (DOBLADOS) Y ESPACIO EN EL MEDIO PARA TARJETAS, CUENTA CON OJAL PARA ENGANCHAR CADENA..<br><br>MATERIALES: CUERO DE RES FULL GRAIN, LATON y ACERO INOXIDABLE", price: 129, varPhotos: { "SIN CADENA": ["images/trucker1.webp", "images/trucker2.webp"], "CON CADENA": ["images/trucker3.webp"] }, varPrices: { "SIN CADENA": 129, "CON CADENA": 159}, variants: ["SIN CADENA", "CON CADENA"], selected: "SIN CADENA" },
+            { id: 14, cat: "BEADS", name: "HORNED SKULL BEAD", desc: "CUENTA DECORATIVA.<br><br>MATERIAL: LATÓN MACIZO", price: 59, imgs: ["images/hornbead.webp"], variants: [] }
         ];
 
         let cart = JSON.parse(localStorage.getItem('cart_1811')) || [];
-        let currentImgIdx = {};
-
+        let currentImgIdx = {}; 
+        
         function init() {
             updateCartUI(); 
             const params = new URLSearchParams(window.location.search);
@@ -206,6 +206,7 @@
             const grid = document.getElementById('products-grid');
             grid.className = "md:col-span-10 flex flex-col"; 
             grid.innerHTML = '';
+
             const categories = ["BILLETERAS", "ACCESORIOS", "BOLSOS", "CINTURONES", "LLAVEROS", "BEADS"];
 
             categories.forEach(cat => {
@@ -222,8 +223,8 @@
                     <div class="category-slider no-scrollbar">
                         ${catProducts.map(p => `
                             <div class="min-w-[160px] md:min-w-[220px] cursor-pointer group" onclick="window.location.href='?id=${p.id}'">
-                                <div class="aspect-square bg-black mb-2 overflow-hidden flex items-center justify-center">
-                                    <img src="${p.imgs ? p.imgs[0] : p.varPhotos[p.selected][0]}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500">
+                                <div class="aspect-square bg-black mb-2 overflow-hidden">
+                                    <img src="${p.imgs ? p.imgs[0] : p.varPhotos[p.selected][0]}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                 </div>
                                 <h4 class="text-[8px] md:text-[9px] font-black text-white uppercase truncate">${p.name}</h4>
                                 <p class="text-[8px] text-gray-400 font-bold">S/ ${p.price}</p>
@@ -249,6 +250,7 @@
             const grid = document.getElementById('products-grid');
             grid.className = "md:col-span-10 grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6";
             grid.innerHTML = '';
+            
             const filtered = products.filter(p => p.cat === filter);
             filtered.forEach(p => {
                 let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
@@ -256,8 +258,8 @@
                 const div = document.createElement('div');
                 div.className = "product-card p-2 md:p-4";
                 div.innerHTML = `
-                    <div class="aspect-square mb-2 md:mb-4 overflow-hidden cursor-pointer bg-black flex items-center justify-center" onclick="window.location.href='?id=${p.id}'">
-                        <img src="${gallery[0]}" class="w-full h-full object-contain hover:scale-105 transition-transform duration-500">
+                    <div class="aspect-square mb-2 md:mb-4 overflow-hidden cursor-pointer bg-black" onclick="window.location.href='?id=${p.id}'">
+                        <img src="${gallery[0]}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
                     </div>
                     <div class="flex flex-col flex-1">
                         <div class="flex flex-col mb-2">
@@ -289,13 +291,14 @@
             let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
             let price = p.varPrices ? p.varPrices[p.selected] : p.price;
             let extraDesc = p.varDesc ? `<br>${p.varDesc[p.selected]}` : '';
+
             container.innerHTML = `
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
-                    <div class="relative aspect-square bg-black overflow-hidden rounded-sm group flex items-center justify-center">
+                    <div class="relative aspect-square bg-black overflow-hidden rounded-sm group">
                         <div class="carousel-container" id="carousel-${p.id}" onscroll="updateDotsOnScroll(${p.id})">
                             ${gallery.map((img, i) => `
-                                <div class="carousel-item flex items-center justify-center">
-                                    <img src="${img}" class="w-full h-full object-contain">
+                                <div class="carousel-item">
+                                    <img src="${img}" class="w-full h-full object-cover">
                                 </div>
                             `).join('')}
                         </div>
@@ -307,6 +310,7 @@
                         <div class="nav-area right-area" onclick="changeImg(${p.id}, 1)">
                             <div class="nav-arrow-mini">❯</div>
                         </div>
+                        
                         <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-1.5 z-[70] pointer-events-none">
                             ${gallery.map((_, i) => `
                                 <div id="dot-${p.id}-${i}" class="w-1.5 h-1.5 rounded-full transition-all ${i === currentImgIdx[p.id] ? 'bg-white scale-110' : 'bg-white/30'}"></div>
@@ -330,24 +334,29 @@
                     </div>
                 </div>`;
             
+            // Posicionar el scroll en la imagen guardada
             setTimeout(() => {
                 const carousel = document.getElementById(`carousel-${p.id}`);
                 if(carousel) carousel.scrollLeft = carousel.clientWidth * currentImgIdx[p.id];
             }, 10);
         }
 
+        // Cambio manual por clic (PC)
         function changeImg(id, step) {
             const p = products.find(x => x.id === id);
             let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
             const carousel = document.getElementById(`carousel-${id}`);
+            
             currentImgIdx[id] = (currentImgIdx[id] + step + gallery.length) % gallery.length;
             carousel.scrollTo({ left: carousel.clientWidth * currentImgIdx[id], behavior: 'smooth' });
         }
 
+        // Sincronizar puntos al deslizar (Celular)
         function updateDotsOnScroll(id) {
             const carousel = document.getElementById(`carousel-${id}`);
             const p = products.find(x => x.id === id);
             let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
+            
             const newIdx = Math.round(carousel.scrollLeft / carousel.clientWidth);
             if(newIdx !== currentImgIdx[id]) {
                 currentImgIdx[id] = newIdx;
@@ -361,7 +370,7 @@
         function setVar(id, v) {
             const p = products.find(prod => prod.id === id);
             p.selected = v;
-            currentImgIdx[id] = 0; 
+            currentImgIdx[id] = 0; // Reiniciar a la primera foto de la variante
             showSingleProduct(id);
         }
 
@@ -424,6 +433,7 @@
 
         function toggleCategoriesMobile() { document.getElementById('category-panel-mobile').classList.toggle('active'); }
         
+        // Ejecutar init al cargar la página
         window.onload = init;
     </script>
 </body>
