@@ -190,19 +190,21 @@
             }
         }
 
-        function renderHomeWithBanners() {
+function renderHomeWithBanners() {
     const container = document.getElementById('products-container');
+    if (!container) return; // Seguridad por si no encuentra el contenedor
     container.innerHTML = '';
 
     const categories = ["BILLETERAS", "ACCESORIOS", "BOLSOS", "CINTURONES", "LLAVEROS", "BEADS", "STAGE GEAR"];
 
     categories.forEach((category, index) => {
+        // Filtramos los productos que pertenecen a esta categoría
         const filtered = products.filter(p => p.cat === category);
-        if (filtered.length === 0) return;
+        if (filtered.length === 0) return; // Si no hay productos, pasa a la siguiente
 
         let sectionHTML = '';
 
-        // Secciones específicas con sus banners correlativos
+        // Control de Banners por índice de categoría
         if (index === 0) {
             sectionHTML += `
                 <div class="mb-6 relative w-full h-[400px] bg-cover bg-center flex items-end p-6" style="background-image: url('images/bannerbilleteras.webp');">
@@ -264,24 +266,26 @@
                 </div>
             `;
         } else {
-            // SOLUCIÓN: Para STAGE GEAR o cualquier otra categoría nueva sin banner individual
+            // Seccion para STAGE GEAR u otras categorías nuevas sin un banner asignado
             sectionHTML += `
-                <div class="mb-6 pt-4 border-t border-[#1f1f1f]">
+                <div class="w-full mb-6 pt-6 border-t border-[#1f1f1f]">
                     <h2 class="text-white text-2xl font-black tracking-tighter uppercase font-oswald mb-4">${category}</h2>
                 </div>
             `;
         }
 
-        // Cuadrícula de productos de esta sección
+        // Creamos la cuadrícula para los productos filtrados
         sectionHTML += `<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">`;
         filtered.forEach(product => {
             sectionHTML += createProductCard(product);
         });
         sectionHTML += `</div>`;
 
+        // Agregamos todo el bloque construido al contenedor principal de la web
         container.innerHTML += sectionHTML;
     });
 }
+        
         function render(filter = 'TODOS') {
             document.getElementById('body-tag').classList.remove('product-open');
             document.getElementById('main-content').classList.remove('hidden');
