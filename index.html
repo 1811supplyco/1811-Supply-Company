@@ -190,102 +190,49 @@
             }
         }
 
-function renderHomeWithBanners() {
-    const container = document.getElementById('products-container');
-    if (!container) return; // Seguridad por si no encuentra el contenedor
-    container.innerHTML = '';
+        function renderHomeWithBanners() {
+            document.getElementById('body-tag').classList.remove('product-open');
+            document.getElementById('main-content').classList.remove('hidden');
+            document.getElementById('single-product-view').classList.add('hidden');
+            document.getElementById('view-title').innerHTML = "ARTICULOS BRAVAZOS CON LOS MEJORES MATERIALES HECHOS EN PERÚ";
+            
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-TODOS').classList.add('active');
 
-    const categories = ["BILLETERAS", "ACCESORIOS", "BOLSOS", "CINTURONES", "LLAVEROS", "BEADS", "STAGE GEAR"];
+            const grid = document.getElementById('products-grid');
+            grid.className = "md:col-span-10 flex flex-col"; 
+            grid.innerHTML = '';
 
-    categories.forEach((category, index) => {
-        // Filtramos los productos que pertenecen a esta categoría
-        const filtered = products.filter(p => p.cat === category);
-        if (filtered.length === 0) return; // Si no hay productos, pasa a la siguiente
+            const categories = [...new Set(products.map(p => p.cat))];
 
-        let sectionHTML = '';
+            categories.forEach(cat => {
+                const catProducts = products.filter(p => p.cat === cat);
+                if(catProducts.length === 0) return;
 
-        // Control de Banners por índice de categoría
-        if (index === 0) {
-            sectionHTML += `
-                <div class="mb-6 relative w-full h-[400px] bg-cover bg-center flex items-end p-6" style="background-image: url('images/bannerbilleteras.webp');">
-                    <div class="absolute inset-0 bg-black/40"></div>
-                    <div class="relative z-10">
-                        <h2 class="text-white text-3xl font-black tracking-tighter uppercase font-oswald mb-2">BILLETERAS</h2>
-                        <button onclick="filterProducts('BILLETERAS')" class="bg-white text-black px-4 py-2 text-xs font-black uppercase hover:bg-gray-200 transition">VER COLECCIÓN</button>
+                const section = document.createElement('div');
+                section.className = "category-banner";
+          
+                section.innerHTML = `
+                    <div class="flex justify-between items-center mb-4 border-b border-white/5 pb-2">
+                        <h2 class="text-[10px] font-black tracking-widest text-white uppercase">${cat}</h2>
+                        <button onclick="filterProducts('${cat}')" class="text-[9px] text-gray-500 font-bold uppercase hover:text-white">Ver Todo →</button>
                     </div>
-                </div>
-            `;
-        } else if (index === 1) {
-            sectionHTML += `
-                <div class="mb-6 relative w-full h-[400px] bg-cover bg-center flex items-end p-6" style="background-image: url('images/banneraccesorios.webp');">
-                    <div class="absolute inset-0 bg-black/40"></div>
-                    <div class="relative z-10">
-                        <h2 class="text-white text-3xl font-black tracking-tighter uppercase font-oswald mb-2">ACCESORIOS</h2>
-                        <button onclick="filterProducts('ACCESORIOS')" class="bg-white text-black px-4 py-2 text-xs font-black uppercase hover:bg-gray-200 transition">VER COLECCIÓN</button>
+                    <div class="category-slider no-scrollbar">
+                        ${catProducts.map(p => `
+                            <div class="min-w-[160px] md:min-w-[220px] cursor-pointer group" onclick="window.location.href='?id=${p.id}'">
+                                <div class="relative w-full aspect-square bg-black mb-2 overflow-hidden rounded-sm">
+                                    <img src="${p.imgs ? p.imgs[0] : p.varPhotos[p.selected][0]}" class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
+                                </div>
+                                <h4 class="text-[8px] md:text-[9px] font-black text-white uppercase truncate">${p.name}</h4>
+                                <p class="text-[8px] text-gray-400 font-bold">S/ ${Number(p.price).toFixed(2)}</p>
+                            </div>
+                        `).join('')}
                     </div>
-                </div>
-            `;
-        } else if (index === 2) {
-            sectionHTML += `
-                <div class="mb-6 relative w-full h-[400px] bg-cover bg-center flex items-end p-6" style="background-image: url('images/bannerbolsos.webp');">
-                    <div class="absolute inset-0 bg-black/40"></div>
-                    <div class="relative z-10">
-                        <h2 class="text-white text-3xl font-black tracking-tighter uppercase font-oswald mb-2">BOLSOS</h2>
-                        <button onclick="filterProducts('BOLSOS')" class="bg-white text-black px-4 py-2 text-xs font-black uppercase hover:bg-gray-200 transition">VER COLECCIÓN</button>
-                    </div>
-                </div>
-            `;
-        } else if (index === 3) {
-            sectionHTML += `
-                <div class="mb-6 relative w-full h-[400px] bg-cover bg-center flex items-end p-6" style="background-image: url('images/bannercinturones.webp');">
-                    <div class="absolute inset-0 bg-black/40"></div>
-                    <div class="relative z-10">
-                        <h2 class="text-white text-3xl font-black tracking-tighter uppercase font-oswald mb-2">CINTURONES</h2>
-                        <button onclick="filterProducts('CINTURONES')" class="bg-white text-black px-4 py-2 text-xs font-black uppercase hover:bg-gray-200 transition">VER COLECCIÓN</button>
-                    </div>
-                </div>
-            `;
-        } else if (index === 4) {
-            sectionHTML += `
-                <div class="mb-6 relative w-full h-[400px] bg-cover bg-center flex items-end p-6" style="background-image: url('images/bannerllaveros.webp');">
-                    <div class="absolute inset-0 bg-black/40"></div>
-                    <div class="relative z-10">
-                        <h2 class="text-white text-3xl font-black tracking-tighter uppercase font-oswald mb-2">LLAVEROS</h2>
-                        <button onclick="filterProducts('LLAVEROS')" class="bg-white text-black px-4 py-2 text-xs font-black uppercase hover:bg-gray-200 transition">VER COLECCIÓN</button>
-                    </div>
-                </div>
-            `;
-        } else if (index === 5) {
-            sectionHTML += `
-                <div class="mb-6 relative w-full h-[400px] bg-cover bg-center flex items-end p-6" style="background-image: url('images/bannerbeads.webp');">
-                    <div class="absolute inset-0 bg-black/40"></div>
-                    <div class="relative z-10">
-                        <h2 class="text-white text-3xl font-black tracking-tighter uppercase font-oswald mb-2">BEADS</h2>
-                        <button onclick="filterProducts('BEADS')" class="bg-white text-black px-4 py-2 text-xs font-black uppercase hover:bg-gray-200 transition">VER COLECCIÓN</button>
-                    </div>
-                </div>
-            `;
-        } else {
-            // Seccion para STAGE GEAR u otras categorías nuevas sin un banner asignado
-            sectionHTML += `
-                <div class="w-full mb-6 pt-6 border-t border-[#1f1f1f]">
-                    <h2 class="text-white text-2xl font-black tracking-tighter uppercase font-oswald mb-4">${category}</h2>
-                </div>
-            `;
+                `;
+                grid.appendChild(section);
+            });
         }
 
-        // Creamos la cuadrícula para los productos filtrados
-        sectionHTML += `<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">`;
-        filtered.forEach(product => {
-            sectionHTML += createProductCard(product);
-        });
-        sectionHTML += `</div>`;
-
-        // Agregamos todo el bloque construido al contenedor principal de la web
-        container.innerHTML += sectionHTML;
-    });
-}
-        
         function render(filter = 'TODOS') {
             document.getElementById('body-tag').classList.remove('product-open');
             document.getElementById('main-content').classList.remove('hidden');
