@@ -266,7 +266,7 @@
                                 ${p.agotado
                                     ? `<p class="text-[9px] text-red-500 font-black mt-1">AGOTADO</p>`
                                     : ((ACTIVAR_DESCUENTO && !p.sinDescuento)
-                                        ? `<div class="flex items-center gap-2"><p class="text-[8px] text-gray-400 font-bold line-through">S/ ${Number(p.price).toFixed(2)}</p><p class="text-[9px] text-red-500 font-black">S/ ${(Number(p.price) * 0.85).toFixed(2)}</p></div>`
+                                        ? `<div class="flex items-center gap-2"><p class="text-[8px] text-gray-400 font-bold line-through">S/ ${Number(p.price).toFixed(2)}</p><p class="text-[9px] text-red-500 font-black">S/ ${(Number(p.price) * 0.90).toFixed(2)}</p></div>`
                                         : `<p class="text-[8px] text-gray-400 font-bold">S/ ${Number(p.price).toFixed(2)}</p>`)
                                 }
                             </div>
@@ -310,7 +310,7 @@
                             ${p.agotado
                                 ? `<span class="text-[9px] md:text-[11px] text-red-500 font-black mt-1">AGOTADO</span>`
                                : ((ACTIVAR_DESCUENTO && !p.sinDescuento)
-                                    ? `<div class="flex flex-wrap items-center gap-1.5"><span class="text-[8px] md:text-[9px] text-gray-400 font-bold line-through">S/ ${Number(displayPrice).toFixed(2)}</span><span class="text-[9px] md:text-[11px] text-red-500 font-black">S/ ${(Number(displayPrice) * 0.85).toFixed(2)}</span></div>`
+                                    ? `<div class="flex flex-wrap items-center gap-1.5"><span class="text-[8px] md:text-[9px] text-gray-400 font-bold line-through">S/ ${Number(displayPrice).toFixed(2)}</span><span class="text-[9px] md:text-[11px] text-red-500 font-black">S/ ${(Number(displayPrice) * 0.90).toFixed(2)}</span></div>`
                                     : `<span class="text-[9px] md:text-[10px] text-gray-400 font-bold">S/ ${Number(displayPrice).toFixed(2)}</span>`)
                             }
                         </div>
@@ -377,7 +377,7 @@
                         ${p.agotado
                             ? `<p class="text-2xl md:text-3xl text-red-500 font-black mb-6">AGOTADO</p>`
                            : ((ACTIVAR_DESCUENTO && !p.sinDescuento)
-                                ? `<div class="flex items-center gap-3 mb-6"><p class="text-lg md:text-xl text-gray-400 font-bold line-through">S/ ${Number(price).toFixed(2)}</p><p class="text-2xl md:text-3xl text-red-500 font-black">S/ ${(Number(price) * 0.85).toFixed(2)}</p></div>`
+                                ? `<div class="flex items-center gap-3 mb-6"><p class="text-lg md:text-xl text-gray-400 font-bold line-through">S/ ${Number(price).toFixed(2)}</p><p class="text-2xl md:text-3xl text-red-500 font-black">S/ ${(Number(price) * 0.90).toFixed(2)}</p></div>`
                                 : `<p class="text-xl md:text-2xl text-white font-bold mb-6">S/ ${Number(price).toFixed(2)}</p>`)
                         }
 
@@ -463,7 +463,7 @@
             container.innerHTML = '';
             let sum = 0;
             cart.forEach((item, index) => {
-                let finalPrice = (ACTIVAR_DESCUENTO && !item.sinDescuento) ? item.currentPrice * 0.85 : item.currentPrice;
+                let finalPrice = (ACTIVAR_DESCUENTO && !item.sinDescuento) ? item.currentPrice * 0.90 : item.currentPrice;
                 sum += finalPrice;
                 let gallery = (item.varPhotos && item.varPhotos[item.currentVariant]) ? item.varPhotos[item.currentVariant] : item.imgs;
                 container.innerHTML += `
@@ -489,7 +489,7 @@
             let sum = 0;
             let msg = `Hola 1811, quisiera realizar este pedido:\n\n`;
             cart.forEach(item => {
-                let finalPrice = (ACTIVAR_DESCUENTO && !item.sinDescuento) ? item.currentPrice * 0.85 : item.currentPrice;
+                let finalPrice = (ACTIVAR_DESCUENTO && !item.sinDescuento) ? item.currentPrice * 0.90 : item.currentPrice;
                 msg += `• *${item.name}* ${item.currentVariant ? '('+item.currentVariant+')' : ''} - S/ ${Number(finalPrice).toFixed(2)}\n`;
                 sum += finalPrice;
             });
