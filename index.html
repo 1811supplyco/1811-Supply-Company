@@ -497,7 +497,7 @@
             });
             msg += `\n*TOTAL: S/ ${sum.toFixed(2)}*`;
             const phone = "51947833118";
-            window.location.href = `whatsapp://send?phone=${phone}&text=${encodeURIComponent(msg)}`;
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
         function reservarWhatsApp(id) {
