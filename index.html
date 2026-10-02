@@ -268,7 +268,7 @@
                                 </div>
                                 <h4 class="text-[8px] md:text-[9px] font-black text-white uppercase truncate">${p.name}</h4>
                                 ${p.agotado
-                                    ? `<p class="text-[9px] text-red-500 font-black mt-1">HAZ TU RESERVA</p>`
+                                    ? `<p class="text-[9px] text-red-500 font-black mt-1">AGOTADO</p>`
                                     : ((ACTIVAR_DESCUENTO && !p.sinDescuento)
                                         ? `<div class="flex items-center gap-2"><p class="text-[8px] text-gray-400 font-bold line-through">S/ ${Number(p.price).toFixed(2)}</p><p class="text-[9px] text-red-500 font-black">S/ ${(Number(p.price) * 0.90).toFixed(2)}</p></div>`
                                         : `<p class="text-[8px] text-gray-400 font-bold">S/ ${Number(p.price).toFixed(2)}</p>`)
@@ -312,7 +312,7 @@
                         <div class="flex flex-col mb-2">
                             <h3 class="font-bold text-[8px] md:text-[10px] text-white tracking-widest uppercase mb-1">${p.name}</h3>
                             ${p.agotado
-                                ? `<span class="text-[9px] md:text-[11px] text-red-500 font-black mt-1">HAZ TU RESERVA</span>`
+                                ? `<span class="text-[9px] md:text-[11px] text-red-500 font-black mt-1">AGOTADO</span>`
                                : ((ACTIVAR_DESCUENTO && !p.sinDescuento)
                                     ? `<div class="flex flex-wrap items-center gap-1.5"><span class="text-[8px] md:text-[9px] text-gray-400 font-bold line-through">S/ ${Number(displayPrice).toFixed(2)}</span><span class="text-[9px] md:text-[11px] text-red-500 font-black">S/ ${(Number(displayPrice) * 0.90).toFixed(2)}</span></div>`
                                     : `<span class="text-[9px] md:text-[10px] text-gray-400 font-bold">S/ ${Number(displayPrice).toFixed(2)}</span>`)
@@ -320,8 +320,7 @@
                         </div>
                         <div class="mt-auto flex flex-col gap-2">
                             ${p.agotado
-                                ? ${p.agotado
-    ? `<button onclick="window.location.href='?id=${p.id}'" class="w-full bg-[#1a1a1a] text-white py-2 md:py-3 text-[8px] md:text-[9px] font-black uppercase tracking-widest hover:bg-gray-800 transition-all">Ver para reservar</button>`
+                                ? `<button disabled class="w-full bg-[#1a1a1a] text-gray-500 py-2 md:py-3 text-[8px] md:text-[9px] font-black uppercase tracking-widest cursor-not-allowed">Agotado</button>`
                                 : `<button onclick="addToCart(${p.id})" class="w-full bg-white text-black py-2 md:py-3 text-[8px] md:text-[9px] font-black uppercase tracking-widest hover:bg-gray-200 transition-all">Añadir</button>`
                             }
                         </div>
@@ -380,7 +379,7 @@
                         <h1 class="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter mb-2 leading-none">${p.name}</h1>
                         
                         ${p.agotado
-                            ? `<p class="text-2xl md:text-3xl text-red-500 font-black mb-6">HAZ TU RESERVA</p>`
+                            ? `<p class="text-2xl md:text-3xl text-red-500 font-black mb-6">AGOTADO</p>`
                            : ((ACTIVAR_DESCUENTO && !p.sinDescuento)
                                 ? `<div class="flex items-center gap-3 mb-6"><p class="text-lg md:text-xl text-gray-400 font-bold line-through">S/ ${Number(price).toFixed(2)}</p><p class="text-2xl md:text-3xl text-red-500 font-black">S/ ${(Number(price) * 0.90).toFixed(2)}</p></div>`
                                 : `<p class="text-xl md:text-2xl text-white font-bold mb-6">S/ ${Number(price).toFixed(2)}</p>`)
@@ -395,8 +394,7 @@
                         </div>
                         
                         ${p.agotado
-                            ? ${p.agotado
-    ? `<button onclick="window.open('https://wa.me/51947833118?text=' + encodeURIComponent('Hola 1811, quiero hacer una reserva del producto: ${p.name}' + (p.selected ? ' ('+p.selected+')' : '')), '_blank')" class="w-full bg-[#25D366] text-white py-5 text-[11px] font-black uppercase tracking-[0.2em] hover:bg-[#128C7E] transition-all">Haz tu reserva por WhatsApp</button>`
+                            ? `<button disabled class="w-full bg-[#1a1a1a] text-gray-600 py-5 text-[11px] font-black uppercase tracking-[0.2em] cursor-not-allowed">Producto Agotado</button>`
                             : `<button onclick="addToCart(${p.id})" class="w-full bg-white text-black py-5 text-[11px] font-black uppercase tracking-[0.2em] active:scale-95 transition-all">Añadir al Carrito</button>`
                         }
                     </div>
