@@ -378,11 +378,9 @@
                         <span class="text-[9px] text-white/40 font-black tracking-[0.3em] uppercase mb-2">${p.cat}</span>
                         <h1 class="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter mb-2 leading-none">${p.name}</h1>
                         
-                        ${p.agotado
-                            ? `<p class="text-2xl md:text-3xl text-red-500 font-black mb-6">HAZ TU RESERVA</p>`
-                           : ((ACTIVAR_DESCUENTO && !p.sinDescuento)
-                                ? `<div class="flex items-center gap-3 mb-6"><p class="text-lg md:text-xl text-gray-400 font-bold line-through">S/ ${Number(price).toFixed(2)}</p><p class="text-2xl md:text-3xl text-red-500 font-black">S/ ${(Number(price) * 0.90).toFixed(2)}</p></div>`
-                                : `<p class="text-xl md:text-2xl text-white font-bold mb-6">S/ ${Number(price).toFixed(2)}</p>`)
+                        ${(ACTIVAR_DESCUENTO && !p.sinDescuento)
+                            ? `<div class="flex items-center gap-3 mb-6"><p class="text-lg md:text-xl text-gray-400 font-bold line-through">S/ ${Number(price).toFixed(2)}</p><p class="text-2xl md:text-3xl text-red-500 font-black">S/ ${(Number(price) * 0.90).toFixed(2)}</p></div>`
+                            : `<p class="text-xl md:text-2xl text-white font-bold mb-6">S/ ${Number(price).toFixed(2)}</p>`
                         }
 
                         <div class="text-[11px] leading-relaxed text-gray-400 uppercase font-bold mb-8 border-l border-white/20 pl-4">
@@ -507,7 +505,7 @@
             if(!p) return;
             const msg = `Hola, quisiera reservar ${p.name}`;
             const phone = "51947833118";
-            window.location.href = `whatsapp://send?phone=${phone}&text=${encodeURIComponent(msg)}`;
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
         function toggleCategoriesMobile() { document.getElementById('category-panel-mobile').classList.toggle('active'); }
