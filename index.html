@@ -114,6 +114,7 @@
         <div id="cart-items" class="flex-1 overflow-y-auto p-6 no-scrollbar space-y-6"></div>
    
         <div class="p-6 border-t border-white/5 bg-[#141414]">
+            <div id="cart-summary"></div>
             <div class="flex justify-between mb-4">
                 <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Total Estimado</span>
                 <span class="text-white font-black" id="cart-total">S/ 0.00</span>
@@ -212,6 +213,8 @@
         ];
 
         // --- INTERRUPTOR DE DESCUENTO ---
+        const ENVIO_COSTO = 10;      // Costo de envío en soles
+        const ENVIO_MINIMO = 79;     // Si el pedido es menor a este monto, se cobra envío
         const ACTIVAR_DESCUENTO = false; // Cambia a false para volver a los precios regulares
         // --------------------------------
 
@@ -483,7 +486,26 @@
                         <button class="text-red-500 text-xs" onclick="removeFromCart(${index})">Eliminar</button>
                     </div>`;
             });
-            total.innerText = `S/ ${sum.toFixed(2)}`;
+            const envio = (sum > 0 && sum < ENVIO_MINIMO) ? ENVIO_COSTO : 0;
+            const summary = document.getElementById('cart-summary');
+            if (envio > 0) {
+                let rows = '';
+                cart.forEach(item => {
+                    let fp = (ACTIVAR_DESCUENTO && !item.sinDescuento) ? item.currentPrice * 0.90 : item.currentPrice;
+                    rows += `<div class="flex justify-between gap-4 mb-2">
+                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">${item.name}</span>
+                        <span class="text-white font-black text-xs whitespace-nowrap">S/ ${Number(fp).toFixed(2)}</span>
+                    </div>`;
+                });
+                rows += `<div class="flex justify-between gap-4 mb-2">
+                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Envío</span>
+                        <span class="text-white font-black text-xs whitespace-nowrap">S/ ${envio.toFixed(2)}</span>
+                    </div>`;
+                summary.innerHTML = `<div class="border-b border-white/5 pb-2 mb-4">${rows}</div>`;
+            } else {
+                summary.innerHTML = '';
+            }
+            total.innerText = `S/ ${(sum + envio).toFixed(2)}`;
         }
 
         function checkoutWhatsApp() {
@@ -495,7 +517,9 @@
                 msg += `• *${item.name}* ${item.currentVariant ? '('+item.currentVariant+')' : ''} - S/ ${Number(finalPrice).toFixed(2)}\n`;
                 sum += finalPrice;
             });
-            msg += `\n*TOTAL: S/ ${sum.toFixed(2)}*`;
+            const envio = (sum < ENVIO_MINIMO) ? ENVIO_COSTO : 0;
+            if (envio > 0) msg += `\nEnvío: S/ ${envio.toFixed(2)}`;
+            msg += `\n*TOTAL: S/ ${(sum + envio).toFixed(2)}*`;
             const phone = "51947833118";
             window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
         }
