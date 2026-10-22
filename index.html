@@ -29,7 +29,7 @@
     <link rel="icon" type="image/png" href="images/icono.png">
     <link class="image-icon" rel="apple-touch-icon" href="images/icono.png">
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Oswald:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Oswald:wght@700&family=Space+Mono&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #0a0a0a; color: #d1d1d1; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
@@ -67,15 +67,28 @@
         .category-slider::-webkit-scrollbar { display: none; }
         .category-banner { background: #111; border: 1px solid #1f1f1f; padding: 20px; margin-bottom: 40px; border-radius: 4px; }
         .titulo-destacado { font-family: 'Oswald', sans-serif !important; font-weight: 700; line-height: 1.2; letter-spacing: 0.05em; }
+
+        /* BANNER PROMOCIONAL ESTILO FILSON */
+        .promo-bar { position: sticky; top: 0; z-index: 110; height: 36px; padding: 0 16px; background: #0a0a0a; display: flex; align-items: center; }
+        .promo-line { position: relative; width: 100%; height: 26px; border-top: 1px solid rgba(255,255,255,0.85); border-bottom: 1px solid rgba(255,255,255,0.85); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .promo-text { font-family: 'Space Mono', ui-monospace, monospace; font-size: 10px; font-weight: 400; color: #fff; text-transform: uppercase; letter-spacing: 0.18em; white-space: nowrap; animation: promoSlide 8s cubic-bezier(0.22, 0.61, 0.36, 1) infinite; }
+        @media (min-width: 640px) { .promo-text { font-size: 11px; } }
+        /* Ciclo de 8s: entra desde la derecha, se detiene al centro y sale hacia la izquierda */
+        @keyframes promoSlide {
+            0%   { transform: translateX(110vw); opacity: 0; }
+            12%  { transform: translateX(0); opacity: 1; }
+            80%  { transform: translateX(0); opacity: 1; }
+            100% { transform: translateX(-110vw); opacity: 0; }
+        }
     </style>
 </head>
 <body id="body-tag">
 
-    <div class="bg-white text-black py-2 text-center h-auto min-h-[36px] flex items-center justify-center sticky top-0 z-[110]">
-    <span id="promo-banner" class="text-[10px] sm:text-xs font-bold uppercase tracking-wider transition-opacity duration-500 opacity-100">
-        ENVIOS GRATIS POR COMPRAS MAYORES A S/ 79.00
-    </span>
-</div>
+    <div class="promo-bar">
+        <div class="promo-line">
+            <span id="promo-banner" class="promo-text">ENVIOS GRATIS POR COMPRAS MAYORES A S/ 79.00</span>
+        </div>
+    </div>
 
     <nav class="p-4 md:p-6 sticky top-[30px] bg-[#0a0a0a] z-[100] border-b border-white/5">
         <div class="container mx-auto flex justify-between items-center">
@@ -196,14 +209,13 @@
             { id: 21, cat: "BILLETERAS", name: "ZIPPERED WALLET", desc: "BILLETERA MINIMALISTA DE DISEÑO JAPONES PARA TARJETAS, BILLETES Y MONEDAS.<br><br>MEDIDAS: 9.5 CM X 11 CM APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE LATÓN MACIZO", price: 89, imgs: ["images/ZIPPERED.webp", "images/ZIPPEREDdetalle.webp"], variants: [] },
             { id: 3, cat: "BILLETERAS", name: "GANADERO WALLET", desc: "BIFOLD HÍBRIDA CON ESPACIO PARA TARJETAS, BILLETES Y 4 ESPACIOS PEQUEÑOS PARA MINI HERRAMIENTAS DE VICTORINOX (LAPICERO, MONDADIENTES, PINZAS, ETC.)<br><br>MEDIDAS: 10.5 CM X 9 CM APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y TELA CORDURA", price: 109, varPhotos: { "CHOCOLATE": ["images/GANADERO.webp", "images/GANADEROabierto.webp", "images/GANADEROdetalle.webp"], "NEGRO": ["images/GANADEROnegro.webp", "images/GANADEROnegroabierto.webp", "images/GANADEROdetallenegro.webp"] }, variants: ["CHOCOLATE", "NEGRO"], selected: "CHOCOLATE" },
             { id: 4, cat: "BILLETERAS", name: "DÍDAC WALLET", desc: "TARJETERO MINIMALISTA PERFECTO PARA USO DIARIO PUEDES LLEWAR TARJETAS Y BILLETES.<br><br>MEDIDAS: 6.7 cm X 10.5 cm APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE LATON / ACERO INOXIDABLE", price: 129, varPhotos: { "CHOCOLATE": ["images/didac.webp", "images/DIDACatras.webp"], "NEGRO": ["images/DIDACnegro.webp"] }, variants: ["CHOCOLATE", "NEGRO"], selected: "CHOCOLATE" },
-            { id: 26, cat: "ACCESORIOS", name: "TRENCH LIGHTER", desc: "ENCENDEDOR PESADO DE MECHA CON PERFIL VINTAGE, EDICIÓN LIMITADA. <br>INCLUYE FUNDA DE CUERO.<br><br>MEDIDAS: 7.3 cm x 2.3 cm x 2 cm<br><br>MATERIALES: Latón macizo.", price: 239, imgs: ["images/encendedor.webp","images/encendedor1.webp", "images/encendedor2.webp", "images/encendedor5.webp", "images/encendedor3.webp", "images/encendedor4.webp" ], variants: [] },
-            { id: 25, cat: "ACCESORIOS", name: "TRAVEL NOTES PACK 3 TOPO", desc: "PACK DE 3 LIBRETAS DE 50 HOJAS <br><br>MEDIDAS: A6 <br><br>MATERIALES: COMPUESTO POR PAPEL OFFSET DE 80 GR.", price: 49, imgs: ["images/notes1.webp", "images/notes2.webp", "images/notes3.webp", "images/notes4.webp", "images/notes5.webp" ], variants: [], sinDescuento: true, agotado: true}, 
-            { id: 5, cat: "ACCESORIOS", name: "MULTITOOL CARD + FUNDA DE CUERO", desc: "TARJETA MULTIHERRAMIENTA CON 10 FUNCIONES:<br>• ABRE LATAS<br>• ABRE CAJAS<br>• DESTORNILLADOR PLANO<br>• REGLA 4 CM<br>• ABRE BOTELLAS<br>• LLAVE INGLESA 6 MEDIDAS<br>• LLAVE MARIPOSA<br>• SIERRA<br>• ORIFICIO PARA LANYARD<br>• INDICADOR AUXILIAR DE DIRECCIÓN<br><br>MATERIAL: ACERO INOXIDABLE", price: 89, varPhotos: { "CHOCOLATE": ["images/MULTITOOL.webp", "images/MULTITOOLfunda.webp"], "NEGRO": ["images/MULTITOOL.webp", "images/MULTITOOLfundanegra.webp"] }, variants: ["CHOCOLATE", "NEGRO"], selected: "CHOCOLATE", agotado: true },
+            { id: 25, cat: "ACCESORIOS", name: "TRAVEL NOTES PACK 3 TOPO", desc: "PACK DE 3 LIBRETAS DE 50 HOJAS <br><br>MEDIDAS: A6 <br><br>MATERIALES: COMPUESTO POR PAPEL OFFSET DE 80 GR.", price: 49, imgs: ["images/notes1.webp", "images/notes2.webp", "images/notes3.webp", "images/notes4.webp", "images/notes5.webp" ], variants: [], sinDescuento: true}, 
+            { id: 5, cat: "ACCESORIOS", name: "MULTITOOL CARD + FUNDA DE CUERO", desc: "TARJETA MULTIHERRAMIENTA CON 10 FUNCIONES:<br>• ABRE LATAS<br>• ABRE CAJAS<br>• DESTORNILLADOR PLANO<br>• REGLA 4 CM<br>• ABRE BOTELLAS<br>• LLAVE INGLESA 6 MEDIDAS<br>• LLAVE MARIPOSA<br>• SIERRA<br>• ORIFICIO PARA LANYARD<br>• INDICADOR AUXILIAR DE DIRECCIÓN<br><br>MATERIAL: ACERO INOXIDABLE", price: 89, varPhotos: { "CHOCOLATE": ["images/MULTITOOL.webp", "images/MULTITOOLfunda.webp"], "NEGRO": ["images/MULTITOOL.webp", "images/MULTITOOLfundanegra.webp"] }, variants: ["CHOCOLATE", "NEGRO"], selected: "CHOCOLATE" },
              { id: 23, cat: "ACCESORIOS", name: "THE SHIELD", desc: "PROTECTOR DE CALZADO ACOLCHADO PARA MOTOCICLISTAS CON GARANTIA DE POR VIDA <br><br>MEDIDAS: 9 CM X 13 CM APROX. <br><br>MATERIALES: CUERO DE RES FULL GRAIN <br>HERRAJE DE ACERO INOXIDABLE <br>TELA SUEDE ANTIRRAYONES", price: 99, varPhotos: { "CHOCOLATE": ["images/shieldchoco_8_11zon.webp", "images/shieldchocoback_7_11zon.webp"], "NEGRO": ["images/shieldnegro_9_11zon.webp", "images/shieldnegroback_6_11zon.webp"] }, variants: ["CHOCOLATE", "NEGRO"], selected: "NEGRO", sinDescuento: true },
             { id: 6, cat: "ACCESORIOS", name: "UTILITY TRAY", desc: "BANDEJA PARA COLOCAR OBJETOS DE BOLSILLO PERFECTO PARA TU CASA U OFICINA.<br><br>MATERIALES: CUERO DE RES FULL GRAIN, HERRAJE DE ACERO INOXIDABLE Y TELA TWEED", price: 99, varPhotos: { "SMALL": ["images/BANDEJAS.webp"], "MEDIUM": ["images/BANDEJAM.webp"], "LARGE": ["images/BANDEJAL.webp"] }, varPrices: { "SMALL": 99, "MEDIUM": 129, "LARGE": 159 }, varDesc: { "SMALL": "MEDIDAS: 14 cm X 14 cm APROX.", "MEDIUM": "MEDIDAS: 20 cm X 20 cm APROX.", "LARGE": "MEDIDAS: 20 cm X 30 cm APROX." }, variants: ["SMALL", "MEDIUM", "LARGE"], selected: "SMALL" },
             { id: 7, cat: "ACCESORIOS", name: "PORTALENTES", desc: "FUNDA PARA LENTES CON INTERIOR ANTIRRAYONES Y OJAL PARA ENGANCHE.<br><br>MEDIDAS: 18 cm X 7.5 cm APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN, HERRAJE DE LATÓN Y ACERO INOXIDABLE", price: 99, imgs: ["images/PORTALENTES.webp", "images/PORTALENTESatras.webp"], variants: [] },
-            { id: 8, cat: "CINTURONES", name: "MIGHTY BELT + BLACK BUCKLE", desc: "CORREA TODO TERRENO DE PERFIL CASUAL PERFECTA PARA TODAS TUS AVENTURAS.<br><br>MEDIDAS: 4 cm DE ANCHO X LARGO PERSONALIZABLE.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE ACERO INOXIDABLE PAVONADO EN NEGRO", price: 149, imgs: ["images/MIGHTY.webp", "images/MIGHTYcompleta.webp"], variants: [], agotado: false },
-            { id: 20, cat: "CINTURONES", name: "MIGHTY BELT BLACKOUT", desc: "CORREA TODO TERRENO DE PERFIL CASUAL PERFECTA PARA TODAS TUS AVENTURAS.<br><br>MEDIDAS: 4 cm DE ANCHO X LARGO PERSONALIZABLE.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE ACERO INOXIDABLE PAVONADO EN NEGRO", price: 149, imgs: ["images/blackout1.webp", "images/blackout.webp"], variants: [], agotado: false },
+            { id: 8, cat: "CINTURONES", name: "MIGHTY BELT + BLACK BUCKLE", desc: "CORREA TODO TERRENO DE PERFIL CASUAL PERFECTA PARA TODAS TUS AVENTURAS.<br><br>MEDIDAS: 4 cm DE ANCHO X LARGO PERSONALIZABLE.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE ACERO INOXIDABLE PAVONADO EN NEGRO", price: 149, imgs: ["images/MIGHTY.webp", "images/MIGHTYcompleta.webp"], variants: [], agotado: true },
+            { id: 20, cat: "CINTURONES", name: "MIGHTY BELT BLACKOUT", desc: "CORREA TODO TERRENO DE PERFIL CASUAL PERFECTA PARA TODAS TUS AVENTURAS.<br><br>MEDIDAS: 4 cm DE ANCHO X LARGO PERSONALIZABLE.<br><br>MATERIALES: CUERO DE RES FULL GRAIN Y HERRAJE DE ACERO INOXIDABLE PAVONADO EN NEGRO", price: 149, imgs: ["images/blackout1.webp", "images/blackout.webp"], variants: [], agotado: true },
             { id: 9, cat: "LLAVEROS", name: "EL GANCHO", desc: "LLAVERO CON MOSQUETÓN DE PERFIL TÁCTICO.<br><br>MEDIDAS: 13.5 cm X 3 cm APROX.<br><br>MATERIALES: CUERO DE RES FULL GRAIN AND HERRAJE DE ACERO INOXIDABLE", price: 79, varPhotos: { "CHOCOLATE": ["images/GANCHO.webp"], "NEGRO": ["images/GANCHOnegro.webp"] }, variants: ["CHOCOLATE", "NEGRO"], selected: "CHOCOLATE" },
             { id: 10, cat: "BEADS", name: "SKULL BEAD", desc: "CUENTA DECORATIVA.<br><br>MATERIAL: LATÓN MACIZO", price: 89, imgs: ["images/SKULLBEAD.webp"], variants: [] },
             { id: 11, cat: "BEADS", name: "BABY DEVIL BEAD", desc: "CUENTA DECORATIVA.<br><br>MATERIAL: LATÓN MACIZO", price: 99, imgs: ["images/BABYDEVIL.webp"], variants: [] },
@@ -224,6 +236,7 @@
             { id: 2, cat: "BOLSOS", name: "UTILITY BRIEFCASE CAMO", desc: "MALETÍN DE TRABAJO DE AMPLIO ESPACIO.<br>AL EXTERIOR:<br>-BOLSILLO FRONTAL<br>-HANDLES UTILITARIOS (PARA LLEVAR PORTAPLANOS, CHAQUETA, PERIÓDICOS, ETC.)<br>AL INTERIOR:<br>-COMPARTIMENTO ANTI RAYONES PARA LAPTOP,<br>-BOLSILLO CON CIERRE<br>-DOS BOLSILLOS PARA CABLEADO U OTROS ACCESORIOS.<br><br>MATERIAL: CUERO DE RES FULL GRAIN, TELA CORDURA, ACERO INOXIDABLE, TELA SUEDE", price: 579, imgs: ["images/briefcase1.webp", "images/briefcase2.webp", "images/briefcase3.webp", "images/briefcase4.webp", "images/briefcase5.webp", "images/briefcase6.webp"], variants: [] },
             { id: 22, cat: "BOLSOS", name: "UTILITY BRIEFCASE DISTRESSED CHOCOLATE", desc: "MALETÍN DE TRABAJO DE AMPLIO ESPACIO.<br>AL EXTERIOR:<br>-BOLSILLO FRONTAL<br>-HANDLES UTILITARIOS (PARA LLEVAR PORTAPLANOS, CHAQUETA, PERIÓDICOS, ETC.)<br>AL INTERIOR:<br>-COMPARTIMENTO ANTI RAYONES PARA LAPTOP,<br>-BOLSILLO CON CIERRE<br>-DOS BOLSILLOS PARA CABLEADO U OTROS ACCESORIOS.<br><br>MATERIAL: CUERO DE RES FULL GRAIN, CANVAS DE ALTO GRAMAJE, TELA CORDURA, ACERO INOXIDABLE, TELA SUEDE", price: 579, imgs: ["images/briefcasechoco1.webp", "images/briefcasechoco2.webp", "images/briefcasechoco3.webp", "images/briefcasechoco4.webp", "images/briefcasechoco5.webp", "images/briefcasechoco6.webp"], variants: [] },
            
+            
         ];
 
         // --- INTERRUPTOR DE DESCUENTO ---
@@ -550,31 +563,7 @@
         function goHome() {
             window.location.href = 'index.html';
         }
-       // --- ANIMACIÓN DEL BANNER PROMOCIONAL ---
-let bannerIndex = 0;
-const bannerMessages = [
-    "ENVIOS GRATIS POR COMPRAS MAYORES A S/ 79.00"
-];
-
-// Cambia el mensaje cada 4 segundos (4000 milisegundos)
-setInterval(() => {
-    const banner = document.getElementById('promo-banner');
-    if(!banner) return;
-    
-    // 1. Oculta el texto suavemente (Fade out)
-    banner.classList.remove('opacity-100');
-    banner.classList.add('opacity-0');
-    
-    // 2. Espera medio segundo a que desaparezca para cambiar la frase
-    setTimeout(() => {
-        bannerIndex = (bannerIndex + 1) % bannerMessages.length;
-        banner.innerText = bannerMessages[bannerIndex];
-        
-        // 3. Vuelve a mostrar el texto (Fade in)
-        banner.classList.remove('opacity-0');
-        banner.classList.add('opacity-100');
-    }, 500); 
-}, 4000);
+       // (La animación del banner ahora se hace con CSS)
         window.onload = init;
     </script>
 </body>
