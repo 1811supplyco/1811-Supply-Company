@@ -248,6 +248,39 @@
         let cart = JSON.parse(localStorage.getItem('cart_1811')) || [];
         let currentImgIdx = {};
 
+        // ===== VARIANTES EN LISTAS: AYUDANTES =====
+        // Categorías donde cada variante se muestra como tarjeta propia. Para agregar otra: ["STAGE GEAR", "BILLETERAS"]
+        const CATEGORIAS_CON_VARIANTES = ["STAGE GEAR"];
+
+        // Convierte la lista de productos en una lista de tarjetas.
+        // Un producto con 2 o más variantes (y fotos por variante) genera UNA TARJETA POR VARIANTE.
+        // Para que un producto se muestre en UNA sola tarjeta, agrégale  unaTarjeta: true  en su lista de datos.
+        function listingItems(list) {
+            return list.flatMap(p =>
+                (CATEGORIAS_CON_VARIANTES.includes(p.cat) && p.variants && p.variants.length > 1 && p.varPhotos && !p.unaTarjeta)
+                    ? p.variants.map(v => ({ p, v }))
+                    : [{ p, v: null }]
+            );
+        }
+        // Enlace que abre el producto (con la variante elegida, si la hay)
+        function itemLink(p, v) {
+            return `?id=${p.id}${v ? '&v=' + encodeURIComponent(v) : ''}`;
+        }
+        // Precio de la tarjeta (respeta varPrices si existe)
+        function itemPrice(p, v) {
+            return p.varPrices ? p.varPrices[v || p.selected] : p.price;
+        }
+        // Galería de fotos de la tarjeta
+        function itemGallery(p, v) {
+            if (v) return (p.varPhotos && p.varPhotos[v]) ? p.varPhotos[v] : p.imgs;
+            return (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
+        }
+        // Línea gris con el nombre de la variante (vacía si no hay variante)
+        function itemVariantLabel(v) {
+            return v ? `<p class="text-[8px] md:text-[9px] text-gray-500 font-bold uppercase truncate">${v}</p>` : '';
+        }
+        // ===== FIN AYUDANTES =====
+
         function init() {
             updateCartUI(); 
             const params = new URLSearchParams(window.location.search);
@@ -255,6 +288,10 @@
             const cat = params.get('cat');
 
             if (productId) {
+                // Si el enlace trae &v=NOMBRE, abre el producto con esa variante seleccionada
+                const pv = products.find(x => x.id === parseInt(productId));
+                const vParam = params.get('v');
+                if (pv && vParam && pv.variants && pv.variants.includes(vParam)) pv.selected = vParam;
                 showSingleProduct(parseInt(productId));
             } else if (cat && cat !== 'TODOS') {
                 render(cat);
@@ -291,17 +328,18 @@
                         <button onclick="filterProducts('${cat}')" class="text-[9px] text-gray-500 font-bold uppercase hover:text-white">Ver Todo →</button>
                     </div>
                     <div class="category-slider no-scrollbar">
-                        ${catProducts.map(p => `
-                            <div class="min-w-[160px] md:min-w-[220px] cursor-pointer group" onclick="window.location.href='?id=${p.id}'">
+                        ${listingItems(catProducts).map(({p, v}) => `
+                            <div class="min-w-[160px] md:min-w-[220px] cursor-pointer group" onclick="window.location.href='${itemLink(p, v)}'">
                                 <div class="relative w-full aspect-square bg-black mb-2 overflow-hidden rounded-sm">
-                                    <img src="${p.imgs ? p.imgs[0] : p.varPhotos[p.selected][0]}" class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
+                                    <img src="${v ? itemGallery(p, v)[0] : (p.imgs ? p.imgs[0] : p.varPhotos[p.selected][0])}" class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
                                 </div>
                                 <h4 class="text-[8px] md:text-[9px] font-black text-white uppercase truncate">${p.name}</h4>
+                                ${itemVariantLabel(v)}
                                 ${p.agotado
                                     ? `<p class="text-[9px] text-red-500 font-black mt-1">HAZ TU RESERVA</p>`
                                     : ((ACTIVAR_DESCUENTO && !p.sinDescuento)
-                                        ? `<div class="flex items-center gap-2"><p class="text-[8px] text-gray-400 font-bold line-through">S/ ${Number(p.price).toFixed(2)}</p><p class="text-[9px] text-red-500 font-black">S/ ${(Number(p.price) * 0.90).toFixed(2)}</p></div>`
-                                        : `<p class="text-[8px] text-gray-400 font-bold">S/ ${Number(p.price).toFixed(2)}</p>`)
+                                        ? `<div class="flex items-center gap-2"><p class="text-[8px] text-gray-400 font-bold line-through">S/ ${Number(itemPrice(p, v)).toFixed(2)}</p><p class="text-[9px] text-red-500 font-black">S/ ${(Number(itemPrice(p, v)) * 0.90).toFixed(2)}</p></div>`
+                                        : `<p class="text-[8px] text-gray-400 font-bold">S/ ${Number(itemPrice(p, v)).toFixed(2)}</p>`)
                                 }
                             </div>
                         `).join('')}
@@ -328,19 +366,20 @@
             grid.innerHTML = '';
 
             const filtered = products.filter(p => p.cat === filter);
-            filtered.forEach(p => {
-                let gallery = (p.varPhotos && p.varPhotos[p.selected]) ? p.varPhotos[p.selected] : p.imgs;
-                let displayPrice = p.varPrices ? p.varPrices[p.selected] : p.price;
+            listingItems(filtered).forEach(({p, v}) => {
+                let gallery = itemGallery(p, v);
+                let displayPrice = itemPrice(p, v);
                 const div = document.createElement('div');
                 div.className = "product-card p-2 md:p-4";
    
                 div.innerHTML = `
-                    <div class="relative w-full aspect-square mb-2 md:mb-4 overflow-hidden cursor-pointer bg-black rounded-sm" onclick="window.location.href='?id=${p.id}'">
+                    <div class="relative w-full aspect-square mb-2 md:mb-4 overflow-hidden cursor-pointer bg-black rounded-sm" onclick="window.location.href='${itemLink(p, v)}'">
                         <img src="${gallery[0]}" class="absolute inset-0 w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500">
                     </div>
                     <div class="flex flex-col flex-1">
                         <div class="flex flex-col mb-2">
                             <h3 class="font-bold text-[8px] md:text-[10px] text-white tracking-widest uppercase mb-1">${p.name}</h3>
+                            ${itemVariantLabel(v)}
                             ${p.agotado
                                 ? `<span class="text-[9px] md:text-[11px] text-red-500 font-black mt-1">HAZ TU RESERVA</span>`
                                : ((ACTIVAR_DESCUENTO && !p.sinDescuento)
@@ -351,7 +390,7 @@
                         <div class="mt-auto flex flex-col gap-2">
                             ${p.agotado
                                 ? `<button onclick="reservarWhatsApp(${p.id})" class="w-full bg-white text-black py-2 md:py-3 text-[8px] md:text-[9px] font-black uppercase tracking-widest hover:bg-gray-200 transition-all">Haz tu reserva</button>`
-                                : `<button onclick="addToCart(${p.id})" class="w-full bg-white text-black py-2 md:py-3 text-[8px] md:text-[9px] font-black uppercase tracking-widest hover:bg-gray-200 transition-all">Añadir</button>`
+                                : `<button onclick="addToCart(${p.id}, ${v ? `'${v}'` : 'null'})" class="w-full bg-white text-black py-2 md:py-3 text-[8px] md:text-[9px] font-black uppercase tracking-widest hover:bg-gray-200 transition-all">Añadir</button>`
                             }
                         </div>
                     </div>`;
@@ -464,6 +503,7 @@
             const p = products.find(prod => prod.id === id);
             p.selected = v;
             currentImgIdx[id] = 0; // Reiniciar a la primera foto de la variante
+            history.replaceState(null, '', `?id=${id}&v=${encodeURIComponent(v)}`); // enlace compartible
             showSingleProduct(id);
         }
 
@@ -472,8 +512,9 @@
             document.getElementById('cart-overlay').classList.toggle('active');
         }
 
-        function addToCart(id) {
+        function addToCart(id, variant) {
             const p = products.find(prod => prod.id === id);
+            if (variant) p.selected = variant; // variante elegida desde la tarjeta
             const price = p.varPrices ? p.varPrices[p.selected] : p.price;
             cart.push({ ...p, currentPrice: price, currentVariant: p.selected });
             localStorage.setItem('cart_1811', JSON.stringify(cart));
